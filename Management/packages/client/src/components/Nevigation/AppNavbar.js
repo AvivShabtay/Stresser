@@ -44,53 +44,37 @@ class AppNavbar extends React.Component {
               <MenuIcon />
             </IconButton>
             <Box 
-              className="ml-2 mr-1">
+              className="flex justify-between ml-2 mr-1 min-w-70">
                 <Button
                   size = "small" 
                   variant="contained" 
                 >
                   Stresser
                 </Button>
-            </Box>
-            <Box 
-              className="mx-1">
               <Button 
                 size = "small" 
                 variant="contained" 
               >
                 End-point
               </Button>
-            </Box>
-            <Box 
-             className="mx-1" >
               <Button 
                 size = "small" 
                 variant="contained" 
               >
                 Policy
               </Button>
-            </Box>
-            <Box 
-              className="mx-1">
               <Button 
                 size = "small" 
                variant="contained" 
               >
                 Rules
               </Button>
-            </Box>
-            <Box 
-              className=" ml-1 mr-32"  >
               <Button  
-             
                 size = "small" 
                 variant="contained" 
                 >
                 Events
               </Button>
-            </Box>
-            <Box
-             className="ml-16" >
                <Button 
                 size = "small" 
                 variant="contained"
