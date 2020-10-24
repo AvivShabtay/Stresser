@@ -1,11 +1,11 @@
 #include "FakeRegistry.h"
 
-bool FakeRegistry::Install()
+bool FakeRegistry::Install() const
 {
 	return false;
 }
 
-bool FakeRegistry::Uninstall()
+bool FakeRegistry::Uninstall() const
 {
 	return false;
 }

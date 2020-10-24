@@ -7,8 +7,9 @@
 class FakeFile : public FakeArtifact
 {
 public:
-	bool Install();
-	bool Uninstall();
+	FakeFile(ArtifactType type, ArtifactArgs args) : FakeArtifact(type, args) {}
+	virtual bool Install() const override;
+	virtual bool Uninstall() const override;
 };
 
 

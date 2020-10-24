@@ -1,11 +1,11 @@
 #include "FakeFile.h"
 
-bool FakeFile::Install()
+bool FakeFile::Install() const
 {
-    return false;
+	return false;
 }
 
-bool FakeFile::Uninstall()
+bool FakeFile::Uninstall() const
 {
-    return false;
+	return false;
 }
