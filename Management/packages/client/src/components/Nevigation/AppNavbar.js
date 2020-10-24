@@ -46,6 +46,7 @@ class AppNavbar extends React.Component {
             <Box 
               className="flex justify-between ml-2 mr-1 min-w-70">
                 <Button
+                  className="bg-gray-700"
                   size = "small" 
                   variant="contained" 
                 >
