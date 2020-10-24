@@ -1,14 +1,18 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+//import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircle from "@material-ui/icons/AccountCircle";
+//import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
+import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
+
 
 class AppNavbar extends React.Component {
+ 
   constructor() {
     super();
     this.state = {
@@ -28,7 +32,7 @@ class AppNavbar extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <AppBar className="flex-grow" position="static">
+        <AppBar className="flex-grow " position="static" >
           <Toolbar>
             <IconButton
               edge="start"
@@ -39,10 +43,64 @@ class AppNavbar extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" className="flex-grow">
-              Stresser
-            </Typography>
-            <IconButton
+            <Box 
+              className="ml-2 mr-1">
+                <Button
+                  size = "small" 
+                  variant="contained" 
+                >
+                  Stresser
+                </Button>
+            </Box>
+            <Box 
+              className="mx-1">
+              <Button 
+                size = "small" 
+                variant="contained" 
+              >
+                End-point
+              </Button>
+            </Box>
+            <Box 
+             className="mx-1" >
+              <Button 
+                size = "small" 
+                variant="contained" 
+              >
+                Policy
+              </Button>
+            </Box>
+            <Box 
+              className="mx-1">
+              <Button 
+                size = "small" 
+               variant="contained" 
+              >
+                Rules
+              </Button>
+            </Box>
+            <Box 
+              className=" ml-1 mr-32"  >
+              <Button  
+             
+                size = "small" 
+                variant="contained" 
+                >
+                Events
+              </Button>
+            </Box>
+            <Box
+             className="ml-16" >
+               <Button 
+                size = "small" 
+                variant="contained"
+              >
+                Log-out
+              </Button>
+            </Box>
+
+
+            {/* <IconButton
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
@@ -50,7 +108,7 @@ class AppNavbar extends React.Component {
               color="inherit"
             >
               <AccountCircle />
-            </IconButton>
+            </IconButton> */}
             <Menu
               id="menu-appbar"
               anchorEl={this.state.anchorEl}
