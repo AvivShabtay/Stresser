@@ -7,18 +7,20 @@
 #include "Request.h"
 #include "Policy.h"
 
+/*
 #include "FakeArtifact.h"
 #include "FakeRegistry.h"
 #include "FakeFile.h"
 #include "ArtifactArgs.h"
 #include "ArtifactType.h"
+*/
 
 #pragma comment (lib, "winhttp.lib")
 
 using json = nlohmann::json;
 
 int __cdecl main(int argc, char** argv) {
-
+	/*
 	std::vector<FakeArtifact*> fakeArtifacts;
 
 	ArtifactType type1 = ArtifactType::Registry;
@@ -32,6 +34,7 @@ int __cdecl main(int argc, char** argv) {
 	// Cleanup:
 	for (int i = 0; i < fakeArtifacts.size(); i++)
 		delete fakeArtifacts.at(i);
+	*/
 }
 
 void testPolicyFromServer() {
