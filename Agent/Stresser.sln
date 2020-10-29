@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
@@ -6,6 +6,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Stresser", "Stresser\Stresser.vcxproj", "{327B41FA-9078-4851-8F64-2D1AF5FF4592}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StresserEngine", "StresserEngine\StresserEngine.vcxproj", "{92E95C51-6BD3-44AA-BADF-531C6F488C16}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArtifactManager", "ArtifactManager\ArtifactManager.vcxproj", "{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,18 @@ Global
 		{92E95C51-6BD3-44AA-BADF-531C6F488C16}.Release|x86.ActiveCfg = Release|Win32
 		{92E95C51-6BD3-44AA-BADF-531C6F488C16}.Release|x86.Build.0 = Release|Win32
 		{92E95C51-6BD3-44AA-BADF-531C6F488C16}.Release|x86.Deploy.0 = Release|Win32
+		{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}.Debug|ARM.ActiveCfg = Debug|Win32
+		{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}.Debug|x64.ActiveCfg = Debug|x64
+		{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}.Debug|x64.Build.0 = Debug|x64
+		{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}.Debug|x86.ActiveCfg = Debug|Win32
+		{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}.Debug|x86.Build.0 = Debug|Win32
+		{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}.Release|ARM.ActiveCfg = Release|Win32
+		{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}.Release|ARM64.ActiveCfg = Release|Win32
+		{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}.Release|x64.ActiveCfg = Release|x64
+		{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}.Release|x64.Build.0 = Release|x64
+		{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}.Release|x86.ActiveCfg = Release|Win32
+		{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
