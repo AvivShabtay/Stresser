@@ -50,8 +50,6 @@ namespace Tests
 
 			/* Assert */
 			Assert::AreEqual(manager.Size(), numOfArtifacts);
-			//auto artifact2 = manager.GetArtifactByIndex(2);
-			//Assert::IsNotNull(artifact2);
 		}
 
 		TEST_METHOD(GetArtifactsFromArtifactManager)
