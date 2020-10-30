@@ -2,7 +2,7 @@ module.exports = {
   purge: [],
   target: 'relaxed',
   prefix: '',
-  important: false,
+  important: true,
   separator: ':',
   theme: {
     screens: {
@@ -353,6 +353,7 @@ module.exports = {
     },
     minWidth: {
       '0': '0',
+      '70': '70%',
       full: '100%',
     },
     objectPosition: {

@@ -1,14 +1,16 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
+import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
+
 
 class AppNavbar extends React.Component {
+ 
   constructor() {
     super();
     this.state = {
@@ -28,30 +30,64 @@ class AppNavbar extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <AppBar className="flex-grow" position="static">
+        <AppBar className="flex-grow flex bg-gray-800  " position="static"  >
           <Toolbar>
             <IconButton
               edge="start"
-              className="mr-2"
+              className="mr-2  "
               color="inherit"
               aria-label="menu"
               onClick={() => {}}
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" className="flex-grow">
-              Stresser
-            </Typography>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={(event) => {}}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
+            <Box>
+                <Button
+                  className="flex-auto h-8 m-2 bg-gray-600 border-double border-4 border-gray-400 font-mono text-white"
+                  size = "small" 
+                  variant="contained" 
+                >
+                  Stresser
+                </Button>
+              <Button 
+                className="flex-auto h-8 m-2 bg-gray-600 border-double border-4 border-gray-400 font-mono text-white"
+                size = "small" 
+                variant="contained" 
+              >
+                End-point
+              </Button>
+              <Button 
+                className="flex-auto h-8 m-2 bg-gray-600 border-double border-4 border-gray-400 font-mono text-white"
+                size = "small" 
+                variant="contained" 
+              >
+                Policy
+              </Button>
+              <Button 
+                className="flex-auto h-8 m-2 bg-gray-600 border-double border-4 border-gray-400 font-mono text-white"
+                size = "small" 
+               variant="contained" 
+              >
+                Rules
+              </Button>
+              <Button  
+                className="flex-auto h-8 m-2 bg-gray-600 border-double border-4 border-gray-400 font-mono text-white"
+                size = "small" 
+                variant ="contained" 
+                >
+                Events
+              </Button>
+              </Box>
+               <Button 
+                className="absolute right-0 h-8 ml-16 bg-gray-600 border-double border-4 border-gray-400 font-mono text-white"
+                size = "small" 
+                variant="contained"
+              >
+                Log-out
+              </Button>
+
+
+            {/* <Menu
               id="menu-appbar"
               anchorEl={this.state.anchorEl}
               anchorOrigin={{
@@ -68,7 +104,7 @@ class AppNavbar extends React.Component {
             >
               <MenuItem onClick={this.handleClose}>Profile</MenuItem>
               <MenuItem onClick={this.handleClose}>My account</MenuItem>
-            </Menu>
+            </Menu> */}
           </Toolbar>
         </AppBar>
       </React.Fragment>
