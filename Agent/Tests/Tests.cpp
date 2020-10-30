@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 
+#include "../ArtifactManager/ArtifactManager.h"
 #include "../ArtifactManager/FakeArtifact.h"
 #include "../ArtifactManager/FakeRegistry.h"
 #include "../ArtifactManager/FakeFile.h"
@@ -15,27 +16,85 @@ namespace Tests
 	{
 	public:
 
-		TEST_METHOD(TestMethod1)
+		TEST_METHOD(AddArtifactsToArtifactManager)
 		{
-			const size_t numOfArtifacts = 2;
-			const size_t zeroArtifacts = 0;
+			/* Arrange */
+			ArtifactManager manager;
+			const int numOfArtifacts = 3;
+			ArtifactArgs argsArray[numOfArtifacts];
+			ArtifactType typesArray[numOfArtifacts] = { ArtifactType::File, ArtifactType::Registry, ArtifactType::File };
 
-			std::vector<FakeArtifact*> fakeArtifacts;
+			/* Act */
+			// Add artifacts to the manager:
+			for (int i = 0; i < numOfArtifacts; ++i) {
+				auto args = argsArray[i];
+				auto type = typesArray[i];
 
-			ArtifactType type1 = ArtifactType::Registry;
-			ArtifactArgs args1;
-			fakeArtifacts.push_back(new FakeRegistry(type1, args1));
+				switch (type) {
+				case ArtifactType::File:
+				{
+					auto artifact = new FakeFile(type, args);
+					manager.AddArtifact(artifact);
+					break;
+				}
+				case ArtifactType::Registry:
+				{
+					auto artifact = new FakeRegistry(type, args);
+					manager.AddArtifact(artifact);
+					break;
+				}
+				default:
+					break;
+				}
+			}
 
-			ArtifactType type2 = ArtifactType::File;
-			ArtifactArgs args2;
-			fakeArtifacts.push_back(new FakeFile(type2, args2));
+			/* Assert */
+			Assert::AreEqual(manager.Size(), numOfArtifacts);
+			//auto artifact2 = manager.GetArtifactByIndex(2);
+			//Assert::IsNotNull(artifact2);
+		}
 
-			Assert::AreEqual(fakeArtifacts.size(), numOfArtifacts);
+		TEST_METHOD(GetArtifactsFromArtifactManager)
+		{
+			/* Arrange */
+			ArtifactManager manager;
+			const int numOfArtifacts = 3;
+			ArtifactArgs argsArray[numOfArtifacts];
+			ArtifactType typesArray[numOfArtifacts] = { ArtifactType::File, ArtifactType::Registry, ArtifactType::File };
 
-			// Cleanup:
-			for (int i = 0; i < fakeArtifacts.size(); i++)
-				delete fakeArtifacts.at(i);
+			// Use for assert latter:
+			FakeArtifact* artifacts[numOfArtifacts];
 
+			/* Act */
+			// Add artifacts to the manager:
+			for (int i = 0; i < numOfArtifacts; ++i) {
+				auto args = argsArray[i];
+				auto type = typesArray[i];
+
+				switch (type) {
+				case ArtifactType::File:
+				{
+					auto artifact = new FakeFile(type, args);
+					artifacts[i] = artifact;
+					manager.AddArtifact(artifact);
+					break;
+				}
+				case ArtifactType::Registry:
+				{
+					auto artifact = new FakeRegistry(type, args);
+					artifacts[i] = artifact;
+					manager.AddArtifact(artifact);
+					break;
+				}
+				default:
+					break;
+				}
+			}
+
+			/* Assert */
+			auto artifact2 = manager.GetArtifactByIndex(2);
+			Assert::IsNotNull(artifact2);
+			Assert::IsTrue(artifact2 == artifacts[2]);
 		}
 	};
 }

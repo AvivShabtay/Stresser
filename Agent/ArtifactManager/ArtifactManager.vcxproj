@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ArtifactArgs.h" />
+    <ClInclude Include="ArtifactManager.h" />
     <ClInclude Include="ArtifactType.h" />
     <ClInclude Include="FakeArtifact.h" />
     <ClInclude Include="FakeFile.h" />
@@ -161,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArtifactArgs.cpp" />
+    <ClCompile Include="ArtifactManager.cpp" />
     <ClCompile Include="FakeFile.cpp" />
     <ClCompile Include="FakeRegistry.cpp" />
     <ClCompile Include="pch.cpp">
