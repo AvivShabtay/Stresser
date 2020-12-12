@@ -4,7 +4,7 @@
 #include <winhttp.h>
 #include "nlohmann/json.hpp"
 #include <iostream>
-#include "Request.h"
+#include "../CommunicationManager/Request.h"
 #include "Policy.h"
 
 #pragma comment (lib, "winhttp.lib")
