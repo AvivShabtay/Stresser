@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Request.h"
 
 Request::Request(std::string hostname, int port, std::string requestType, std::string requestURL)
