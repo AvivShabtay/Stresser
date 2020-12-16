@@ -1,11 +1,12 @@
+#include "pch.h"
 #include "FakeRegistry.h"
 
-bool FakeRegistry::Install() const
+bool FakeRegistry::Install()
 {
 	return false;
 }
 
-bool FakeRegistry::Uninstall() const
+bool FakeRegistry::Uninstall()
 {
 	return false;
 }

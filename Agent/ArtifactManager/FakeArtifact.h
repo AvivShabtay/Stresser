@@ -17,8 +17,12 @@ private:
 
 public:
 	FakeArtifact(ArtifactType type, ArtifactArgs args) : Type(type), Args(args) {}
-	virtual bool Install() const = 0;
-	virtual bool Uninstall() const = 0;
+	ArtifactType GetType();
+	ArtifactArgs GetArgs();
+
+	// Interface functions:
+	virtual bool Install() = 0;
+	virtual bool Uninstall() = 0;
 };
 
 #endif // !__FAKE_ARTIFACT_H

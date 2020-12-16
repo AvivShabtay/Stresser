@@ -8,8 +8,8 @@ class FakeFile : public FakeArtifact
 {
 public:
 	FakeFile(ArtifactType type, ArtifactArgs args) : FakeArtifact(type, args) {}
-	virtual bool Install() const override;
-	virtual bool Uninstall() const override;
+	virtual bool Install() override;
+	virtual bool Uninstall() override;
 };
 
 

@@ -8,8 +8,8 @@ class FakeRegistry : public FakeArtifact
 {
 public:
 	FakeRegistry(ArtifactType type, ArtifactArgs args) : FakeArtifact(type, args) {}
-	virtual bool Install() const override;
-	virtual bool Uninstall() const override;
+	virtual bool Install() override;
+	virtual bool Uninstall() override;
 };
 
 #endif // !__FAKE_REGISTRY_H

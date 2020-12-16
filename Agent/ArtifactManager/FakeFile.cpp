@@ -1,11 +1,12 @@
+#include "pch.h"
 #include "FakeFile.h"
 
-bool FakeFile::Install() const
+bool FakeFile::Install()
 {
 	return false;
 }
 
-bool FakeFile::Uninstall() const
+bool FakeFile::Uninstall()
 {
 	return false;
 }
