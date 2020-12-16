@@ -163,6 +163,7 @@
   <ItemGroup>
     <ClCompile Include="ArtifactArgs.cpp" />
     <ClCompile Include="ArtifactManager.cpp" />
+    <ClCompile Include="FakeArtifact.cpp" />
     <ClCompile Include="FakeFile.cpp" />
     <ClCompile Include="FakeRegistry.cpp" />
     <ClCompile Include="pch.cpp">

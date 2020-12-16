@@ -56,5 +56,8 @@
     <ClCompile Include="ArtifactManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FakeArtifact.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
