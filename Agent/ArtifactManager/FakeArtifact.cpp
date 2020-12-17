@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "FakeArtifact.h"
 
-ArtifactType FakeArtifact::GetType()
+ArtifactType::Type FakeArtifact::GetType()
 {
 	return this->Type;
 }
