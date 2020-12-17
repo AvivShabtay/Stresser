@@ -2,7 +2,6 @@
 //
 
 #include "pch.h"
-#include "framework.h"
 #include "ArtifactManager.h"
 
 ArtifactManager::ArtifactManager() { }
@@ -76,4 +75,32 @@ bool ArtifactManager::RemoveArtifactByIndex(int artifactIndex) {
 
 int ArtifactManager::Size() {
 	return this->artifacts.size();
+}
+
+/*  */
+bool ArtifactManager::Install() {
+	if (0 < this->artifacts.size()) {
+		for (auto& fakeArtifact : this->artifacts) {
+			auto type = ArtifactType::ArtifactTypeToWString(fakeArtifact->GetType());
+			if (!fakeArtifact->Install()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+/*  */
+bool ArtifactManager::Uninstall() {
+	if (0 < this->artifacts.size()) {
+		for (auto& fakeArtifact : this->artifacts) {
+			auto type = ArtifactType::ArtifactTypeToWString(fakeArtifact->GetType());
+			if (!fakeArtifact->Uninstall()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
 }

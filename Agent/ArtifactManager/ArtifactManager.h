@@ -19,6 +19,8 @@ public:
 	FakeArtifact* GetArtifactByIndex(int artifactIndex);
 	bool RemoveArtifactByIndex(int artifactIndex);
 	int Size();
+	bool Install();
+	bool Uninstall();
 };
 
 
