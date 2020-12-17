@@ -8,5 +8,12 @@
 #define PCH_H
 
 // add headers that you want to pre-compile here
+#include <windows.h>
+#include "../ArtifactManager/ArtifactArgs.h"
+#include "../ArtifactManager/ArtifactType.h"
+#include "../ArtifactManager/FakeArtifact.h"
+#include "../ArtifactManager/FakeFile.h"
+#include "../ArtifactManager/FakeRegistry.h"
+#include "../ArtifactManager/ArtifactManager.h"
 
 #endif //PCH_H
