@@ -8,6 +8,11 @@
 #define PCH_H
 
 // add headers that you want to pre-compile here
-#include "framework.h"
+#include <windows.h>
+#include <wil\resource.h>
+#include <vector>
+#include <iostream>
+#include "ArtifactType.h"
+#include "ArtifactArgs.h"
 
 #endif //PCH_H
