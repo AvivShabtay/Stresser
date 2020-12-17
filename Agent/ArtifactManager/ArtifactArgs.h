@@ -11,6 +11,9 @@ private:
 	std::vector<std::wstring> args;
 
 public:
+	ArtifactArgs();
+	ArtifactArgs(std::vector<std::wstring> args) : args(args) {}
+	ArtifactArgs* AddArg(std::wstring arg);
 	std::vector<std::wstring>& GetData();
 };
 
