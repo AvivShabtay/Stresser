@@ -2,11 +2,16 @@
 #ifndef __ARTIFACT_TYPE_H
 #define __ARTIFACT_TYPE_H
 
-enum class ArtifactType {
-	Registry,
-	File,
-	Process,
-	Service
+class ArtifactType {
+public:
+	enum class Type {
+		Registry,
+		File,
+		Process,
+		Service
+	};
+
+	static std::wstring ArtifactTypeToWString(Type type);
 };
 
 #endif // !__ARTIFACT_TYPE_H

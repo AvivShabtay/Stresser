@@ -2,9 +2,6 @@
 #ifndef __FAKE_ARTIFACT_H
 #define __FAKE_ARTIFACT_H
 
-#include "ArtifactType.h"
-#include "ArtifactArgs.h"
-
 /*
 * Represent the base class of the Command pattern.
 * Each concrete class provide logic to install fake artifact from specific type,
@@ -12,13 +9,17 @@
 */
 class FakeArtifact {
 private:
-	ArtifactType Type;
+	ArtifactType::Type Type;
 	ArtifactArgs Args;
 
 public:
-	FakeArtifact(ArtifactType type, ArtifactArgs args) : Type(type), Args(args) {}
-	virtual bool Install() const = 0;
-	virtual bool Uninstall() const = 0;
+	FakeArtifact(ArtifactType::Type type, ArtifactArgs args) : Type(type), Args(args) {}
+	ArtifactType::Type GetType();
+	ArtifactArgs GetArgs();
+
+	// Interface functions:
+	virtual bool Install() = 0;
+	virtual bool Uninstall() = 0;
 };
 
 #endif // !__FAKE_ARTIFACT_H

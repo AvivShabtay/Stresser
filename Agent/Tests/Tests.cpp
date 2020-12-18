@@ -1,13 +1,6 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 
-#include "../ArtifactManager/ArtifactManager.h"
-#include "../ArtifactManager/FakeArtifact.h"
-#include "../ArtifactManager/FakeRegistry.h"
-#include "../ArtifactManager/FakeFile.h"
-#include "../ArtifactManager/ArtifactArgs.h"
-#include "../ArtifactManager/ArtifactType.h"
-
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Tests
@@ -22,7 +15,11 @@ namespace Tests
 			ArtifactManager manager;
 			const int numOfArtifacts = 3;
 			ArtifactArgs argsArray[numOfArtifacts];
-			ArtifactType typesArray[numOfArtifacts] = { ArtifactType::File, ArtifactType::Registry, ArtifactType::File };
+			ArtifactType::Type typesArray[numOfArtifacts] = {
+				ArtifactType::Type::File,
+				ArtifactType::Type::Registry,
+				ArtifactType::Type::File
+			};
 
 			/* Act */
 			// Add artifacts to the manager:
@@ -31,13 +28,13 @@ namespace Tests
 				auto type = typesArray[i];
 
 				switch (type) {
-				case ArtifactType::File:
+				case ArtifactType::Type::File:
 				{
 					auto artifact = new FakeFile(type, args);
 					manager.AddArtifact(artifact);
 					break;
 				}
-				case ArtifactType::Registry:
+				case ArtifactType::Type::Registry:
 				{
 					auto artifact = new FakeRegistry(type, args);
 					manager.AddArtifact(artifact);
@@ -58,7 +55,11 @@ namespace Tests
 			ArtifactManager manager;
 			const int numOfArtifacts = 3;
 			ArtifactArgs argsArray[numOfArtifacts];
-			ArtifactType typesArray[numOfArtifacts] = { ArtifactType::File, ArtifactType::Registry, ArtifactType::File };
+			ArtifactType::Type typesArray[numOfArtifacts] = {
+				ArtifactType::Type::File,
+				ArtifactType::Type::Registry,
+				ArtifactType::Type::File
+			};
 
 			// Use for assert latter:
 			FakeArtifact* artifacts[numOfArtifacts];
@@ -70,14 +71,14 @@ namespace Tests
 				auto type = typesArray[i];
 
 				switch (type) {
-				case ArtifactType::File:
+				case ArtifactType::Type::File:
 				{
 					auto artifact = new FakeFile(type, args);
 					artifacts[i] = artifact;
 					manager.AddArtifact(artifact);
 					break;
 				}
-				case ArtifactType::Registry:
+				case ArtifactType::Type::Registry:
 				{
 					auto artifact = new FakeRegistry(type, args);
 					artifacts[i] = artifact;

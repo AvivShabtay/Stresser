@@ -6,10 +6,13 @@
 
 class FakeFile : public FakeArtifact
 {
+private:
+	std::vector<std::wstring> filePaths;
 public:
-	FakeFile(ArtifactType type, ArtifactArgs args) : FakeArtifact(type, args) {}
-	virtual bool Install() const override;
-	virtual bool Uninstall() const override;
+	FakeFile(ArtifactType::Type type, ArtifactArgs args) : FakeArtifact(type, args) {}
+	~FakeFile();
+	virtual bool Install() override;
+	virtual bool Uninstall() override;
 };
 
 

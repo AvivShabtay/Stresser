@@ -6,10 +6,13 @@
 
 class FakeRegistry : public FakeArtifact
 {
+private:
+	std::vector<std::wstring> registryPaths;
 public:
-	FakeRegistry(ArtifactType type, ArtifactArgs args) : FakeArtifact(type, args) {}
-	virtual bool Install() const override;
-	virtual bool Uninstall() const override;
+	FakeRegistry(ArtifactType::Type type, ArtifactArgs args) : FakeArtifact(type, args) {}
+	~FakeRegistry();
+	virtual bool Install() override;
+	virtual bool Uninstall() override;
 };
 
 #endif // !__FAKE_REGISTRY_H

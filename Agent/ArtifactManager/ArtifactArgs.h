@@ -8,7 +8,13 @@
 class ArtifactArgs
 {
 private:
-	std::vector<std::string> args;
+	std::vector<std::wstring> args;
+
+public:
+	ArtifactArgs();
+	ArtifactArgs(std::vector<std::wstring> args) : args(args) {}
+	ArtifactArgs* AddArg(std::wstring arg);
+	std::vector<std::wstring>& GetData();
 };
 
 #endif // !__ARTIFACT_ARGS_H
