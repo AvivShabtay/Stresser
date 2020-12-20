@@ -22,11 +22,10 @@ Connection::~Connection()
 	if (hSession) WinHttpCloseHandle(hSession);
 }
 
-std::string Connection::sendRequest(std::string requestType, std::string path, std::string data) {
+json Connection::SendRequest(std::string requestType, std::string path, json jsonToSend) {
 	
 	BOOL bResults = FALSE;
-	DWORD dwSize = 0;
-	DWORD dwDownloaded = 0;
+	std::string data = jsonToSend.dump();
 	std::wstring headers = L"Content-Type: application/json\r\n";
 
 	HINTERNET hRequest = ::WinHttpOpenRequest(hConnect, 
@@ -39,7 +38,7 @@ std::string Connection::sendRequest(std::string requestType, std::string path, s
 
 	// Send a request.
 	if (hRequest)
-		bResults = WinHttpSendRequest(hRequest, 
+		bResults = WinHttpSendRequest(hRequest,
 									  headers.c_str(), 
 									  headers.length(), 
 									  (LPVOID)data.c_str(), 
@@ -51,31 +50,40 @@ std::string Connection::sendRequest(std::string requestType, std::string path, s
 	if (bResults)
 		bResults = WinHttpReceiveResponse(hRequest, NULL);
 
-	// Keep checking for data until there is nothing left.
-	if (bResults)
-	{
-		do
-		{
-			// Check for available data.
-			dwSize = 0;
-			if (!WinHttpQueryDataAvailable(hRequest, &dwSize))
-				std::cout << "Error " << GetLastError() << " in WinHttpQueryDataAvailable." << std::endl;
+	// Check the Response
+	if (bResults) {
 
-			// Allocate space for the buffer.
-			std::unique_ptr<byte> pszOutBuffer(new byte[dwSize + 1]);
-			
-			// Read the Data.
-			ZeroMemory(pszOutBuffer.get(), dwSize + 1);
+		DWORD dwDownloaded = 0;
+		DWORD dwStatusCode = 0;
+		DWORD dwSize = sizeof(dwStatusCode);
 
-			if (!WinHttpReadData(hRequest, (LPVOID)pszOutBuffer.get(), dwSize, &dwDownloaded))
-				return "";
-			else
-				return (char*)pszOutBuffer.get();
+		// Check status code
+		WinHttpQueryHeaders(hRequest,
+			WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
+			WINHTTP_HEADER_NAME_BY_INDEX,
+			&dwStatusCode, &dwSize, WINHTTP_NO_HEADER_INDEX);
 
-		} while (dwSize > 0);
+		if (dwStatusCode != 200) return "";
+
+		// Check for available data.
+		if (!WinHttpQueryDataAvailable(hRequest, &dwSize))
+			std::cout << "Error " << GetLastError() << " in WinHttpQueryDataAvailable." << std::endl;
+
+		// Allocate space for the buffer.
+		std::unique_ptr<byte> pszOutBuffer(new byte[dwSize + 1]);
+
+		// Read the Data.
+		ZeroMemory(pszOutBuffer.get(), dwSize + 1);
+
+		if (!WinHttpReadData(hRequest, (LPVOID)pszOutBuffer.get(), dwSize, &dwDownloaded)) {
+			if (hRequest) WinHttpCloseHandle(hRequest);
+			return "";
+		}
+		else {
+			if (hRequest) WinHttpCloseHandle(hRequest);
+			return json::parse(pszOutBuffer.get());
+		}
 	}
-
-	if (hRequest) WinHttpCloseHandle(hRequest);
 
 	// Report any errors.
 	if (!bResults)
