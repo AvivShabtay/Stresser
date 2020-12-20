@@ -16,7 +16,7 @@ int __cdecl main(int argc, char** argv) {
 }
 
 void testPolicyFromServer() {
-	Request getPolicy("127.0.0.1", 10000, "GET", "/policy");
+	Connection getPolicy("127.0.0.1", 10000, "GET", "/policy");
 	LPSTR responseData = getPolicy.GetData();
 	json jsonData = json::parse(responseData);
 
