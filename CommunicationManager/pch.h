@@ -4,8 +4,8 @@
 // However, files listed here are ALL re-compiled if any one of them is updated between builds.
 // Do not add files here that you will be updating frequently as this negates the performance advantage.
 
-#ifndef PCH_H
-#define PCH_H
+#ifndef PCH_H_COMMUNICATION_HEADER
+#define PCH_H_COMMUNICATION_HEADER
 
 // add headers that you want to pre-compile here
 #include <windows.h>
@@ -16,4 +16,4 @@
 #include <atlbase.h>
 #include <atlconv.h>
 
-#endif //PCH_H
+#endif //PCH_H_COMMUNICATION_HEADER
