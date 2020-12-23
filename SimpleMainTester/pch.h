@@ -4,17 +4,11 @@
 // However, files listed here are ALL re-compiled if any one of them is updated between builds.
 // Do not add files here that you will be updating frequently as this negates the performance advantage.
 
-#ifndef PCH_H
-#define PCH_H
+#ifndef PCH_H_SIMPLE_MAIN_TESTER
+#define PCH_H_SIMPLE_MAIN_TESTER
 
 // add headers that you want to pre-compile here
 #include <windows.h>
-#include "../ArtifactManager/ArtifactArgs.h"
-#include "../ArtifactManager/ArtifactType.h"
-#include "../ArtifactManager/FakeArtifact.h"
-#include "../ArtifactManager/FakeFile.h"
-#include "../ArtifactManager/FakeRegistry.h"
-#include "../ArtifactManager/ArtifactManager.h"
 #include <iostream>
 
-#endif //PCH_H
+#endif //PCH_H_SIMPLE_MAIN_TESTER

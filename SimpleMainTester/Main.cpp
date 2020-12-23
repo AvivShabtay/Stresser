@@ -1,4 +1,10 @@
 #include "pch.h"
+#include "../ArtifactManager/ArtifactArgs.h"
+#include "../ArtifactManager/ArtifactType.h"
+#include "../ArtifactManager/FakeArtifact.h"
+#include "../ArtifactManager/FakeFile.h"
+#include "../ArtifactManager/FakeRegistry.h"
+#include "../ArtifactManager/ArtifactManager.h"
 
 int main() {
 
