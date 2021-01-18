@@ -1,45 +1,34 @@
 #include "pch.h"
-#include "../ArtifactManager/ArtifactArgs.h"
-#include "../ArtifactManager/ArtifactType.h"
-#include "../ArtifactManager/FakeArtifact.h"
-#include "../ArtifactManager/FakeFile.h"
-#include "../ArtifactManager/FakeRegistry.h"
-#include "../ArtifactManager/ArtifactManager.h"
+#include "..\Utils\Service.h"
 
 int main() {
 
-	ArtifactManager manager;
+	bool isInstalled = false;
+	bool isStarted = false;
 
-	ArtifactArgs vmwareArgs;
-	vmwareArgs.AddArg(L"C:\\temp\\vmwareFakeFile1.txt");
-	vmwareArgs.AddArg(L"C:\\temp\\vmwareFakeFile2.txt");
 
-	ArtifactArgs vboxArgs;
-	vboxArgs.AddArg(L"C:\\temp\\vboxFakeFile1.txt");
-	vboxArgs.AddArg(L"C:\\temp\\vboxFakeFile2.txt");
+	Service service(L"stresser", L"C:\\temp\\StresserEngine.sys", SERVICE_KERNEL_DRIVER);
 
-	FakeArtifact* vmwareFakeFiles = new FakeFile(ArtifactType::Type::File, vmwareArgs);
-	FakeArtifact* vboxFakeFiles = new FakeFile(ArtifactType::Type::File, vboxArgs);
+	do {
+		isInstalled = service.Install();
+		if (!isInstalled)
+			break;
 
-	ArtifactArgs vmwareRegistryArgs;
-	vmwareRegistryArgs.AddArg(L"SOFTWARE\\VMwareFakeRegistry1");
-	vmwareRegistryArgs.AddArg(L"SOFTWARE\\VMwareFakeRegistry2");
+		std::wcout << "[+] Service installed" << std::endl;
 
-	ArtifactArgs vboxRegistryArgs;
-	vboxRegistryArgs.AddArg(L"SOFTWARE\\VBoxFakeRegistry1");
-	vboxRegistryArgs.AddArg(L"SOFTWARE\\VBoxFakeRegistry2");
+		isStarted = service.Start();
+		if (!isStarted)
+			break;
 
-	FakeArtifact* vmwareFakeRegistry = new FakeRegistry(ArtifactType::Type::Registry, vmwareRegistryArgs);
-	FakeArtifact* vboxFakeRegistry = new FakeRegistry(ArtifactType::Type::Registry, vboxRegistryArgs);
+		std::wcout << "[+] Service started" << std::endl;
 
-	// Add artifacts to be installed:
-	manager.AddArtifact(vmwareFakeFiles);
-	manager.AddArtifact(vboxFakeFiles);
-	manager.AddArtifact(vmwareFakeRegistry);
-	manager.AddArtifact(vboxFakeRegistry);
+	} while (false);
 
-	bool result = manager.Install();
-	result = manager.Uninstall();
+	if (isStarted)
+		service.Stop();
 
-	std::wcout << "Manager result: " << (result ? L"Success" : L"Failed") << std::endl;
+	if (isInstalled)
+		service.Remove();
+
+	return 0;
 }
