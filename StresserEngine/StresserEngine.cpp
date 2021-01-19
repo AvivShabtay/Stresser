@@ -48,7 +48,7 @@ void StresserEngineUnload(PDRIVER_OBJECT DriverObject) {
 	// Remove device object
 	IoDeleteDevice(DriverObject->DeviceObject);
 
-	KdPrint(("[StresserEngine] PriorityBooster unloaded\n"));
+	KdPrint(("[StresserEngine] StresserEngine unloaded\n"));
 }
 
 NTSTATUS StresserEngineCreateClose(PDEVICE_OBJECT DeviceObject, PIRP Irp)
