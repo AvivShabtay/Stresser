@@ -1,22 +1,21 @@
 #pragma once
-#ifndef __ARTIFACT_ARGS_H
-#define __ARTIFACT_ARGS_H
 
 #include <vector>
 #include <string>
 
 class ArtifactArgs
 {
-private:
-	std::vector<std::wstring> args;
 
 public:
 	ArtifactArgs();
-	ArtifactArgs(std::vector<std::wstring> args) : args(args) {}
+	ArtifactArgs(std::vector<std::wstring> args) : m_args(args) {}
+
+	/* Add new argument. */
 	ArtifactArgs* AddArg(std::wstring arg);
+
+	/* Get all the arguments. */
 	std::vector<std::wstring>& GetData();
+
+private:
+	std::vector<std::wstring> m_args;
 };
-
-#endif // !__ARTIFACT_ARGS_H
-
-

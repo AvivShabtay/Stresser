@@ -1,18 +1,19 @@
 #pragma once
-#ifndef __FAKE_REGISTRY_H
-#define __FAKE_REGISTRY_H
 
 #include "FakeArtifact.h"
 
 class FakeRegistry : public FakeArtifact
 {
-private:
-	std::vector<std::wstring> registryPaths;
 public:
 	FakeRegistry(ArtifactType::Type type, ArtifactArgs args) : FakeArtifact(type, args) {}
-	~FakeRegistry();
-	virtual bool Install() override;
-	virtual bool Uninstall() override;
-};
+	virtual ~FakeRegistry();
 
-#endif // !__FAKE_REGISTRY_H
+	/* Creates the fake registry in the local computer. */
+	virtual bool Install() override;
+
+	/* Removes the fake registry from the local computer. */
+	virtual bool Uninstall() override;
+
+private:
+	std::vector<std::wstring> m_registryPaths;
+};

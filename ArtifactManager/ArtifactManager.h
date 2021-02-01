@@ -1,27 +1,35 @@
 #pragma once
 
-#ifndef __ARTIFACT_MANAGER_H
-#define __ARTIFACT_MANAGER_H
-
 #include <vector>
 #include "FakeArtifact.h"
 
 class ArtifactManager
 {
-private:
-	std::vector<FakeArtifact*> artifacts;
-
 public:
 	ArtifactManager();
 	~ArtifactManager();
+
+	/* Add new fake artifact object. */
 	bool AddArtifact(FakeArtifact* artifact);
+
+	/* Retrieve the index of given fake artifact. */
 	int GetArtifactIndex(FakeArtifact* artifact);
+
+	/* Return the fake artifact object by it's index. */
 	FakeArtifact* GetArtifactByIndex(int artifactIndex);
+
+	/* Get index of artifact and removes it. */
 	bool RemoveArtifactByIndex(int artifactIndex);
+
+	/* Return the number of artifacts. */
 	int Size();
+
+	/* Install all the artifacts in local computer. */
 	bool Install();
+
+	/* Uninstall all the artifacts from local computer. */
 	bool Uninstall();
+
+private:
+	std::vector<FakeArtifact*> m_artifacts;
 };
-
-
-#endif // !__ARTIFACT_MANAGER_H

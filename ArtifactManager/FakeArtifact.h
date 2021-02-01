@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __FAKE_ARTIFACT_H
-#define __FAKE_ARTIFACT_H
 
 /*
 * Represent the base class of the Command pattern.
@@ -8,18 +6,24 @@
 * while all the concrete class provide interface to the callee to do / redo the installation process.
 */
 class FakeArtifact {
-private:
-	ArtifactType::Type Type;
-	ArtifactArgs Args;
 
 public:
-	FakeArtifact(ArtifactType::Type type, ArtifactArgs args) : Type(type), Args(args) {}
+	FakeArtifact(ArtifactType::Type type, ArtifactArgs args) : m_type(type), m_args(args) {}
+	virtual ~FakeArtifact();
+
+	/* Returns the type of the fake artifact. */
 	ArtifactType::Type GetType();
+
+	/* Returns the arguments of the fake artifact. */
 	ArtifactArgs GetArgs();
 
-	// Interface functions:
+	/* Creates the fake artifact in the local computer. */
 	virtual bool Install() = 0;
-	virtual bool Uninstall() = 0;
-};
 
-#endif // !__FAKE_ARTIFACT_H
+	/* Removes the fake artifact from the local computer. */
+	virtual bool Uninstall() = 0;
+
+private:
+	ArtifactType::Type m_type;
+	ArtifactArgs m_args;
+};

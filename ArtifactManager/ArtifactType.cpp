@@ -1,6 +1,5 @@
 #include "pch.h"
 
-/* Convert from ArtifactType to WString represent the type. */
 std::wstring ArtifactType::ArtifactTypeToWString(Type type) {
 	switch (type)
 	{
