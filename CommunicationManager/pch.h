@@ -4,16 +4,18 @@
 // However, files listed here are ALL re-compiled if any one of them is updated between builds.
 // Do not add files here that you will be updating frequently as this negates the performance advantage.
 
-#ifndef PCH_H_COMMUNICATION_HEADER
-#define PCH_H_COMMUNICATION_HEADER
+#ifndef PCH_COMMUNICATION_HEADER_H
+#define PCH_COMMUNICATION_HEADER_H
 
 // add headers that you want to pre-compile here
 #include <windows.h>
 #include <winhttp.h>
-#include "nlohmann/json.hpp"
 #include <iostream>
-#include <tchar.h>
+#include <exception>
 #include <atlbase.h>
 #include <atlconv.h>
+#include <atlstr.h>
 
-#endif //PCH_H_COMMUNICATION_HEADER
+#include "nlohmann/json.hpp"
+
+#endif //PCH_COMMUNICATION_HEADER_H
