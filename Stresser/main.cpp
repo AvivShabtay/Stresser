@@ -1,28 +1,56 @@
-#define WIN32_LEAN_AND_MEAN
-
-#include <windows.h>
-#include <winhttp.h>
-#include "nlohmann/json.hpp"
+#include <Windows.h>
 #include <iostream>
-#include "../CommunicationManager/Request.h"
-#include "Policy.h"
+#include <atlstr.h>
 
-#pragma comment (lib, "winhttp.lib")
+#include "nlohmann/json.hpp"
+#include "../CommunicationManager/Connection.h"
+#include "../StresserExceptions/ExceptionWithWin32ErrorCode.h"
+#include "../StresserExceptions/UnexpectedHTTPStatusCodeException.h"
+#include "Endpoint.h"
 
 using json = nlohmann::json;
 
-int __cdecl main(int argc, char** argv) {
-	// TODO
+std::wstring RegisiterEndpoint();
+
+
+int wmain(int argc, PWCHAR argv[]) {
+
+	auto token = RegisiterEndpoint();
+	std::wcout << token << std::endl;
+
+	return 0;
 }
 
-void testPolicyFromServer() {
-	Connection getPolicy("127.0.0.1", 10000, "GET", "/policy");
-	LPSTR responseData = getPolicy.GetData();
-	json jsonData = json::parse(responseData);
+std::wstring RegisiterEndpoint() {
 
-	Policy policy(jsonData);
-	std::cout << policy << std::endl;
+	std::wstring hostname(L"stresser-project.herokuapp.com");
 
+	try
+	{
+		Endpoint& endpoint = Endpoint::GetInstance(hostname);
+		auto apikey = endpoint.RegisterEndpoint();
+		return apikey;
+	}
+	catch (UnexpectedHTTPStatusCodeException& exception)
+	{
+		std::wcout << exception.what() << "Status code: " << exception.GetHTTPStatusCode() << std::endl;
+		return L"";
+	}
+	catch (ExceptionWithWin32ErrorCode& exception)
+	{
+		std::wcout << exception.what() << std::endl;
+		return L"";
+	}
+	catch (std::exception& exception)
+	{
+		std::wcout << exception.what();
 
-	delete[] responseData;
+		DWORD dwErrorCode = GetLastError();
+		if (dwErrorCode) {
+			std::wcout << ", Error code: 0x" << dwErrorCode;
+		}
+
+		std::wcout << std::endl;
+		return L"";
+	}
 }
