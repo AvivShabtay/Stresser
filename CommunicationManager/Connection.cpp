@@ -1,93 +1,109 @@
 #include "pch.h"
 #include "Connection.h"
 
-Connection::Connection(std::string hostname)
+Connection::Connection(std::wstring hostname)
+	: m_hostname(hostname)
 {
-	this->hSession = ::WinHttpOpen(L"Stresser Client/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME,
-		WINHTTP_NO_PROXY_BYPASS, 0);
-	if (!this->hSession) {
-		throw;
+	AutoHttpHandle hSession(::WinHttpOpen(this->AGENT.c_str(), WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
+		WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0));
+
+	if (!hSession.get()) {
+		throw ExceptionWithWin32ErrorCode("Could not open HTTP session");
 	}
 
-	this->hConnect = ::WinHttpConnect(hSession, CA2W(hostname.c_str()), INTERNET_DEFAULT_PORT, 0);
-	if (!this->hConnect) {
-		throw;
+	this->m_ahSession = std::move(hSession);
+
+	AutoHttpHandle hConnect(::WinHttpConnect(this->m_ahSession.get(), this->m_hostname.c_str(),
+		INTERNET_DEFAULT_PORT, 0));
+
+	if (!hConnect.get()) {
+		throw ExceptionWithWin32ErrorCode("Could not initiate HTTP connection");
 	}
+
+	this->m_ahConnect = std::move(hConnect);
 }
 
-Connection::~Connection()
-{
-	// Close any open handles.
-	if (hConnect) WinHttpCloseHandle(hConnect);
-	if (hSession) WinHttpCloseHandle(hSession);
-}
+json Connection::SendRequest(std::wstring requestType, std::wstring path, json jsonToSend) {
 
-json Connection::SendRequest(std::string requestType, std::string path, json jsonToSend) {
-	
-	BOOL bResults = FALSE;
+	if (!this->m_ahConnect.get()) {
+		throw ExceptionWithWin32ErrorCode("Invalid HTTP connection");
+	}
+
+	AutoHttpHandle hRequest(::WinHttpOpenRequest(this->m_ahConnect.get(), requestType.c_str(), path.c_str(),
+		nullptr, nullptr, nullptr, WINHTTP_FLAG_SECURE));
+
+	if (!hRequest.get()) {
+		throw ExceptionWithWin32ErrorCode("Could not open HTTP request");
+	}
+
 	std::string data = jsonToSend.dump();
-	std::wstring headers = L"Content-Type: application/json\r\n";
 
-	HINTERNET hRequest = ::WinHttpOpenRequest(hConnect, 
-											  CA2W(requestType.c_str()), 
-											  CA2W(path.c_str()), 
-											  NULL, 
-											  nullptr,
-											  NULL, 
-											  WINHTTP_FLAG_SECURE);
-
-	// Send a request.
-	if (hRequest)
-		bResults = WinHttpSendRequest(hRequest,
-									  headers.c_str(), 
-									  headers.length(), 
-									  (LPVOID)data.c_str(), 
-									  data.length(), 
-									  data.length(), 
-									  0);
-
-	// End the request.
-	if (bResults)
-		bResults = WinHttpReceiveResponse(hRequest, NULL);
-
-	// Check the Response
-	if (bResults) {
-
-		DWORD dwDownloaded = 0;
-		DWORD dwStatusCode = 0;
-		DWORD dwSize = sizeof(dwStatusCode);
-
-		// Check status code
-		WinHttpQueryHeaders(hRequest,
-			WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
-			WINHTTP_HEADER_NAME_BY_INDEX,
-			&dwStatusCode, &dwSize, WINHTTP_NO_HEADER_INDEX);
-
-		if (dwStatusCode != 200) return "";
-
-		// Check for available data.
-		if (!WinHttpQueryDataAvailable(hRequest, &dwSize))
-			std::cout << "Error " << GetLastError() << " in WinHttpQueryDataAvailable." << std::endl;
-
-		// Allocate space for the buffer.
-		std::unique_ptr<byte> pszOutBuffer(new byte[dwSize + 1]);
-
-		// Read the Data.
-		ZeroMemory(pszOutBuffer.get(), dwSize + 1);
-
-		if (!WinHttpReadData(hRequest, (LPVOID)pszOutBuffer.get(), dwSize, &dwDownloaded)) {
-			if (hRequest) WinHttpCloseHandle(hRequest);
-			return "";
-		}
-		else {
-			if (hRequest) WinHttpCloseHandle(hRequest);
-			return json::parse(pszOutBuffer.get());
-		}
+	if (!(::WinHttpSendRequest(hRequest.get(), this->HEADERS.c_str(), this->HEADERS.length(),
+		(LPVOID)data.c_str(), data.length(), data.length(), 0))) {
+		throw ExceptionWithWin32ErrorCode("Could not send HTTP data");
 	}
 
-	// Report any errors.
-	if (!bResults)
-		std::cout << "Error " << GetLastError() << " has occurred." << std::endl;
+	if (!(::WinHttpReceiveResponse(hRequest.get(), nullptr))) {
+		throw ExceptionWithWin32ErrorCode("Could not get response from HTTP request");
+	}
+
+	DWORD dwStatusCode = this->GetStatusCode(hRequest.get());
+	if (dwStatusCode != 200) {
+		throw UnexpectedHTTPStatusCodeException(dwStatusCode);
+	}
+
+	DWORD dwDataSize;
+	if (!WinHttpQueryDataAvailable(hRequest.get(), &dwDataSize)) {
+		throw ExceptionWithWin32ErrorCode("Could not query data size of the request");
+	}
+
+	dwDataSize += 1;
+
+	// Allocate space for the buffer:
+	std::unique_ptr<byte> pszOutBuffer(new byte[dwDataSize]);
+	ZeroMemory(pszOutBuffer.get(), dwDataSize);
+
+	DWORD dwDownloaded = 0;
+	if (!WinHttpReadData(hRequest.get(), (LPVOID)pszOutBuffer.get(), dwDataSize, &dwDownloaded)) {
+		return "";
+	}
+	else {
+		return json::parse(pszOutBuffer.get());
+	}
 
 	return "";
+}
+
+Connection::~Connection() { }
+
+
+DWORD Connection::GetStatusCode(const HINTERNET requestHandle) {
+	DWORD dwStatusCode = 0;
+	DWORD dwSize = sizeof(DWORD);
+
+	::WinHttpQueryHeaders(
+		requestHandle,					// Request handle
+		WINHTTP_QUERY_STATUS_CODE		// Query status code
+		| WINHTTP_QUERY_FLAG_NUMBER,	// Query for 32bit number (status code)
+		WINHTTP_HEADER_NAME_BY_INDEX,	// For query which isn't WINHTTP_QUERY_CUSTOM
+		&dwStatusCode,					// Buffer to status code
+		&dwSize,						// 32bit size
+		WINHTTP_NO_HEADER_INDEX	 		// Only first occurrence of a header should be returned
+	);
+
+	return dwStatusCode;
+}
+
+std::wstring ReadHeader(const HINTERNET requestHandle, std::wstring headerName, ULONG queryFlags) {
+	DWORD bufferSize = 256;
+	std::vector<WCHAR> headerBuffer(bufferSize);
+
+	if (!WinHttpQueryHeaders(requestHandle, queryFlags, nullptr, &headerBuffer[0],
+		&bufferSize, WINHTTP_NO_HEADER_INDEX)) {
+
+		auto header = CStringA(headerName.c_str()).GetString();
+		throw ExceptionWithWin32ErrorCode("Could not read header: " + std::string(header));
+	}
+
+	return std::wstring(&headerBuffer[0]);
 }

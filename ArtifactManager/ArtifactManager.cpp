@@ -7,28 +7,27 @@
 ArtifactManager::ArtifactManager() { }
 
 ArtifactManager::~ArtifactManager() {
-	if (artifacts.size() > 0) {
-		for (int i = 0; i < artifacts.size(); ++i) {
-			auto currentArtifact = artifacts.at(i);
+	if (this->m_artifacts.size() > 0) {
+		for (int i = 0; i < this->m_artifacts.size(); ++i) {
+			auto currentArtifact = this->m_artifacts.at(i);
 			delete currentArtifact;
 		}
 
 		// Clear the entire vector:
-		artifacts.erase(artifacts.begin(), artifacts.begin() + artifacts.size());
+		this->m_artifacts.erase(this->m_artifacts.begin(),
+			this->m_artifacts.begin() + this->m_artifacts.size());
 	}
 }
 
-/* Add new fake artifact object. */
 bool ArtifactManager::AddArtifact(FakeArtifact* artifact)
 {
 	if (!artifact)
 		return false;
 
-	this->artifacts.push_back(artifact);
+	this->m_artifacts.push_back(artifact);
 	return true;
 }
 
-/* Retrieve the index of given fake artifact. */
 int ArtifactManager::GetArtifactIndex(FakeArtifact* artifact) {
 	auto index = -1;
 
@@ -36,8 +35,8 @@ int ArtifactManager::GetArtifactIndex(FakeArtifact* artifact) {
 		return index;
 	}
 	else {
-		for (int i = 0; i < artifacts.size(); ++i) {
-			auto currentArtifact = artifacts.at(i);
+		for (int i = 0; i < this->m_artifacts.size(); ++i) {
+			auto currentArtifact = this->m_artifacts.at(i);
 			if (currentArtifact == artifact)
 				index = i;
 		}
@@ -46,41 +45,38 @@ int ArtifactManager::GetArtifactIndex(FakeArtifact* artifact) {
 	return index;
 }
 
-/* Return the fake artifact object by it's index. */
 FakeArtifact* ArtifactManager::GetArtifactByIndex(int artifactIndex) {
-	if (artifactIndex < 0 || artifactIndex > artifacts.size()) {
+	if (artifactIndex < 0 || artifactIndex > this->m_artifacts.size()) {
 		return nullptr;
 	}
 	else {
-		return artifacts.at(artifactIndex);
+		return this->m_artifacts.at(artifactIndex);
 	}
 }
 
-/*  */
 bool ArtifactManager::RemoveArtifactByIndex(int artifactIndex) {
 	auto result = false;
 
-	if (artifactIndex < 0 || artifactIndex > artifacts.size()) {
+	if (artifactIndex < 0 || artifactIndex > this->m_artifacts.size()) {
 		return false;
 	}
 	else {
 		// Release the memory:
-		delete artifacts.at(artifactIndex);
+		delete this->m_artifacts.at(artifactIndex);
 
 		// Remove the element from the data structure:
-		artifacts.erase(artifacts.begin() + artifactIndex);
+		this->m_artifacts.erase(this->m_artifacts.begin() + artifactIndex);
 		return true;
 	}
 }
 
 int ArtifactManager::Size() {
-	return this->artifacts.size();
+	return this->m_artifacts.size();
 }
 
-/*  */
 bool ArtifactManager::Install() {
-	if (0 < this->artifacts.size()) {
-		for (auto& fakeArtifact : this->artifacts) {
+	if (0 < this->m_artifacts.size()) {
+		for (auto& fakeArtifact : this->m_artifacts) {
 			auto type = ArtifactType::ArtifactTypeToWString(fakeArtifact->GetType());
 			if (!fakeArtifact->Install()) {
 				return false;
@@ -91,10 +87,9 @@ bool ArtifactManager::Install() {
 	return false;
 }
 
-/*  */
 bool ArtifactManager::Uninstall() {
-	if (0 < this->artifacts.size()) {
-		for (auto& fakeArtifact : this->artifacts) {
+	if (0 < this->m_artifacts.size()) {
+		for (auto& fakeArtifact : this->m_artifacts) {
 			auto type = ArtifactType::ArtifactTypeToWString(fakeArtifact->GetType());
 			if (!fakeArtifact->Uninstall()) {
 				return false;

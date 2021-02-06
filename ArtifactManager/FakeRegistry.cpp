@@ -3,17 +3,13 @@
 
 FakeRegistry::~FakeRegistry() { }
 
-bool FakeRegistry::Install()
-{
-	// Get the arguments:
+bool FakeRegistry::Install() {
 	auto args = this->GetArgs();
 
-	// For each given argument, create registry key:
 	for (auto& regValuePath : args.GetData()) {
 
 		wil::unique_hkey hKey;
 
-		// Create the fake key in the OS:
 		::RegCreateKeyEx(
 			HKEY_LOCAL_MACHINE, 	// Registry key
 			regValuePath.c_str(), 	// Sub key
@@ -26,17 +22,15 @@ bool FakeRegistry::Install()
 			NULL 					// Determine either the key exists or not
 		);
 
-		// Save the key for latter usage:
+		// Save the key for uninstall operation:
 		if (hKey) {
-			this->registryPaths.push_back(regValuePath.c_str());
+			this->m_registryPaths.push_back(regValuePath.c_str());
 			std::wcout
 				<< "[FAKE_REGISTRY] install registry: "
 				<< regValuePath
 				<< std::endl;
 		}
 		else {
-			// Installation Failed:
-			// TODO: Release previous handles.
 			std::wcout
 				<< "[FAKE_REGISTRY] Couldn't install registry: "
 				<< regValuePath
@@ -46,12 +40,11 @@ bool FakeRegistry::Install()
 			return false;
 		}
 	}
-	// Installation successfully:
 	return true;
 }
 
 bool FakeRegistry::Uninstall() {
-	for (auto& regKeyPath : this->registryPaths) {
+	for (auto& regKeyPath : this->m_registryPaths) {
 		auto result = ::RegDeleteKey(HKEY_LOCAL_MACHINE, regKeyPath.c_str());
 		if (result != ERROR_SUCCESS) {
 			std::wcout

@@ -4,18 +4,12 @@
 // However, files listed here are ALL re-compiled if any one of them is updated between builds.
 // Do not add files here that you will be updating frequently as this negates the performance advantage.
 
-#ifndef PCH_COMMUNICATION_HEADER_H
-#define PCH_COMMUNICATION_HEADER_H
+#ifndef __PCH_STRESSER_EXCEPTIONS_H
+#define __PCH_STRESSER_EXCEPTIONS_H
 
 // add headers that you want to pre-compile here
-#include <windows.h>
-#include <winhttp.h>
+#include <Windows.h>
 #include <iostream>
-#include <exception>
-#include <atlbase.h>
-#include <atlconv.h>
-#include <atlstr.h>
+#include <sstream>
 
-#include "nlohmann/json.hpp"
-
-#endif //PCH_COMMUNICATION_HEADER_H
+#endif //__PCH_STRESSER_EXCEPTIONS_H

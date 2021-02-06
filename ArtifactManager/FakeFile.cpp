@@ -3,15 +3,11 @@
 
 FakeFile::~FakeFile() { }
 
-bool FakeFile::Install()
-{
-	// Get the arguments:
+bool FakeFile::Install() {
 	auto args = this->GetArgs();
 
-	// For each given argument, create file:
 	for (auto& fileName : args.GetData()) {
 
-		// Create the fake key in the OS:
 		wil::unique_handle hFile(::CreateFile(
 			fileName.c_str(),		// Open file
 			GENERIC_WRITE, 			// Open for writing
@@ -22,9 +18,9 @@ bool FakeFile::Install()
 			NULL
 		));
 
-		// Save the key for latter usage:
+		// Save the filename for uninstall operation:
 		if (hFile) {
-			this->filePaths.push_back(fileName.c_str());
+			this->m_filePaths.push_back(fileName.c_str());
 			std::wcout
 				<< "[FAKE_FILE] install file: "
 				<< fileName
@@ -42,13 +38,12 @@ bool FakeFile::Install()
 			return false;
 		}
 	}
-	// Installation successfully:
 	return true;
 }
 
 bool FakeFile::Uninstall() {
-	// For each given argument, create registry key:
-	for (auto& fakeFile : this->filePaths) {
+
+	for (auto& fakeFile : this->m_filePaths) {
 		bool deleteResult = ::DeleteFile(fakeFile.c_str());
 		if (!deleteResult) {
 			std::wcout

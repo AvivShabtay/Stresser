@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __ARTIFACT_TYPE_H
-#define __ARTIFACT_TYPE_H
 
 class ArtifactType {
 public:
@@ -11,7 +9,6 @@ public:
 		Service
 	};
 
+	/* Convert from ArtifactType to WString represent the type. */
 	static std::wstring ArtifactTypeToWString(Type type);
 };
-
-#endif // !__ARTIFACT_TYPE_H

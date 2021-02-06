@@ -1,19 +1,19 @@
 #pragma once
-#ifndef __FAKE_FILE_H
-#define __FAKE_FILE_H
 
 #include "FakeArtifact.h"
 
 class FakeFile : public FakeArtifact
 {
-private:
-	std::vector<std::wstring> filePaths;
 public:
 	FakeFile(ArtifactType::Type type, ArtifactArgs args) : FakeArtifact(type, args) {}
-	~FakeFile();
+	virtual ~FakeFile();
+
+	/* Creates the fake file in the local computer. */
 	virtual bool Install() override;
+
+	/* Removes the fake file from the local computer. */
 	virtual bool Uninstall() override;
+
+private:
+	std::vector<std::wstring> m_filePaths;
 };
-
-
-#endif // !__FAKE_FILE_H
