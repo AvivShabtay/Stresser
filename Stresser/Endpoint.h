@@ -35,8 +35,10 @@ public:
 	* and get in return new API key to communicate with the server.
 	* @return API key for server-client communication.
 	*/
-	std::wstring RegisterEndpoint();
+	bool RegisterEndpoint();
 
+	std::wstring GetEndpointID();
+	std::wstring GetAPIKey();
 
 private:
 	Endpoint(std::wstring serverURL);
@@ -61,5 +63,6 @@ private:
 	std::wstring m_computerName;
 	std::wstring m_serverURL;
 	std::wstring m_apiKey;
+	std::wstring m_endpoindID;
 };
 

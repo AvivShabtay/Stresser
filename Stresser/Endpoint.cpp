@@ -29,7 +29,7 @@ Endpoint& Endpoint::GetInstance(const std::wstring serverURL) {
 	return m_instance;
 }
 
-std::wstring Endpoint::RegisterEndpoint() {
+bool Endpoint::RegisterEndpoint() {
 	json endpoint;
 	endpoint["endpointId"] = 0;
 	endpoint["IPAddress"] = "10.10.10.10";
@@ -44,11 +44,19 @@ std::wstring Endpoint::RegisterEndpoint() {
 		throw std::runtime_error("Server return with no data");
 	}
 
-	auto apiKey = responseJson["apiKey"];
-	std::wstring apiKeyW(CA2W(apiKey.dump().c_str()));
+	auto apiKey = responseJson["apiKey"].dump();
+	auto endpointID = responseJson["endpointId"].dump();
+
+	std::wstring apiKeyW(CA2W(apiKey.c_str()));
+	std::wstring endpointIDW(CA2W(endpointID.c_str()));
 
 	apiKeyW = StringUtils::RemoveQuotationMarks(apiKeyW);
-	return apiKeyW;
+	endpointIDW = StringUtils::RemoveQuotationMarks(endpointIDW);
+
+	this->m_apiKey = apiKeyW;
+	this->m_endpoindID = endpointIDW;
+
+	return true;
 }
 
 bool Endpoint::KeepConnectionAlive() {
