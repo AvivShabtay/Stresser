@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Service.h" />
+    <ClInclude Include="ShutdownSignal.h" />
     <ClInclude Include="StringUtils.h" />
     <ClInclude Include="TimeUtils.h" />
   </ItemGroup>
@@ -169,6 +170,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Service.cpp" />
+    <ClCompile Include="ShutdownSignal.cpp" />
     <ClCompile Include="StringUtils.cpp" />
     <ClCompile Include="TimeUtils.cpp" />
   </ItemGroup>
