@@ -20,6 +20,9 @@ Endpoint::Endpoint(std::wstring serverURL) {
 	this->m_computerName = this->GetLocalComputerName();
 #endif // DEBUG
 
+
+	this->CreateEndpoint();
+	this->RunKeepAliveThread();
 }
 
 Endpoint& Endpoint::GetInstance(const std::wstring serverURL) {
@@ -29,7 +32,8 @@ Endpoint& Endpoint::GetInstance(const std::wstring serverURL) {
 	return m_instance;
 }
 
-bool Endpoint::RegisterEndpoint() {
+bool Endpoint::CreateEndpoint()
+{
 	json endpoint;
 	endpoint["endpointId"] = 0;
 	endpoint["IPAddress"] = "10.10.10.10";
@@ -59,12 +63,63 @@ bool Endpoint::RegisterEndpoint() {
 	return true;
 }
 
-bool Endpoint::KeepConnectionAlive() {
-	return false;
+bool Endpoint::KeepAlive()
+{
+	json endpoint;
+	endpoint["apiKey"] = std::string(CW2A(this->m_apiKey.c_str()));
+
+	Connection sendKeepAlive(this->m_serverURL);
+	std::wstring uri = L"/endpoint/" + this->m_endpoindID;
+	auto responseJson = sendKeepAlive.SendRequest(L"PUT", uri, endpoint);
+	if (responseJson.size() <= 0) {
+		throw std::runtime_error("Server return with no data");
+	}
+
+	std::wcout << "[KEEP ALIVE] " << std::endl;
+
+	return true;
 }
 
-std::wstring Endpoint::GetAPIKey() {
+std::wstring Endpoint::GetEndpointID()
+{
+	return this->m_endpoindID;
+}
+
+std::wstring Endpoint::GetAPIKey()
+{
 	return this->m_apiKey;
+}
+
+void Endpoint::RunKeepAliveThread()
+{
+	if (this->m_apiKey.empty()) {
+		throw std::runtime_error("Could not start keep alive thread before having API Key");
+	}
+
+	AutoHandle hThread(::CreateThread(nullptr, 0,
+		[](LPVOID params) {
+
+			auto thisEndpoint = reinterpret_cast<Endpoint*>(params);
+
+			ShutdownSignal& g_signal = ShutdownSignal::GetInstance(L"");
+			if (!g_signal.Get()) {
+				return static_cast<DWORD>(-1);
+			}
+
+			DWORD dwResult = 0;
+
+			while (::WaitForSingleObject(g_signal.Get(), 500) == WAIT_TIMEOUT) {
+				dwResult = thisEndpoint->KeepAlive();
+				if (!dwResult) {
+					break;
+				}
+			}
+
+			return dwResult;
+		},
+		this, 0, nullptr));
+
+	this->m_ahKeepAliveThread = std::move(hThread);
 }
 
 std::wstring Endpoint::GetLocalComputerName() {
