@@ -25,6 +25,9 @@ Connection::Connection(std::wstring hostname)
 
 json Connection::SendRequest(std::wstring requestType, std::wstring path, json jsonToSend) {
 
+	// TODO: Remove latter
+	auto dataForDebugOnly = jsonToSend.dump();
+
 	if (!this->m_ahConnect.get()) {
 		throw ExceptionWithWin32ErrorCode("Invalid HTTP connection");
 	}
@@ -57,18 +60,26 @@ json Connection::SendRequest(std::wstring requestType, std::wstring path, json j
 		throw ExceptionWithWin32ErrorCode("Could not query data size of the request");
 	}
 
+	// Null terminator character:
 	dwDataSize += 1;
 
 	// Allocate space for the buffer:
-	std::unique_ptr<byte> pszOutBuffer(new byte[dwDataSize]);
-	ZeroMemory(pszOutBuffer.get(), dwDataSize);
+	std::unique_ptr<byte> receivedData(new byte[dwDataSize]);
+	ZeroMemory(receivedData.get(), dwDataSize);
 
 	DWORD dwDownloaded = 0;
-	if (!WinHttpReadData(hRequest.get(), (LPVOID)pszOutBuffer.get(), dwDataSize, &dwDownloaded)) {
+	if (!WinHttpReadData(hRequest.get(), (LPVOID)receivedData.get(), dwDataSize, &dwDownloaded)) {
 		return "";
 	}
+
+	std::string receivedDataString(reinterpret_cast<PCHAR>(receivedData.get()));
+	receivedDataString = StringUtils::RemoveNewLine(receivedDataString);
+	if (StringUtils::DoesEmptyJSON(receivedDataString)) {
+		return "";
+	}
+
 	else {
-		return json::parse(pszOutBuffer.get());
+		return json::parse(receivedData.get());
 	}
 
 	return "";

@@ -4,6 +4,7 @@
 #include "../Utils/AutoHandle.h"
 #include "../StresserExceptions/ExceptionWithWin32ErrorCode.h"
 #include "../StresserExceptions/UnexpectedHTTPStatusCodeException.h"
+#include "../Utils/StringUtils.h"
 
 /* Force the linker to add WINHTTP library */
 #pragma comment (lib, "winhttp.lib")
