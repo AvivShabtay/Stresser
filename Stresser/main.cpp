@@ -8,38 +8,30 @@
 #include "../StresserExceptions/UnexpectedHTTPStatusCodeException.h"
 #include "Endpoint.h"
 
+#include "../Utils/ShutdownSignal.h"
+
 using json = nlohmann::json;
 
-std::wstring RegisiterEndpoint();
-
-
 int wmain(int argc, PWCHAR argv[]) {
-
-	auto token = RegisiterEndpoint();
-	std::wcout << token << std::endl;
-
-	return 0;
-}
-
-std::wstring RegisiterEndpoint() {
 
 	std::wstring hostname(L"stresser-project.herokuapp.com");
 
 	try
 	{
+		ShutdownSignal& shutdownSignal = ShutdownSignal::GetInstance(L"Shutdown");
 		Endpoint& endpoint = Endpoint::GetInstance(hostname);
-		auto apikey = endpoint.RegisterEndpoint();
-		return apikey;
+		std::wcout << "API key: " << endpoint.GetAPIKey() << std::endl;
+
+		// TODO: Remove latter:
+		::Sleep(5000);
 	}
 	catch (UnexpectedHTTPStatusCodeException& exception)
 	{
 		std::wcout << exception.what() << "Status code: " << exception.GetHTTPStatusCode() << std::endl;
-		return L"";
 	}
 	catch (ExceptionWithWin32ErrorCode& exception)
 	{
 		std::wcout << exception.what() << std::endl;
-		return L"";
 	}
 	catch (std::exception& exception)
 	{
@@ -51,6 +43,7 @@ std::wstring RegisiterEndpoint() {
 		}
 
 		std::wcout << std::endl;
-		return L"";
 	}
+
+	return 0;
 }
