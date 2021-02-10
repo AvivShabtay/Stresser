@@ -96,30 +96,28 @@ void Endpoint::RunKeepAliveThread()
 		throw std::runtime_error("Could not start keep alive thread before having API Key");
 	}
 
-	AutoHandle hThread(::CreateThread(nullptr, 0,
-		[](LPVOID params) {
+	auto threadStartRoutine = [](auto params) {
 
-			auto thisEndpoint = reinterpret_cast<Endpoint*>(params);
+		auto thisEndpoint = reinterpret_cast<Endpoint*>(params);
 
-			ShutdownSignal& g_signal = ShutdownSignal::GetInstance(L"");
-			if (!g_signal.Get()) {
-				return static_cast<DWORD>(-1);
+		ShutdownSignal& g_signal = ShutdownSignal::GetInstance(L"");
+		if (!g_signal.Get()) {
+			return static_cast<DWORD>(-1);
+		}
+
+		DWORD dwResult = 0;
+
+		while (::WaitForSingleObject(g_signal.Get(), 500) == WAIT_TIMEOUT) {
+			dwResult = thisEndpoint->KeepAlive();
+			if (!dwResult) {
+				break;
 			}
+		}
 
-			DWORD dwResult = 0;
+		return dwResult;
+	};
 
-			while (::WaitForSingleObject(g_signal.Get(), 500) == WAIT_TIMEOUT) {
-				dwResult = thisEndpoint->KeepAlive();
-				if (!dwResult) {
-					break;
-				}
-			}
-
-			return dwResult;
-		},
-		this, 0, nullptr));
-
-	this->m_ahKeepAliveThread = std::move(hThread);
+	this->m_ahKeepAliveThread.reset(::CreateThread(nullptr, 0, threadStartRoutine, this, 0, nullptr));
 }
 
 std::wstring Endpoint::GetLocalComputerName() {
