@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Endpoint.cpp" />
+    <ClCompile Include="IPolicy.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Policy.cpp" />
     <ClCompile Include="Rule.cpp" />
