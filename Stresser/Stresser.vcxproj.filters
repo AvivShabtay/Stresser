@@ -27,9 +27,6 @@
     <ClCompile Include="Endpoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPolicy.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="PolicyEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -41,6 +38,9 @@
     </ClCompile>
     <ClCompile Include="EventEntity.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IPolicyControllerService.h">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,9 +56,6 @@
     <ClInclude Include="Endpoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IEndpoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PolicyEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -69,6 +66,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EventEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IEndpointControllerService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IRuleControllerService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
