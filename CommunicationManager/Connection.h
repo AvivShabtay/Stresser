@@ -2,9 +2,10 @@
 
 #include "pch.h"
 #include "../Utils/AutoHandle.h"
+#include "../Utils/StringUtils.h"
+#include "IConnection.h"
 #include "../StresserExceptions/ExceptionWithWin32ErrorCode.h"
 #include "../StresserExceptions/UnexpectedHTTPStatusCodeException.h"
-#include "../Utils/StringUtils.h"
 
 /* Force the linker to add WINHTTP library */
 #pragma comment (lib, "winhttp.lib")
@@ -12,12 +13,9 @@
 /* Used as the JSON data parser. */
 using json = nlohmann::json;
 
-class Connection
+class Connection : public IConnection
 {
 public:
-	Connection(std::wstring hostname);
-	~Connection();
-
 	/*
 	* Send HTTP request to specific route and return the data to the client.
 	*
@@ -28,7 +26,18 @@ public:
 	*/
 	json SendRequest(std::wstring requestType, std::wstring path, json data);
 
+	/*
+	*/
+	void SetToken(std::string token);
+
+	static Connection& GetInstance(std::wstring serverURL);
+
+	~Connection() = default;
+
 private:
+	Connection(std::wstring hostname);
+	Connection();
+
 	/*
 	* Returns HTTP status code of the HTTP request.
 	* @param requestHandle - Handle for HTTP request.

@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="IConnection.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Connection.h" />
   </ItemGroup>

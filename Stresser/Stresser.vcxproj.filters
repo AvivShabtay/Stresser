@@ -21,10 +21,22 @@
     <ClCompile Include="Rule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Policy.cpp">
+    <ClCompile Include="PolicyEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Endpoint.cpp">
+    <ClCompile Include="EndpointEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EventEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IPolicyControllerService.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EndpointControllerService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,13 +47,25 @@
     <ClInclude Include="Rule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Policy.h">
+    <ClInclude Include="PolicyEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Endpoint.h">
+    <ClInclude Include="EndpointEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IEndpoint.h">
+    <ClInclude Include="RuleEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IEndpointControllerService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IRuleControllerService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndpointControllerService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

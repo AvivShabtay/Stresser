@@ -33,7 +33,8 @@ json Connection::SendRequest(std::wstring requestType, std::wstring path, json j
 	}
 
 	AutoHttpHandle hRequest(::WinHttpOpenRequest(this->m_ahConnect.get(), requestType.c_str(), path.c_str(),
-		nullptr, nullptr, nullptr, WINHTTP_FLAG_SECURE));
+		//nullptr, nullptr, nullptr, WINHTTP_FLAG_SECURE));
+		nullptr, nullptr, nullptr, 0));
 
 	if (!hRequest.get()) {
 		throw ExceptionWithWin32ErrorCode("Could not open HTTP request");
@@ -41,7 +42,14 @@ json Connection::SendRequest(std::wstring requestType, std::wstring path, json j
 
 	std::string data = jsonToSend.dump();
 
-	if (!(::WinHttpSendRequest(hRequest.get(), this->HEADERS.c_str(), this->HEADERS.length(),
+	std::wstring headers = this->HEADERS.c_str();
+	if (!this->m_token.empty()) {
+		headers += L"Authorization:";
+		headers += std::wstring(CA2W(this->m_token.c_str()));
+		headers += L"\r\n";
+	}
+
+	if (!(::WinHttpSendRequest(hRequest.get(), headers.c_str(), headers.length(),
 		(LPVOID)data.c_str(), data.length(), data.length(), 0))) {
 		throw ExceptionWithWin32ErrorCode("Could not send HTTP data");
 	}
@@ -85,8 +93,15 @@ json Connection::SendRequest(std::wstring requestType, std::wstring path, json j
 	return "";
 }
 
-Connection::~Connection() { }
+void Connection::SetToken(std::string token)
+{
+	this->m_token = token;
+}
 
+Connection& Connection::GetInstance(std::wstring serverURL) {
+	static Connection g_connection(serverURL);
+	return g_connection;
+}
 
 DWORD Connection::GetStatusCode(const HINTERNET requestHandle) {
 	DWORD dwStatusCode = 0;
