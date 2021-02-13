@@ -44,8 +44,11 @@ public:
 		Updates endpoint session status by sending  "Hello" request.
 		@param apiKey - Unique key for server request authentication.
 		@param If operation success.
+	* Represent the thread functions.
+	* Gets reference to this class ans start sending keep alive messages
+	* to the server while the application is running.
 	*/
-	bool KeepAlive(EndpointEntity& endpoint);
+	bool StartAPIKeyRefresher(std::string endpointID);
 
 	/*
 		Gets the endpoint data from the server.
@@ -59,11 +62,9 @@ private:
 	EndpointControllerService(IConnection& connection);
 
 	/*
-	* Represent the thread functions.
-	* Gets reference to this class ans start sending keep alive messages
-	* to the server while the application is running.
+	*
 	*/
-	void StartAPIKeyRefresher();
+	void RefreshToken(std::string endpointID);
 
 	/*
 	* Return the local computer name.

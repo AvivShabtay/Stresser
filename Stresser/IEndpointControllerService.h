@@ -19,7 +19,7 @@ public:
 		Updates endpoint session status by sending  "Hello" request.
 		@param If operation success.
 	*/
-	virtual bool KeepAlive(EndpointEntity& endpoint) = 0;
+	virtual bool StartAPIKeyRefresher(std::string endpointID) = 0;
 
 	/*
 		Gets the endpoint data from the server.

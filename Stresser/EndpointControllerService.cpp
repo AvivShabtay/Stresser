@@ -8,8 +8,6 @@ EndpointEntity EndpointControllerService::GetEndpoint(std::string endpointId)
 EndpointControllerService::EndpointControllerService(IConnection& connection)
 	: IEndpointControllerService(connection) {
 
-	this->m_connection = Connection::GetInstance();
-
 #ifdef DEBUG
 	/*
 	* Use unique value each time while in debug mode because the server keeps
@@ -22,10 +20,21 @@ EndpointControllerService::EndpointControllerService(IConnection& connection)
 #else
 	this->m_computerName = this->GetLocalComputerName();
 #endif // DEBUG
+}
 
+void EndpointControllerService::RefreshToken(std::string endpointID)
+{
+	std::wstring uri = L"/endpoint/" + std::wstring(CA2W(endpointID.c_str()));
 
-	this->CreateEndpoint();
-	this->StartAPIKeyRefresher();
+	auto jsResponse = this->m_connection.SendRequest(L"PUT", uri, "");
+	if (jsResponse.size() <= 0) {
+		throw std::runtime_error("Server return with no data");
+	}
+
+	auto newApiKey = jsResponse["apiKey"].dump();
+	newApiKey = StringUtils::RemoveQuotationMarks(newApiKey);
+
+	this->m_connection.SetToken(newApiKey);
 }
 
 EndpointControllerService& EndpointControllerService::GetInstance(IConnection& connection) {
@@ -51,44 +60,44 @@ EndpointEntity EndpointControllerService::CreateEndpoint()
 	return EndpointEntity::ConvertFromJson(responseJson);
 }
 
-bool EndpointControllerService::KeepAlive(EndpointEntity& endpoint)
+bool EndpointControllerService::StartAPIKeyRefresher(std::string endpointID)
 {
-	std::wstring uri = L"/endpoint/" + std::wstring(CA2W(endpoint.GetID().c_str()));
+	struct ThreadParams
+	{
+		std::string endpointID;
+		EndpointControllerService* controller;
+	};
 
-	auto responseJson = this->m_connection.SendRequest(L"PUT", uri, "");
-	if (responseJson.size() <= 0) {
-		throw std::runtime_error("Server return with no data");
-	}
+	ThreadParams* threadParams = new ThreadParams;
+	threadParams->endpointID = endpointID;
+	threadParams->controller = this;
 
-	std::wcout << "[KEEP ALIVE] " << std::endl;
-
-	return true;
-}
-
-void EndpointControllerService::StartAPIKeyRefresher()
-{
 	auto threadStartRoutine = [](auto params) {
 
-		auto thisEndpoint = reinterpret_cast<EndpointControllerService*>(params);
+		ThreadParams* threadParams = reinterpret_cast<ThreadParams*>(params);
+		auto endpointID = threadParams->endpointID;
+		auto thisEndpoint = threadParams->controller;
 
 		ShutdownSignal& g_signal = ShutdownSignal::GetInstance(L"");
 		if (!g_signal.Get()) {
 			return static_cast<DWORD>(-1);
 		}
 
-		DWORD dwResult = 0;
-
 		while (::WaitForSingleObject(g_signal.Get(), 500) == WAIT_TIMEOUT) {
-			//dwResult = thisEndpoint->KeepAlive();
-			if (!dwResult) {
-				break;
-			}
+			thisEndpoint->RefreshToken(endpointID);
 		}
 
-		return dwResult;
+		// TODO: Replace with RAII wrapper:
+		delete threadParams;
+		return (DWORD)1;
 	};
 
-	this->m_ahKeepAliveThread.reset(::CreateThread(nullptr, 0, threadStartRoutine, this, 0, nullptr));
+	this->m_ahKeepAliveThread.reset(::CreateThread(nullptr, 0, threadStartRoutine, threadParams, 0, nullptr));
+	if (!this->m_ahKeepAliveThread.get()) {
+		return true;
+	}
+
+	return false;
 }
 
 std::wstring EndpointControllerService::GetLocalComputerName() {
