@@ -23,6 +23,11 @@ Connection::Connection(std::wstring hostname)
 	this->m_ahConnect = std::move(hConnect);
 }
 
+void Connection::SetServerURL(std::wstring serverURL)
+{
+	this->serverURL = serverURL;
+}
+
 json Connection::SendRequest(std::wstring requestType, std::wstring path, json jsonToSend) {
 
 	// TODO: Remove latter
@@ -41,7 +46,11 @@ json Connection::SendRequest(std::wstring requestType, std::wstring path, json j
 
 	std::string data = jsonToSend.dump();
 
-	if (!(::WinHttpSendRequest(hRequest.get(), this->HEADERS.c_str(), this->HEADERS.length(),
+	std::wstring headers = this->HEADERS.c_str();
+	if (!this->m_token.empty())
+		headers += std::wstring(CA2W(this->m_token.c_str()));
+
+	if (!(::WinHttpSendRequest(hRequest.get(), headers.c_str(), headers.length(),
 		(LPVOID)data.c_str(), data.length(), data.length(), 0))) {
 		throw ExceptionWithWin32ErrorCode("Could not send HTTP data");
 	}
@@ -85,8 +94,15 @@ json Connection::SendRequest(std::wstring requestType, std::wstring path, json j
 	return "";
 }
 
-Connection::~Connection() { }
+void Connection::SetToken(std::string token)
+{
+	this->m_token = token;
+}
 
+Connection& Connection::GetInstance() {
+	static Connection g_connection;
+	return g_connection;
+}
 
 DWORD Connection::GetStatusCode(const HINTERNET requestHandle) {
 	DWORD dwStatusCode = 0;
