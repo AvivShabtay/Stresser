@@ -57,7 +57,7 @@ void EndpointEntity::GetStatus(const std::string status)
 EndpointEntity EndpointEntity::ConvertFromJson(Json jsEndpoint)
 {
 	return EndpointEntity(
-		jsEndpoint["endpointId"].dump(),
+		jsEndpoint["id"].dump(),
 		jsEndpoint["hostname"].dump(),
 		jsEndpoint["IPAddress"].dump(),
 		jsEndpoint["apiKey"].dump(),
@@ -69,7 +69,7 @@ EndpointEntity EndpointEntity::ConvertFromJson(Json jsEndpoint)
 Json EndpointEntity::ConvertFromEntity(EndpointEntity entity)
 {
 	Json jsEndpoint;
-	jsEndpoint["endpointId"] = entity.GetID();
+	jsEndpoint["id"] = entity.GetID();
 	jsEndpoint["hostname"] = entity.GetHostname();
 	jsEndpoint["IPAddress"] = entity.GetIPAddress();;
 	jsEndpoint["apiKey"] = entity.GetAPIKey();
