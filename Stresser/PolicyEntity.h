@@ -2,26 +2,34 @@
 #include <iostream>
 #include <vector>
 
+#include "RuleEntity.h"
+#include "nlohmann/json.hpp"
+
+using Json = nlohmann::json;
+
 class PolicyEntity
 {
 public:
-	PolicyEntity(std::string id, std::string name, int numberOfRules, std::string rules, int updateCount);
+	PolicyEntity();
+	PolicyEntity(std::string id, std::string name, int numberOfRules, std::vector<RuleEntity> rules, int updateCount);
 	~PolicyEntity();
-
-	friend std::ostream& operator << (std::ostream& out, const PolicyEntity& policyEntity);
 
 	const std::string GetID();
 	const std::string GetName();
 	const int GetSize();
-	const std::vector<int> GetRules();
+	const std::vector<RuleEntity> GetRules();
 	const int GetUpdateCount();
+
+	static PolicyEntity ConvertFromJson(Json jsonPolicy);
+	static Json ConvertFromEntity(PolicyEntity policyEntity);
+
+	friend std::ostream& operator << (std::ostream& out, const PolicyEntity& policyEntity);
 
 private:
 	std::string m_id;
 	std::string m_name;
 	int m_numberOfRules;
-	// TODO: Replace with RuleEntity object type:
-	std::vector<int> m_rules;
+	std::vector<RuleEntity> m_rules;
 	int m_updateCount;
 };
 
