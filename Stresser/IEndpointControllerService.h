@@ -2,10 +2,13 @@
 #include <iostream>
 
 #include "EndpointEntity.h"
+#include "../CommunicationManager/IConnection.h"
 
 class IEndpointControllerService
 {
 public:
+	IEndpointControllerService(IConnection& connection) : m_connection(connection) { }
+
 	/*
 		Create new endpoint entity in the server
 		@return The new endpoint details.
@@ -14,19 +17,17 @@ public:
 
 	/*
 		Updates endpoint session status by sending  "Hello" request.
-		@param apiKey - Unique key for server request authentication.
 		@param If operation success.
 	*/
-	virtual bool KeepAlive(std::string apiKey, EndpointEntity& endpoint) = 0;
+	virtual bool KeepAlive(EndpointEntity& endpoint) = 0;
 
 	/*
 		Gets the endpoint data from the server.
-		@param apiKey - Unique key for server request authentication.
 		@param endpointId - The ID of the endpoint in the server.
 		@return The corresponding endpoint data.
 	*/
-	virtual EndpointEntity GetEndpoint(std::string apiKey, std::string endpointId) = 0;
+	virtual EndpointEntity GetEndpoint(std::string endpointId) = 0;
 
-private:
-	EndpointEntity endpointEntity;
+protected:
+	IConnection& m_connection;
 };
