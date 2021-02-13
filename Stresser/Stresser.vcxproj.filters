@@ -21,12 +21,6 @@
     <ClCompile Include="Rule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Policy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Endpoint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PolicyEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,18 +36,18 @@
     <ClCompile Include="IPolicyControllerService.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="PolicyControllerService.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EndpointControllerService.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rule.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Policy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Endpoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PolicyEntity.h">
@@ -72,6 +66,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IRuleControllerService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PolicyControllerService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndpointControllerService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
