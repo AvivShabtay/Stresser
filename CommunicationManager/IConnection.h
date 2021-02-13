@@ -12,11 +12,6 @@ public:
 	IConnection() { }
 
 	/*
-	*
-	*/
-	virtual void SetServerURL(std::wstring serverURL) = 0;
-
-	/*
 
 	*/
 	virtual void SetToken(std::string token) = 0;

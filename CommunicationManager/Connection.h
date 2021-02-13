@@ -16,9 +16,6 @@ using json = nlohmann::json;
 class Connection : public IConnection
 {
 public:
-
-	void SetServerURL(std::wstring serverURL);
-
 	/*
 	* Send HTTP request to specific route and return the data to the client.
 	*
@@ -33,7 +30,7 @@ public:
 	*/
 	void SetToken(std::string token);
 
-	static Connection& GetInstance();
+	static Connection& GetInstance(std::wstring serverURL);
 
 	~Connection() = default;
 
