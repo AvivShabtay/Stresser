@@ -23,15 +23,17 @@ int wmain(int argc, PWCHAR argv[]) {
 		ShutdownSignal& shutdownSignal = ShutdownSignal::GetInstance(L"Shutdown");
 
 		// Create global connection instance:
-		Connection& connection = Connection::GetInstance();
-		connection.SetServerURL(hostname);
+		IConnection& connection = Connection::GetInstance(hostname);
 
 		// Create global controllers:
 		EndpointControllerService& endpointController = EndpointControllerService::GetInstance(connection);
 
-		// Get current endpoint data:
+		// Create endpoint and start token refreshing:
 		EndpointEntity endpoint = endpointController.CreateEndpoint();
-		endpoint = endpointController.GetEndpoint(endpoint.GetID());
+		bool result = endpointController.StartAPIKeyRefresher(endpoint.GetID());
+
+		auto token = StringUtils::RemoveQuotationMarks(endpoint.GetAPIKey());
+		std::cout << token << std::endl;
 
 		// TODO: Remove latter:
 		::Sleep(5000);
