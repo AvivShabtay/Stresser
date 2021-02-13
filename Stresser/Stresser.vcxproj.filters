@@ -36,9 +36,6 @@
     <ClCompile Include="IPolicyControllerService.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="PolicyControllerService.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EndpointControllerService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -66,9 +63,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IRuleControllerService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PolicyControllerService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EndpointControllerService.h">

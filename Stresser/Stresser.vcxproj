@@ -149,7 +149,6 @@
     <ClCompile Include="EventEntity.cpp" />
     <ClCompile Include="IPolicyControllerService.h" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PolicyControllerService.cpp" />
     <ClCompile Include="PolicyEntity.cpp" />
     <ClCompile Include="Rule.cpp" />
     <ClCompile Include="RuleEntity.cpp" />
@@ -163,7 +162,6 @@
     <ClInclude Include="EventEntity.h" />
     <ClInclude Include="IEndpointControllerService.h" />
     <ClInclude Include="IRuleControllerService.h" />
-    <ClInclude Include="PolicyControllerService.h" />
     <ClInclude Include="PolicyEntity.h" />
     <ClInclude Include="Rule.h" />
     <ClInclude Include="RuleEntity.h" />
