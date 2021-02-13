@@ -6,9 +6,10 @@
 #include "../CommunicationManager/Connection.h"
 #include "../StresserExceptions/ExceptionWithWin32ErrorCode.h"
 #include "../StresserExceptions/UnexpectedHTTPStatusCodeException.h"
-#include "Endpoint.h"
+#include "EndpointControllerService.h"
 
 #include "../Utils/ShutdownSignal.h"
+#include "EndpointEntity.h"
 
 using json = nlohmann::json;
 
@@ -18,9 +19,19 @@ int wmain(int argc, PWCHAR argv[]) {
 
 	try
 	{
+		// Create global shutdown event:
 		ShutdownSignal& shutdownSignal = ShutdownSignal::GetInstance(L"Shutdown");
-		Endpoint& endpoint = Endpoint::GetInstance(hostname);
-		std::wcout << "API key: " << endpoint.GetAPIKey() << std::endl;
+
+		// Create global connection instance:
+		Connection& connection = Connection::GetInstance();
+		connection.SetServerURL(hostname);
+
+		// Create global controllers:
+		EndpointControllerService& endpointController = EndpointControllerService::GetInstance(connection);
+
+		// Get current endpoint data:
+		EndpointEntity endpoint = endpointController.CreateEndpoint();
+		endpoint = endpointController.GetEndpoint(endpoint.GetID());
 
 		// TODO: Remove latter:
 		::Sleep(5000);
