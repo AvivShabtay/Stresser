@@ -144,27 +144,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="EndpointControllerService.cpp" />
+    <ClCompile Include="EndpointController.cpp" />
     <ClCompile Include="EndpointEntity.cpp" />
     <ClCompile Include="EventEntity.cpp" />
+    <ClCompile Include="HttpConnectionWithTokens.cpp" />
     <ClCompile Include="IPolicyControllerService.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PolicyEntity.cpp" />
     <ClCompile Include="Rule.cpp" />
     <ClCompile Include="RuleEntity.cpp" />
+    <ClCompile Include="TokenManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EndpointControllerService.h" />
+    <ClInclude Include="EndpointController.h" />
     <ClInclude Include="EndpointEntity.h" />
     <ClInclude Include="EventEntity.h" />
-    <ClInclude Include="IEndpointControllerService.h" />
+    <ClInclude Include="HttpConnectionWithTokens.h" />
+    <ClInclude Include="IEndpointController.h" />
     <ClInclude Include="IRuleControllerService.h" />
+    <ClInclude Include="ITokenListener.h" />
     <ClInclude Include="PolicyEntity.h" />
     <ClInclude Include="Rule.h" />
     <ClInclude Include="RuleEntity.h" />
+    <ClInclude Include="TokenManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommunicationManager\CommunicationManager.vcxproj">

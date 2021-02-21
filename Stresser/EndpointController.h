@@ -1,15 +1,9 @@
 #pragma once
 
-#include <iostream>
-#include <vector>
+#include "IEndpointController.h"
+#include "../CommunicationManager/IHttpConnection.h"
 
-#include "IEndpointControllerService.h"
-#include "../CommunicationManager/Connection.h"
-
-#include "../Utils/TimeUtils.h"
-#include "../Utils/StringUtils.h"
 #include "../Utils/AutoHandle.h"
-#include "../Utils/ShutdownSignal.h"
 
 #include "nlohmann/json.hpp"
 
@@ -20,25 +14,27 @@ using Json = nlohmann::json;
 * Responsible for updating the Stresser server of endpoint status
 * and manage the Agent API key for server-client operations.
 */
-class EndpointControllerService : public IEndpointControllerService
+class EndpointController : public IEndpointController
 {
 public:
 	// Disable cloneable, disable assignable:
-	EndpointControllerService(EndpointControllerService& other) = delete;
-	void operator=(const EndpointControllerService&) = delete;
+	EndpointController(EndpointController& other) = delete;
+	void operator=(const EndpointController&) = delete;
+
+	virtual ~EndpointController() = default;
 
 	/*
 	* Return the singleton instance of this class.
 	* @param serverURL - the URL of the Stresser server.
 	* @return Instance of the Agent's Endpoint class.
 	*/
-	static EndpointControllerService& GetInstance(IConnection& connection);
+	static EndpointController& GetInstance(HttpConnectionWithTokens* httpConnection);
 
 	/*
 		Create new endpoint entity in the server
 		@return The new endpoint details.
 	*/
-	EndpointEntity CreateEndpoint();
+	EndpointEntity CreateEndpoint() override;
 
 	/*
 		Updates endpoint session status by sending  "Hello" request.
@@ -48,7 +44,7 @@ public:
 	* Gets reference to this class ans start sending keep alive messages
 	* to the server while the application is running.
 	*/
-	bool StartAPIKeyRefresher(std::string endpointID);
+	//bool StartAPIKeyRefresher(std::string endpointID);
 
 	/*
 		Gets the endpoint data from the server.
@@ -56,15 +52,18 @@ public:
 		@param endpointId - The ID of the endpoint in the server.
 		@return The corresponding endpoint data.
 	*/
-	EndpointEntity GetEndpoint(std::string endpointId);
+	EndpointEntity GetEndpoint(std::string endpointId) override;
+
+
+	void updateToken(const std::string& newToken) override;
 
 private:
-	EndpointControllerService(IConnection& connection);
+	EndpointController(HttpConnectionWithTokens* httpConnection);
 
 	/*
 	*
 	*/
-	void RefreshToken(std::string endpointID);
+	//void RefreshToken(std::string endpointID);
 
 	/*
 	* Return the local computer name.

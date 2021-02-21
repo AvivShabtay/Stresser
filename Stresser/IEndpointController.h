@@ -1,13 +1,16 @@
 #pragma once
-#include <iostream>
 
 #include "EndpointEntity.h"
-#include "../CommunicationManager/IConnection.h"
+#include "HttpConnectionWithTokens.h"
+#include "ITokenListener.h"
 
-class IEndpointControllerService
+#include <iostream>
+
+class IEndpointController : public ITokenListener
 {
 public:
-	IEndpointControllerService(IConnection& connection) : m_connection(connection) { }
+	IEndpointController(HttpConnectionWithTokens* httpConnection)
+		: m_httpConnection(httpConnection) { }
 
 	/*
 		Create new endpoint entity in the server
@@ -19,7 +22,7 @@ public:
 		Updates endpoint session status by sending  "Hello" request.
 		@param If operation success.
 	*/
-	virtual bool StartAPIKeyRefresher(std::string endpointID) = 0;
+	//virtual bool StartAPIKeyRefresher(std::string endpointID) = 0;
 
 	/*
 		Gets the endpoint data from the server.
@@ -28,6 +31,8 @@ public:
 	*/
 	virtual EndpointEntity GetEndpoint(std::string endpointId) = 0;
 
+	void updateToken(const std::string& newToken) = 0;
+
 protected:
-	IConnection& m_connection;
+	std::unique_ptr<HttpConnectionWithTokens> m_httpConnection;
 };

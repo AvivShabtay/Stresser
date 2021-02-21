@@ -36,7 +36,13 @@
     <ClCompile Include="IPolicyControllerService.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="EndpointControllerService.cpp">
+    <ClCompile Include="TokenManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HttpConnectionWithTokens.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EndpointController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,13 +65,22 @@
     <ClInclude Include="EventEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IEndpointControllerService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IRuleControllerService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EndpointControllerService.h">
+    <ClInclude Include="TokenManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HttpConnectionWithTokens.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ITokenListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndpointController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IEndpointController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
