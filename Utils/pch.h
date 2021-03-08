@@ -11,6 +11,7 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
+#include <vector>
 
 #include <Windows.h>
 #include <winhttp.h>
