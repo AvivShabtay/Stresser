@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
@@ -10,8 +10,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArtifactManager", "ArtifactManager\ArtifactManager.vcxproj", "{58FF2831-2CEF-4D05-9D17-6F69AD56E0BE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "Tests\Tests.vcxproj", "{407A0584-298E-4C5E-8CE9-D7372CA70C2C}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CommunicationManager", "CommunicationManager\CommunicationManager.vcxproj", "{BC0D5538-45C8-456E-B9B5-238EF7427B8A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleMainTester", "SimpleMainTester\SimpleMainTester.vcxproj", "{2DED3AEA-ACA3-4123-8704-6D17D375D1E3}"
 EndProject
@@ -91,18 +89,6 @@ Global
 		{407A0584-298E-4C5E-8CE9-D7372CA70C2C}.Release|x64.Build.0 = Release|x64
 		{407A0584-298E-4C5E-8CE9-D7372CA70C2C}.Release|x86.ActiveCfg = Release|Win32
 		{407A0584-298E-4C5E-8CE9-D7372CA70C2C}.Release|x86.Build.0 = Release|Win32
-		{BC0D5538-45C8-456E-B9B5-238EF7427B8A}.Debug|ARM.ActiveCfg = Debug|Win32
-		{BC0D5538-45C8-456E-B9B5-238EF7427B8A}.Debug|ARM64.ActiveCfg = Debug|Win32
-		{BC0D5538-45C8-456E-B9B5-238EF7427B8A}.Debug|x64.ActiveCfg = Debug|x64
-		{BC0D5538-45C8-456E-B9B5-238EF7427B8A}.Debug|x64.Build.0 = Debug|x64
-		{BC0D5538-45C8-456E-B9B5-238EF7427B8A}.Debug|x86.ActiveCfg = Debug|Win32
-		{BC0D5538-45C8-456E-B9B5-238EF7427B8A}.Debug|x86.Build.0 = Debug|Win32
-		{BC0D5538-45C8-456E-B9B5-238EF7427B8A}.Release|ARM.ActiveCfg = Release|Win32
-		{BC0D5538-45C8-456E-B9B5-238EF7427B8A}.Release|ARM64.ActiveCfg = Release|Win32
-		{BC0D5538-45C8-456E-B9B5-238EF7427B8A}.Release|x64.ActiveCfg = Release|x64
-		{BC0D5538-45C8-456E-B9B5-238EF7427B8A}.Release|x64.Build.0 = Release|x64
-		{BC0D5538-45C8-456E-B9B5-238EF7427B8A}.Release|x86.ActiveCfg = Release|Win32
-		{BC0D5538-45C8-456E-B9B5-238EF7427B8A}.Release|x86.Build.0 = Release|Win32
 		{2DED3AEA-ACA3-4123-8704-6D17D375D1E3}.Debug|ARM.ActiveCfg = Debug|Win32
 		{2DED3AEA-ACA3-4123-8704-6D17D375D1E3}.Debug|ARM64.ActiveCfg = Debug|Win32
 		{2DED3AEA-ACA3-4123-8704-6D17D375D1E3}.Debug|x64.ActiveCfg = Debug|x64
