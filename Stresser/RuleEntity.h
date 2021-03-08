@@ -1,24 +1,28 @@
 #pragma once
-#include <iostream>
 
 #include "nlohmann/json.hpp"
 
+#include <iostream>
+
 using Json = nlohmann::json;
 
+/*
+ * Represent Rule entity in the application server.
+ */
 class RuleEntity
 {
 public:
 	RuleEntity();
-	RuleEntity(std::string id, std::string name, std::string type, std::string data);
-	~RuleEntity();
+	explicit RuleEntity(std::string id, std::string name, std::string type, std::string data);
+	virtual ~RuleEntity() = default;
 
-	const std::string GetID();
-	const std::string GetName();
-	const std::string GetType();
-	const std::string GetData();
+	std::string getID() const;
+	std::string getName() const;
+	std::string getType() const;
+	std::string getData() const;
 
-	static RuleEntity ConvertFromJson(Json jsRule);
-	static Json ConvertFromEntity(RuleEntity ruleEntity);
+	static RuleEntity convertFromJson(Json jsRule);
+	static Json convertFromEntity(const RuleEntity& ruleEntity);
 
 	friend std::ostream& operator << (std::ostream& out, const RuleEntity& ruleEntity);
 
