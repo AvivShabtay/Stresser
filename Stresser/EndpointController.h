@@ -1,11 +1,13 @@
 #pragma once
 
-#include "IEndpointController.h"
-#include "../CommunicationManager/IHttpConnection.h"
+#include "AuthorizedHttpRequest.h"
+#include "EndpointEntity.h"
 
 #include "../Utils/AutoHandle.h"
 
 #include "nlohmann/json.hpp"
+
+#include <iostream>
 
 using Json = nlohmann::json;
 
@@ -14,7 +16,7 @@ using Json = nlohmann::json;
 * Responsible for updating the Stresser server of endpoint status
 * and manage the Agent API key for server-client operations.
 */
-class EndpointController : public IEndpointController
+class EndpointController
 {
 public:
 	// Disable cloneable, disable assignable:
@@ -28,23 +30,13 @@ public:
 	* @param serverURL - the URL of the Stresser server.
 	* @return Instance of the Agent's Endpoint class.
 	*/
-	static EndpointController& GetInstance(HttpConnectionWithTokens* httpConnection);
+	static EndpointController& getInstance(AuthorizedHttpRequest& authorizedHttpRequest);
 
 	/*
 		Create new endpoint entity in the server
 		@return The new endpoint details.
 	*/
-	EndpointEntity CreateEndpoint() override;
-
-	/*
-		Updates endpoint session status by sending  "Hello" request.
-		@param apiKey - Unique key for server request authentication.
-		@param If operation success.
-	* Represent the thread functions.
-	* Gets reference to this class ans start sending keep alive messages
-	* to the server while the application is running.
-	*/
-	//bool StartAPIKeyRefresher(std::string endpointID);
+	EndpointEntity createEndpoint() const;
 
 	/*
 		Gets the endpoint data from the server.
@@ -52,25 +44,12 @@ public:
 		@param endpointId - The ID of the endpoint in the server.
 		@return The corresponding endpoint data.
 	*/
-	EndpointEntity GetEndpoint(std::string endpointId) override;
-
-
-	void updateToken(const std::string& newToken) override;
+	EndpointEntity getEndpoint(const std::string& endpointId) const;
 
 private:
-	EndpointController(HttpConnectionWithTokens* httpConnection);
+	EndpointController(AuthorizedHttpRequest& authorizedHttpRequest);
 
-	/*
-	*
-	*/
-	//void RefreshToken(std::string endpointID);
-
-	/*
-	* Return the local computer name.
-	* @return The local computer name in string (ASCII) format.
-	*/
-	std::wstring GetLocalComputerName();
-
+	AuthorizedHttpRequest& m_authorizedHttpRequest;
 	std::wstring m_computerName;
 	AutoHandle m_ahKeepAliveThread;
 };
