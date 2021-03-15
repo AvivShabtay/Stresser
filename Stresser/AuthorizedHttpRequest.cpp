@@ -83,12 +83,12 @@ Json AuthorizedHttpRequest::sendRequest(const http::verb& requestMethod, const s
 {
 	if (this->m_token.empty())
 	{
-		return HttpRequest::sendRequest(this->m_server.getUserAgent(), this->m_server.gethttpVersion(), this->m_server.getContentType(), "",
+		return HttpRequest::sendRequest(this->m_server.getUserAgent(), this->m_server.getHttpVersion(), this->m_server.getContentType(), "",
 			requestMethod, this->m_server.getHostname(), target, this->m_server.getPort(), payload);
 	}
 	else
 	{
-		return HttpRequest::sendRequest(this->m_server.getUserAgent(), this->m_server.gethttpVersion(), this->m_server.getContentType(),
+		return HttpRequest::sendRequest(this->m_server.getUserAgent(), this->m_server.getHttpVersion(), this->m_server.getContentType(),
 			this->m_token, requestMethod, this->m_server.getHostname(), target, this->m_server.getPort(), payload);
 	}
 }
