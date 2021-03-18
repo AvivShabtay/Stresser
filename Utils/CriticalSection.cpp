@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CriticalSection.h"
-#include "../StresserExceptions/ExceptionWithWin32ErrorCode.h"
+#include "ExceptionWithWin32ErrorCode.h"
 
 CriticalSection::CriticalSection(DWORD spinCount, DWORD flags)
 {

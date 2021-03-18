@@ -36,6 +36,18 @@
     <ClInclude Include="AutoCriticalSection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DebugPrint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExceptionWithWin32ErrorCode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnexpectedHTTPStatusCodeException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalPcUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -60,6 +72,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AutoCriticalSection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExceptionWithWin32ErrorCode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UnexpectedHTTPStatusCodeException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalPcUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

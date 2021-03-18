@@ -6,29 +6,27 @@ RuleEntity::RuleEntity()
 RuleEntity::RuleEntity(std::string id, std::string name, std::string type, std::string data)
 	: m_id(id), m_name(name), m_type(type), m_data(data) { }
 
-RuleEntity::~RuleEntity() { }
-
-const std::string RuleEntity::GetID()
+std::string RuleEntity::getID() const
 {
 	return this->m_id;
 }
 
-const std::string RuleEntity::GetName()
+std::string RuleEntity::getName() const
 {
 	return this->m_name;
 }
 
-const std::string RuleEntity::GetType()
+std::string RuleEntity::getType() const
 {
 	return this->m_type;
 }
 
-const std::string RuleEntity::GetData()
+std::string RuleEntity::getData() const
 {
 	return this->m_data;
 }
 
-RuleEntity RuleEntity::ConvertFromJson(Json jsRule)
+RuleEntity RuleEntity::convertFromJson(Json jsRule)
 {
 	return RuleEntity(
 		jsRule["ruleId"].dump(),
@@ -38,13 +36,13 @@ RuleEntity RuleEntity::ConvertFromJson(Json jsRule)
 	);
 }
 
-Json RuleEntity::ConvertFromEntity(RuleEntity ruleEntity)
+Json RuleEntity::convertFromEntity(const RuleEntity& ruleEntity)
 {
 	Json jsRule;
-	jsRule["ruleId"] = ruleEntity.GetID();
-	jsRule["ruleName"] = ruleEntity.GetName();
-	jsRule["ruleType"] = ruleEntity.GetType();;
-	jsRule["ruleData"] = ruleEntity.GetData();
+	jsRule["ruleId"] = ruleEntity.getID();
+	jsRule["ruleName"] = ruleEntity.getName();
+	jsRule["ruleType"] = ruleEntity.getType();;
+	jsRule["ruleData"] = ruleEntity.getData();
 
 	return jsRule;
 }

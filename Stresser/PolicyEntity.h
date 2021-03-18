@@ -1,27 +1,32 @@
 #pragma once
+
+#include "RuleEntity.h"
+
+#include "nlohmann/json.hpp"
+
 #include <iostream>
 #include <vector>
 
-#include "RuleEntity.h"
-#include "nlohmann/json.hpp"
-
 using Json = nlohmann::json;
 
+/*
+ * Represent Policy entity in the application server.
+ */
 class PolicyEntity
 {
 public:
 	PolicyEntity();
-	PolicyEntity(std::string id, std::string name, int numberOfRules, std::vector<RuleEntity> rules, int updateCount);
-	~PolicyEntity();
+	explicit PolicyEntity(std::string id, std::string name, int numberOfRules, std::vector<RuleEntity> rules, int updateCount);
+	virtual ~PolicyEntity() = default;
 
-	const std::string GetID();
-	const std::string GetName();
-	const int GetSize();
-	const std::vector<RuleEntity> GetRules();
-	const int GetUpdateCount();
+	std::string getId() const;
+	std::string getName() const;
+	int getSize() const;
+	std::vector<RuleEntity> getRules() const;
+	int getUpdateCount() const;
 
-	static PolicyEntity ConvertFromJson(Json jsonPolicy);
-	static Json ConvertFromEntity(PolicyEntity policyEntity);
+	static PolicyEntity convertFromJson(Json jsonPolicy);
+	static Json convertFromEntity(const PolicyEntity& policyEntity);
 
 	friend std::ostream& operator << (std::ostream& out, const PolicyEntity& policyEntity);
 

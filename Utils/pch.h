@@ -8,9 +8,12 @@
 #define __PCH_UTILS_H
 
 // add headers that you want to pre-compile here
+#include <iostream>
+#include <sstream>
+#include <memory>
+#include <vector>
+
 #include <Windows.h>
 #include <winhttp.h>
-#include <iostream>
-#include <memory>
 
 #endif //__PCH_UTILS_H

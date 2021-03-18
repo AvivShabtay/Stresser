@@ -1,4 +1,5 @@
 #include "EndpointEntity.h"
+#include "../Utils/StringUtils.h"
 
 EndpointEntity::EndpointEntity()
 	: m_id(""), m_hostname(""), m_ipAddress(""), m_apiKey(""), m_policyId(""), m_status("") { }
@@ -57,12 +58,12 @@ void EndpointEntity::GetStatus(const std::string status)
 EndpointEntity EndpointEntity::ConvertFromJson(Json jsEndpoint)
 {
 	return EndpointEntity(
-		jsEndpoint["id"].dump(),
-		jsEndpoint["hostname"].dump(),
-		jsEndpoint["IPAddress"].dump(),
-		jsEndpoint["apiKey"].dump(),
-		jsEndpoint["policyId"].dump(),
-		jsEndpoint["status"].dump()
+		StringUtils::RemoveQuotationMarks(jsEndpoint["id"].dump()),
+		StringUtils::RemoveQuotationMarks(jsEndpoint["hostname"].dump()),
+		StringUtils::RemoveQuotationMarks(jsEndpoint["IPAddress"].dump()),
+		StringUtils::RemoveQuotationMarks(jsEndpoint["apiKey"].dump()),
+		StringUtils::RemoveQuotationMarks(jsEndpoint["policyId"].dump()),
+		StringUtils::RemoveQuotationMarks(jsEndpoint["status"].dump())
 	);
 }
 

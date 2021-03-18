@@ -1,62 +1,70 @@
-#include <Windows.h>
+#include "EndpointEntity.h"
+#include "AuthorizedHttpRequest.h"
+#include "EndpointController.h"
+#include "ServerDetails.h"
+
+#include "../Utils/AutoCriticalSection.h"
+#include "../Utils/ShutdownSignal.h"
+#include "../Utils/DebugPrint.h"
+
+#include "nlohmann/json.hpp"
+
 #include <iostream>
 #include <atlstr.h>
 
-#include "nlohmann/json.hpp"
-#include "../CommunicationManager/Connection.h"
-#include "../StresserExceptions/ExceptionWithWin32ErrorCode.h"
-#include "../StresserExceptions/UnexpectedHTTPStatusCodeException.h"
-#include "EndpointControllerService.h"
+#include <Windows.h>
 
-#include "../Utils/ShutdownSignal.h"
-#include "EndpointEntity.h"
+using Json = nlohmann::json;
 
-using json = nlohmann::json;
+bool g_running = true;
+
+BOOL consoleHandler(DWORD signal);
 
 int wmain(int argc, PWCHAR argv[]) {
 
-	std::wstring hostname(L"stresser-project.herokuapp.com");
-
 	try
 	{
-		// Create global shutdown event:
-		ShutdownSignal& shutdownSignal = ShutdownSignal::GetInstance(L"Shutdown");
+		if (!SetConsoleCtrlHandler(consoleHandler, TRUE))
+		{
+			throw std::runtime_error("Could not set console handler");
+		}
 
-		// Create global connection instance:
-		IConnection& connection = Connection::GetInstance(hostname);
 
-		// Create global controllers:
-		EndpointControllerService& endpointController = EndpointControllerService::GetInstance(connection);
+		// Create application globals:
+		ShutdownSignal& shutdownSignal = ShutdownSignal::GetInstance();
+		ServerDetails serverDetails("Stresser Client / 1.0", 11, "application/json", "stresser-project.herokuapp.com", "80");
+		AuthorizedHttpRequest& authorizedHttpRequest = AuthorizedHttpRequest::getInstance(serverDetails);
+		EndpointController& endpointController = EndpointController::getInstance(authorizedHttpRequest);
 
-		// Create endpoint and start token refreshing:
-		EndpointEntity endpoint = endpointController.CreateEndpoint();
-		bool result = endpointController.StartAPIKeyRefresher(endpoint.GetID());
+		// Register new endpoint in the server:
+		EndpointEntity endpoint = endpointController.createEndpoint();
 
-		auto token = StringUtils::RemoveQuotationMarks(endpoint.GetAPIKey());
-		std::cout << token << std::endl;
+		// Start token manager:
+		authorizedHttpRequest.startTokenRefresherThread(endpoint.GetID(), endpoint.GetAPIKey());
 
-		// TODO: Remove latter:
-		::Sleep(5000);
-	}
-	catch (UnexpectedHTTPStatusCodeException& exception)
-	{
-		std::wcout << exception.what() << "Status code: " << exception.GetHTTPStatusCode() << std::endl;
-	}
-	catch (ExceptionWithWin32ErrorCode& exception)
-	{
-		std::wcout << exception.what() << std::endl;
+
+		while (g_running)
+		{
+			const EndpointEntity endpointEntity = endpointController.getEndpoint(endpoint.GetID());
+			DEBUG_PRINT(endpointEntity);
+			Sleep(500);
+		}
 	}
 	catch (std::exception& exception)
 	{
-		std::wcout << exception.what();
-
-		DWORD dwErrorCode = GetLastError();
-		if (dwErrorCode) {
-			std::wcout << ", Error code: 0x" << dwErrorCode;
-		}
-
-		std::wcout << std::endl;
+		DEBUG_PRINT(exception.what());
 	}
 
 	return 0;
+}
+
+BOOL consoleHandler(DWORD signal) {
+
+	if (CTRL_C_EVENT == signal)
+	{
+		AutoCriticalSection autoCriticalSection;
+		g_running = false;
+	}
+
+	return TRUE;
 }

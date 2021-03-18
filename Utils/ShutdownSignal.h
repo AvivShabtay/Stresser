@@ -22,7 +22,7 @@ public:
 	* @param signalName - the name of the Win32 event.
 	* @return Instance of ShutdownSignal.
 	*/
-	static ShutdownSignal& GetInstance(const std::wstring signalName);
+	static ShutdownSignal& GetInstance(const std::wstring signalName = L"StresserShutdown");
 
 	~ShutdownSignal();
 

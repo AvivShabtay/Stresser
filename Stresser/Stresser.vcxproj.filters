@@ -1,72 +1,103 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="AuthorizedHttpRequest.cpp">
+      <Filter>Communication\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rule.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="HttpRequest.cpp">
+      <Filter>Communication\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PolicyEntity.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="EndpointController.cpp">
+      <Filter>Controllers\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EndpointEntity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RuleEntity.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Entities\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EventEntity.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Entities\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPolicyControllerService.h">
-      <Filter>Header Files</Filter>
+    <ClCompile Include="PolicyEntity.cpp">
+      <Filter>Entities\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EndpointControllerService.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="RuleEntity.cpp">
+      <Filter>Entities\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ServerDetails.cpp">
+      <Filter>Configurations\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AuthorizedHttpRequest.h">
+      <Filter>Communication\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HttpRequest.h">
+      <Filter>Communication\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndpointController.h">
+      <Filter>Controllers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPolicyControllerService.h">
+      <Filter>Controllers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IRuleControllerService.h">
+      <Filter>Controllers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndpointEntity.h">
+      <Filter>Entities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventEntity.h">
+      <Filter>Entities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PolicyEntity.h">
+      <Filter>Entities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RuleEntity.h">
+      <Filter>Entities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerDetails.h">
+      <Filter>Configurations\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Configurations">
+      <UniqueIdentifier>{a4c0e17e-0e7a-42da-95d4-8b660b47740b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Communication">
+      <UniqueIdentifier>{f1015edf-0047-44d4-8461-4ae534d74a15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers">
+      <UniqueIdentifier>{8c957416-eb8d-430c-af55-86825ca5ee2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{ff48e64a-f6e3-4544-9d64-1e301ca08a75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Communication\Header Files">
+      <UniqueIdentifier>{b5a9c99b-141b-4f3e-8b49-3f9dd4a93d4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Communication\Source Files">
+      <UniqueIdentifier>{992f7f89-78de-44bf-aa00-c9ed26760436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Source Files">
+      <UniqueIdentifier>{25f11d42-c601-437c-8e90-964b08f660d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Header Files">
+      <UniqueIdentifier>{be1b8ba8-1c90-4b81-a509-d4ff3f16270a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Source Files">
+      <UniqueIdentifier>{eb1167ae-f0b9-4ece-a839-e748acdf8f59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Header Files">
+      <UniqueIdentifier>{62ce8439-6d25-4542-b6f6-512a804e2bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Configurations\Source Files">
+      <UniqueIdentifier>{a7e8cd9f-cdfe-4ac3-8189-93f65e667898}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Configurations\Header Files">
+      <UniqueIdentifier>{0469e3dc-38f0-4b80-9512-0cf08195247b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Rule.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PolicyEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EndpointEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RuleEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EventEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IEndpointControllerService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRuleControllerService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EndpointControllerService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

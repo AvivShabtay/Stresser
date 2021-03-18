@@ -1,75 +1,75 @@
 #include "PolicyEntity.h"
 
 PolicyEntity::PolicyEntity()
-	: m_id(""), m_name(""), m_numberOfRules(0), m_rules(std::vector<RuleEntity>()), m_updateCount(0) { }
+	: m_id(""), m_name(""), m_numberOfRules(0), m_rules(std::vector<RuleEntity>()), m_updateCount(0)
+{
+}
 
 PolicyEntity::PolicyEntity(std::string id, std::string name, int numberOfRules, std::vector<RuleEntity> rules, int updateCount)
 	: m_id(id), m_name(name), m_numberOfRules(numberOfRules), m_rules(rules), m_updateCount(updateCount) { }
 
-PolicyEntity::~PolicyEntity() { }
-
-const std::string PolicyEntity::GetID()
+std::string PolicyEntity::getId() const
 {
 	return this->m_id;
 }
 
-const std::string PolicyEntity::GetName()
+std::string PolicyEntity::getName() const
 {
 	return this->m_name;
 }
 
-const int PolicyEntity::GetSize()
+int PolicyEntity::getSize() const
 {
 	return this->m_numberOfRules;
 }
 
-const std::vector<RuleEntity> PolicyEntity::GetRules()
+std::vector<RuleEntity> PolicyEntity::getRules() const
 {
 	return this->m_rules;
 }
 
-const int PolicyEntity::GetUpdateCount()
+int PolicyEntity::getUpdateCount() const
 {
 	return this->m_updateCount;
 }
 
-PolicyEntity PolicyEntity::ConvertFromJson(Json jsonPolicy)
+PolicyEntity PolicyEntity::convertFromJson(Json jsonPolicy)
 {
-	auto policyID = jsonPolicy["policyId"].dump();
-	auto policyName = jsonPolicy["policyName"].dump();
-	auto numberOfRules = stoi(jsonPolicy["numberOfRules"].dump());
-	auto updateCount = stoi(jsonPolicy["updateCount"].dump());
+	const std::string policyID = jsonPolicy["policyId"].dump();
+	const std::string policyName = jsonPolicy["policyName"].dump();
+	const int numberOfRules = stoi(jsonPolicy["numberOfRules"].dump());
+	const int updateCount = stoi(jsonPolicy["updateCount"].dump());
 
 	std::vector<RuleEntity> rules(numberOfRules);
 
 	auto jsRules = jsonPolicy["rules"].array();
 	for (int i = 0; i < numberOfRules; i++)
 	{
-		RuleEntity rule = RuleEntity::ConvertFromJson(jsRules[i]);
+		RuleEntity rule = RuleEntity::convertFromJson(jsRules[i]);
 		rules.push_back(rule);
 	}
 
 	return PolicyEntity(policyID, policyName, numberOfRules, rules, updateCount);
 }
 
-Json PolicyEntity::ConvertFromEntity(PolicyEntity policyEntity)
+Json PolicyEntity::convertFromEntity(const PolicyEntity& policyEntity)
 {
 	Json jsPolicy;
-	jsPolicy["policyId"] = policyEntity.GetID();
-	jsPolicy["policyName"] = policyEntity.GetName();
-	jsPolicy["numberOfRules"] = std::string("" + policyEntity.GetSize());
+	jsPolicy["policyId"] = policyEntity.getId();
+	jsPolicy["policyName"] = policyEntity.getName();
+	jsPolicy["numberOfRules"] = std::string("" + policyEntity.getSize());
 
 	Json jsRules = Json::array();
-	auto rules = policyEntity.GetRules();
+	auto rules = policyEntity.getRules();
 
-	for (int i = 0; i < policyEntity.GetSize(); i++)
+	for (int i = 0; i < policyEntity.getSize(); i++)
 	{
-		auto jsRule = RuleEntity::ConvertFromEntity(rules.at(i));
+		auto jsRule = RuleEntity::convertFromEntity(rules.at(i));
 		jsRules.push_back(jsRule);
 	}
 
 	jsPolicy["rules"] = jsRules;
-	jsPolicy["updateCount"] = std::string("" + policyEntity.GetUpdateCount());
+	jsPolicy["updateCount"] = std::string("" + policyEntity.getUpdateCount());
 
 	return jsPolicy;
 }
