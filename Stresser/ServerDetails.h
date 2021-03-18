@@ -2,14 +2,14 @@
 
 #include <iostream>
 
-class ServerDetails
+class ServerDetails final
 {
 public:
 	ServerDetails() = delete;
 
 	explicit ServerDetails(const std::string userAgent, int httpVersion, const std::string contentType, const std::string hostname, const std::string port);
 
-	virtual ~ServerDetails() = default;
+	~ServerDetails() = default;
 
 	std::string getUserAgent() const;
 	int getHttpVersion() const;
