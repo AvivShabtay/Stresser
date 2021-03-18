@@ -1,23 +1,18 @@
-
-#include "../CommunicationManager/IHttpConnection.h"
-#include "../CommunicationManager/HttpConnection.h"
-#include "../StresserExceptions/ExceptionWithWin32ErrorCode.h"
-#include "../StresserExceptions/UnexpectedHTTPStatusCodeException.h"
-#include "IEndpointController.h"
-#include "EndpointController.h"
-#include "HttpConnectionWithTokens.h"
-
-#include "../Utils/ShutdownSignal.h"
 #include "EndpointEntity.h"
-#include "TokenManager.h"
+#include "AuthorizedHttpRequest.h"
+#include "EndpointController.h"
+#include "ServerDetails.h"
+
+#include "../Utils/AutoCriticalSection.h"
+#include "../Utils/ShutdownSignal.h"
+#include "../Utils/DebugPrint.h"
+
+#include "nlohmann/json.hpp"
 
 #include <iostream>
 #include <atlstr.h>
 
-#include "nlohmann/json.hpp"
 #include <Windows.h>
-
-#include "../Utils/AutoCriticalSection.h"
 
 using Json = nlohmann::json;
 
@@ -35,36 +30,29 @@ int wmain(int argc, PWCHAR argv[]) {
 		}
 
 
-		// Create global shutdown event:
-		ShutdownSignal& shutdownSignal = ShutdownSignal::GetInstance(L"Shutdown");
+		// Create application globals:
+		ShutdownSignal& shutdownSignal = ShutdownSignal::GetInstance();
+		ServerDetails serverDetails("Stresser Client / 1.0", 11, "application/json", "stresser-project.herokuapp.com", "80");
+		AuthorizedHttpRequest& authorizedHttpRequest = AuthorizedHttpRequest::getInstance(serverDetails);
+		EndpointController& endpointController = EndpointController::getInstance(authorizedHttpRequest);
 
-		// Create global controllers:
-		IEndpointController& endpointController = EndpointController::GetInstance(new HttpConnectionWithTokens());
-
-		// Create endpoint and start token refreshing:
-		EndpointEntity endpoint = endpointController.CreateEndpoint();
+		// Register new endpoint in the server:
+		EndpointEntity endpoint = endpointController.createEndpoint();
 
 		// Start token manager:
-		TokenManager& g_tokenManager = TokenManager::getInstance(new HttpConnectionWithTokens());
+		authorizedHttpRequest.startTokenRefresherThread(endpoint.GetID(), endpoint.GetAPIKey());
 
-		// Register token listeners:
-		g_tokenManager.addListener(&endpointController);
-
-		// Start refreshing tokens:
-		const std::string endpointID = endpoint.GetID();
-		const std::string endpointInitialToken = endpoint.GetAPIKey();
-		g_tokenManager.startTokenRefresherThread(endpointID, endpointInitialToken);
 
 		while (g_running)
 		{
-			const EndpointEntity endpointEntity = endpointController.GetEndpoint(endpointID);
-			std::cout << "\n" << endpointEntity << std::endl;
-			Sleep(1000);
+			const EndpointEntity endpointEntity = endpointController.getEndpoint(endpoint.GetID());
+			DEBUG_PRINT(endpointEntity);
+			Sleep(500);
 		}
 	}
 	catch (std::exception& exception)
 	{
-		std::wcout << exception.what() << std::endl;
+		DEBUG_PRINT(exception.what());
 	}
 
 	return 0;
@@ -72,7 +60,7 @@ int wmain(int argc, PWCHAR argv[]) {
 
 BOOL consoleHandler(DWORD signal) {
 
-	if (signal == CTRL_C_EVENT)
+	if (CTRL_C_EVENT == signal)
 	{
 		AutoCriticalSection autoCriticalSection;
 		g_running = false;
