@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+	  <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+	  <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+	  <ConformanceMode>true</ConformanceMode>
+	  <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+	<Link>
+      <SubSystem>Console</SubSystem>
+	  <GenerateDebugInformation>true</GenerateDebugInformation>
+	  <LinkIncremental>true</LinkIncremental>
+	  <!-- Needs to move to Release version -->
+	  <LinkIncremental>false</LinkIncremental>
+	  <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+	  <!--LinkIncremental>false</LinkIncremental-->
+	</Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>
