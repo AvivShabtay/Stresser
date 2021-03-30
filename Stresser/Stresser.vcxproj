@@ -101,7 +101,9 @@
     <ClCompile Include="EventEntity.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="PolicyController.cpp" />
     <ClCompile Include="PolicyEntity.cpp" />
+    <ClCompile Include="RuleController.cpp" />
     <ClCompile Include="RuleEntity.cpp" />
     <ClCompile Include="ServerDetails.cpp" />
   </ItemGroup>
@@ -111,9 +113,9 @@
     <ClInclude Include="EndpointEntity.h" />
     <ClInclude Include="EventEntity.h" />
     <ClInclude Include="HttpRequest.h" />
-    <ClInclude Include="IPolicyControllerService.h" />
-    <ClInclude Include="IRuleControllerService.h" />
+    <ClInclude Include="PolicyController.h" />
     <ClInclude Include="PolicyEntity.h" />
+    <ClInclude Include="RuleController.h" />
     <ClInclude Include="RuleEntity.h" />
     <ClInclude Include="ServerDetails.h" />
   </ItemGroup>

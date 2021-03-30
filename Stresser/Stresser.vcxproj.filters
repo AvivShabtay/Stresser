@@ -26,6 +26,12 @@
     <ClCompile Include="ServerDetails.cpp">
       <Filter>Configurations\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PolicyController.cpp">
+      <Filter>Controllers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleController.cpp">
+      <Filter>Controllers\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h">
@@ -37,10 +43,7 @@
     <ClInclude Include="EndpointController.h">
       <Filter>Controllers\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IPolicyControllerService.h">
-      <Filter>Controllers\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRuleControllerService.h">
+    <ClInclude Include="PolicyController.h">
       <Filter>Controllers\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EndpointEntity.h">
@@ -57,6 +60,9 @@
     </ClInclude>
     <ClInclude Include="ServerDetails.h">
       <Filter>Configurations\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RuleController.h">
+      <Filter>Controllers\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
