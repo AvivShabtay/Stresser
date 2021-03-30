@@ -1,4 +1,5 @@
 #include "PolicyEntity.h"
+#include "../Utils/StringUtils.h"
 
 PolicyEntity::PolicyEntity()
 	: m_id(""), m_name(""), m_numberOfRules(0), m_rules(std::vector<RuleEntity>()), m_updateCount(0)
@@ -35,17 +36,18 @@ int PolicyEntity::getUpdateCount() const
 
 PolicyEntity PolicyEntity::convertFromJson(Json jsonPolicy)
 {
-	const std::string policyID = jsonPolicy["policyId"].dump();
-	const std::string policyName = jsonPolicy["policyName"].dump();
-	const int numberOfRules = stoi(jsonPolicy["numberOfRules"].dump());
-	const int updateCount = stoi(jsonPolicy["updateCount"].dump());
+	const std::string policyID = StringUtils::RemoveQuotationMarks(jsonPolicy["id"].dump());
+	const std::string policyName = StringUtils::RemoveQuotationMarks(jsonPolicy["policyName"].dump());
+	const int numberOfRules = stoi(StringUtils::RemoveQuotationMarks(jsonPolicy["numberOfRules"].dump()));
+	const int updateCount = stoi(StringUtils::RemoveQuotationMarks(jsonPolicy["updateCount"].dump()));
 
-	std::vector<RuleEntity> rules(numberOfRules);
+	std::vector<RuleEntity> rules;
+	rules.reserve(numberOfRules);
 
-	auto jsRules = jsonPolicy["rules"].array();
-	for (int i = 0; i < numberOfRules; i++)
+	Json jsRules = jsonPolicy["rules"];
+	for (const auto& jsRuleId : jsRules)
 	{
-		RuleEntity rule = RuleEntity::convertFromJson(jsRules[i]);
+		RuleEntity rule(StringUtils::RemoveQuotationMarks(jsRuleId.dump()));
 		rules.push_back(rule);
 	}
 
@@ -55,7 +57,7 @@ PolicyEntity PolicyEntity::convertFromJson(Json jsonPolicy)
 Json PolicyEntity::convertFromEntity(const PolicyEntity& policyEntity)
 {
 	Json jsPolicy;
-	jsPolicy["policyId"] = policyEntity.getId();
+	jsPolicy["id"] = policyEntity.getId();
 	jsPolicy["policyName"] = policyEntity.getName();
 	jsPolicy["numberOfRules"] = std::string("" + policyEntity.getSize());
 
@@ -84,8 +86,10 @@ std::ostream& operator<<(std::ostream& out, const PolicyEntity& policyEntity)
 		<< std::endl;
 	out << "Rules:" << std::endl;
 
-	for (auto rule : policyEntity.m_rules)
+	for (const auto& rule : policyEntity.m_rules)
+	{
 		out << rule;
+	}
 
 	return out;
 }
