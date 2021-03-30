@@ -1,27 +1,26 @@
 #include "RuleEntity.h"
 
-RuleEntity::RuleEntity()
-	: m_id(""), m_name(""), m_type(""), m_data("") { }
+#include "../Utils/StringUtils.h"
 
 RuleEntity::RuleEntity(std::string id, std::string name, std::string type, std::string data)
 	: m_id(id), m_name(name), m_type(type), m_data(data) { }
 
-std::string RuleEntity::getID() const
+const std::string& RuleEntity::getId() const
 {
 	return this->m_id;
 }
 
-std::string RuleEntity::getName() const
+const std::string& RuleEntity::getName() const
 {
 	return this->m_name;
 }
 
-std::string RuleEntity::getType() const
+const std::string& RuleEntity::getType() const
 {
 	return this->m_type;
 }
 
-std::string RuleEntity::getData() const
+const std::string& RuleEntity::getData() const
 {
 	return this->m_data;
 }
@@ -29,19 +28,19 @@ std::string RuleEntity::getData() const
 RuleEntity RuleEntity::convertFromJson(Json jsRule)
 {
 	return RuleEntity(
-		jsRule["ruleId"].dump(),
-		jsRule["ruleName"].dump(),
-		jsRule["ruleType"].dump(),
-		jsRule["ruleData"].dump()
+		StringUtils::RemoveQuotationMarks(jsRule["id"].dump()),
+		StringUtils::RemoveQuotationMarks(jsRule["ruleName"].dump()),
+		StringUtils::RemoveQuotationMarks(jsRule["ruleType"].dump()),
+		StringUtils::RemoveQuotationMarks(jsRule["ruleData"].dump())
 	);
 }
 
 Json RuleEntity::convertFromEntity(const RuleEntity& ruleEntity)
 {
 	Json jsRule;
-	jsRule["ruleId"] = ruleEntity.getID();
+	jsRule["ruleId"] = ruleEntity.getId();
 	jsRule["ruleName"] = ruleEntity.getName();
-	jsRule["ruleType"] = ruleEntity.getType();;
+	jsRule["ruleType"] = ruleEntity.getType();
 	jsRule["ruleData"] = ruleEntity.getData();
 
 	return jsRule;
