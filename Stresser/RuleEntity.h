@@ -12,14 +12,13 @@ using Json = nlohmann::json;
 class RuleEntity
 {
 public:
-	RuleEntity();
-	explicit RuleEntity(std::string id, std::string name, std::string type, std::string data);
+	explicit RuleEntity(std::string id = "", std::string name = "", std::string type = "", std::string data = "");
 	virtual ~RuleEntity() = default;
 
-	std::string getID() const;
-	std::string getName() const;
-	std::string getType() const;
-	std::string getData() const;
+	const std::string& getId() const;
+	const std::string& getName() const;
+	const std::string& getType() const;
+	const std::string& getData() const;
 
 	static RuleEntity convertFromJson(Json jsRule);
 	static Json convertFromEntity(const RuleEntity& ruleEntity);

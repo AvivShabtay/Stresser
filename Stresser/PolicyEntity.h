@@ -17,6 +17,7 @@ class PolicyEntity
 public:
 	PolicyEntity();
 	explicit PolicyEntity(std::string id, std::string name, int numberOfRules, std::vector<RuleEntity> rules, int updateCount);
+
 	virtual ~PolicyEntity() = default;
 
 	std::string getId() const;
