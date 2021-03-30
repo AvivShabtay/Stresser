@@ -4,56 +4,39 @@ EventEntity::EventEntity(std::string id, std::string name, std::string type, std
 	std::string hostname, std::string ipAddress, std::string timestamp)
 	: m_id(id), m_name(name), m_type(type), m_data(data), m_hostname(hostname), m_ipAddress(ipAddress), m_timestamp(timestamp) { }
 
-EventEntity::~EventEntity() { }
-
-const std::string EventEntity::GetID()
+const std::string& EventEntity::getId() const
 {
 	return this->m_id;
 }
 
-const std::string EventEntity::GetName()
+const std::string& EventEntity::getName() const
 {
 	return this->m_name;
 }
 
-const std::string EventEntity::GetType()
+const std::string& EventEntity::getType() const
 {
 	return this->m_type;
 }
 
-const std::string EventEntity::GetData()
+const std::string& EventEntity::getData() const
 {
 	return this->m_data;
 }
 
-const std::string EventEntity::GetHostname()
+const std::string& EventEntity::getHostname() const
 {
 	return this->m_hostname;
 }
 
-const std::string EventEntity::GetIPAddress()
+const std::string& EventEntity::getIpAddress() const
 {
 	return this->m_ipAddress;
 }
 
-const std::string EventEntity::GetTimestamp()
+const std::string& EventEntity::getTimestamp() const
 {
 	return this->m_timestamp;
-}
-
-void EventEntity::GetHostname(const std::string hostname)
-{
-	this->m_hostname = hostname;
-}
-
-void EventEntity::GetIPAddress(const std::string ipAddress)
-{
-	this->m_ipAddress = ipAddress;
-}
-
-void EventEntity::GetTimestamp(const std::string timestamp)
-{
-	this->m_timestamp = timestamp;
 }
 
 std::ostream& operator<<(std::ostream& out, const EventEntity& eventEntity)
