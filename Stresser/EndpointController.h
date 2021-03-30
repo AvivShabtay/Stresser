@@ -19,9 +19,11 @@ using Json = nlohmann::json;
 class EndpointController
 {
 public:
-	// Disable cloneable, disable assignable:
-	EndpointController(EndpointController& other) = delete;
+	// Disable: cloneable, assignable, movable:
+	EndpointController(EndpointController&) = delete;
 	void operator=(const EndpointController&) = delete;
+	EndpointController(EndpointController&&) = delete;
+	void operator=(const EndpointController&&) = delete;
 
 	virtual ~EndpointController() = default;
 
