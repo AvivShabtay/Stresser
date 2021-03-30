@@ -29,21 +29,20 @@ public:
 
 	/*
 	* Return the singleton instance of this class.
-	* @param serverURL - the URL of the Stresser server.
-	* @return Instance of the Agent's Endpoint class.
+	* @param authorizedHttpRequest - HTTP request provider.
+	* @return Global instance of this class.
 	*/
 	static EndpointController& getInstance(AuthorizedHttpRequest& authorizedHttpRequest);
 
 	/*
 		Create new endpoint entity in the server
-		@return The new endpoint details.
+		@return The new endpoint details: ID and token.
 	*/
 	EndpointEntity createEndpoint() const;
 
 	/*
-		Gets the endpoint data from the server.
-		@param apiKey - Unique key for server request authentication.
-		@param endpointId - The ID of the endpoint in the server.
+		Return the endpoint data from the server by it's endpoint ID.
+		@param endpointId - The associated ID of the endpoint.
 		@return The corresponding endpoint data.
 	*/
 	EndpointEntity getEndpoint(const std::string& endpointId) const;
