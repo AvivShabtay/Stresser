@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "CriticalSection.h"
-#include "ExceptionWithWin32ErrorCode.h"
+#include "Win32ErrorCodeException.h"
 
 CriticalSection::CriticalSection(DWORD spinCount, DWORD flags)
 {
 	if (!InitializeCriticalSectionEx(&this->m_criticalSection, spinCount, flags))
 	{
-		throw ExceptionWithWin32ErrorCode("Could not initialize critical section");
+		throw Win32ErrorCodeException("Could not initialize critical section");
 	}
 }
 

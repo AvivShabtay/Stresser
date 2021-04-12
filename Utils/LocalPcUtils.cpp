@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "LocalPcUtils.h"
 
-#include "ExceptionWithWin32ErrorCode.h"
+#include "Win32ErrorCodeException.h"
 
 std::wstring LocalPcUtils::getLocalComputerName()
 {
@@ -9,7 +9,7 @@ std::wstring LocalPcUtils::getLocalComputerName()
 	DWORD dwNameLength = MAX_COMPUTERNAME_LENGTH + 1;
 
 	if (!GetComputerName(reinterpret_cast<LPWSTR>(&buffer[0]), &dwNameLength)) {
-		throw ExceptionWithWin32ErrorCode("Could not get local computer name");
+		throw Win32ErrorCodeException("Could not get local computer name");
 	}
 
 	return std::wstring(&buffer[0]);
