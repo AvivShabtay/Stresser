@@ -11,6 +11,7 @@
 #include "../Utils/AutoCriticalSection.h"
 #include "../Utils/ShutdownSignal.h"
 #include "../Utils/DebugPrint.h"
+#include "../Utils/SehTranslatorGuard.h"
 
 #include "nlohmann/json.hpp"
 
@@ -29,6 +30,8 @@ int wmain(int argc, PWCHAR argv[]) {
 
 	try
 	{
+		SehTranslatorGuard sehTranslatorGuard;
+
 		if (!SetConsoleCtrlHandler(consoleHandler, TRUE))
 		{
 			throw std::runtime_error("Could not set console handler");

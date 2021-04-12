@@ -4,6 +4,7 @@
 #include "../Utils/ShutdownSignal.h"
 #include "../Utils/StringUtils.h"
 #include "../Utils/DebugPrint.h"
+#include "../Utils/SehTranslatorGuard.h"
 
 #include <Windows.h>
 
@@ -50,7 +51,9 @@ bool AuthorizedHttpRequest::startTokenRefresherThread(const std::string& endpoin
 	this->m_endpointId = endpointId;
 	this->m_token = initialToken;
 
-	auto threadStartRoutine = [](auto params) {
+	auto threadStartRoutine = [](auto params)
+	{
+		SehTranslatorGuard sehTranslatorGuard;
 
 		auto tokenManager = reinterpret_cast<AuthorizedHttpRequest*>(params);
 
