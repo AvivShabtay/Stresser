@@ -51,6 +51,9 @@
     <ClInclude Include="SehException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SehTranslatorGuard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -87,6 +90,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SehException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SehTranslatorGuard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
