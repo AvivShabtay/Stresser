@@ -173,6 +173,7 @@
     <ClInclude Include="ExceptionWithWin32ErrorCode.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="LocalPcUtils.h" />
+    <ClInclude Include="SehException.h" />
     <ClInclude Include="Service.h" />
     <ClInclude Include="ShutdownSignal.h" />
     <ClInclude Include="StringUtils.h" />
@@ -191,6 +192,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="LocalPcUtils.cpp" />
+    <ClCompile Include="SehException.cpp" />
     <ClCompile Include="Service.cpp" />
     <ClCompile Include="ShutdownSignal.cpp" />
     <ClCompile Include="StringUtils.cpp" />
