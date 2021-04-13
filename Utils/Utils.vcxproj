@@ -182,6 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AutoCriticalSection.cpp" />
+    <ClCompile Include="AutoHandle.cpp" />
     <ClCompile Include="AutoHandle.h" />
     <ClCompile Include="CriticalSection.cpp" />
     <ClCompile Include="Win32ErrorCodeException.cpp" />
