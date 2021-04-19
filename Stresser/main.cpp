@@ -1,23 +1,27 @@
-#include "EndpointEntity.h"
-#include "PolicyEntity.h"
+#include "Controllers.h"
+#include "Entities.h"
+#include "ServerDetails.h"
 #include "AuthorizedHttpRequest.h"
 
-#include "EndpointController.h"
-#include "PolicyController.h"
-#include "RuleController.h"
-
-#include "ServerDetails.h"
+#include "EventParser.h"
+#include "EtwManager.h"
 
 #include "../Utils/AutoCriticalSection.h"
-#include "../Utils/ShutdownSignal.h"
 #include "../Utils/DebugPrint.h"
 #include "../Utils/SehTranslatorGuard.h"
+#include "../Utils/StandardThread.h"
+#include "../Utils/WindowsEvent.h"
 
 #include "nlohmann/json.hpp"
 
 #include <iostream>
-#include <atlstr.h>
 
+// Add before any ATL header:
+// https://social.msdn.microsoft.com/Forums/vstudio/en-US/371a069b-f428-47b5-8f7b-e9ad85964bce/guidnull-undeclared-identifier?forum=vclanguage
+#include <cguid.h>
+
+#include <atlbase.h>
+#include <atltime.h>
 #include <Windows.h>
 
 using Json = nlohmann::json;

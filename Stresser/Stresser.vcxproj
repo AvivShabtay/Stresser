@@ -115,8 +115,10 @@
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h" />
     <ClInclude Include="AutoEtwTraceSession.h" />
+    <ClInclude Include="Controllers.h" />
     <ClInclude Include="EndpointController.h" />
     <ClInclude Include="EndpointEntity.h" />
+    <ClInclude Include="Entities.h" />
     <ClInclude Include="EventEntity.h" />
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="PolicyController.h" />

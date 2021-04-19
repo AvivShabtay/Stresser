@@ -88,6 +88,12 @@
     <ClInclude Include="EventData.h">
       <Filter>Collectors\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Controllers.h">
+      <Filter>Controllers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities.h">
+      <Filter>Entities\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Configurations">
