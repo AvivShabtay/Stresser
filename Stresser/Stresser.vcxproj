@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AuthorizedHttpRequest.cpp" />
+    <ClCompile Include="AutoEtwTraceSession.cpp" />
     <ClCompile Include="EndpointController.cpp" />
     <ClCompile Include="EndpointEntity.cpp" />
     <ClCompile Include="EventEntity.cpp" />
@@ -109,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h" />
+    <ClInclude Include="AutoEtwTraceSession.h" />
     <ClInclude Include="EndpointController.h" />
     <ClInclude Include="EndpointEntity.h" />
     <ClInclude Include="EventEntity.h" />

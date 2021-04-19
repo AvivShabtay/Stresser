@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -32,6 +32,9 @@
     <ClCompile Include="RuleController.cpp">
       <Filter>Controllers\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AutoEtwTraceSession.cpp">
+      <Filter>ETW\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h">
@@ -63,6 +66,9 @@
     </ClInclude>
     <ClInclude Include="RuleController.h">
       <Filter>Controllers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoEtwTraceSession.h">
+      <Filter>ETW\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
