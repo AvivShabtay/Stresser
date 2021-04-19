@@ -100,6 +100,7 @@
     <ClCompile Include="EndpointController.cpp" />
     <ClCompile Include="EndpointEntity.cpp" />
     <ClCompile Include="EtwEventTypes.h" />
+    <ClCompile Include="EtwUtils.cpp" />
     <ClCompile Include="EventEntity.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="IEtwEventHandler.h" />
@@ -119,6 +120,7 @@
     <ClInclude Include="EndpointController.h" />
     <ClInclude Include="EndpointEntity.h" />
     <ClInclude Include="Entities.h" />
+    <ClInclude Include="EtwUtils.h" />
     <ClInclude Include="EventEntity.h" />
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="PolicyController.h" />
