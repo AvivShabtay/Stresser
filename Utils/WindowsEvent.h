@@ -16,8 +16,9 @@ public:
 	virtual ~WindowsEvent();
 
 	// Disable: copyable, assignable:
-	WindowsEvent(const WindowsEvent&) = delete;
-	WindowsEvent& operator=(const WindowsEvent&) = delete;
+	WindowsEvent(const WindowsEvent& other);
+
+	WindowsEvent& operator=(const WindowsEvent& other);
 
 	WindowsEvent(WindowsEvent&& other);
 

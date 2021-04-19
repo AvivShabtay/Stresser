@@ -2,6 +2,7 @@
 #include "WindowsEvent.h"
 #include "DebugPrint.h"
 #include "Win32ErrorCodeException.h"
+#include "AutoCriticalSection.h"
 
 #include <exception>
 
@@ -26,6 +27,22 @@ WindowsEvent::~WindowsEvent()
 	{
 		DEBUG_PRINT("Exception was thrown in WindowsEvent destructor");
 	}
+}
+
+WindowsEvent::WindowsEvent(const WindowsEvent& other)
+{
+	this->m_event = other.m_event;
+	this->m_eventName = other.m_eventName;
+}
+
+WindowsEvent& WindowsEvent::operator=(const WindowsEvent& other)
+{
+	this->close();
+
+	this->m_event = other.m_event;
+	this->m_eventName = other.m_eventName;
+
+	return *this;
 }
 
 WindowsEvent::WindowsEvent(WindowsEvent&& other)
