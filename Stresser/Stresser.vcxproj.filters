@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -50,6 +50,9 @@
     <ClCompile Include="IEventCollector.h">
       <Filter>Collectors\Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="CollectorManager.cpp">
+      <Filter>Collectors\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="EtwUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -92,7 +95,7 @@
     <ClInclude Include="EtwManager.h">
       <Filter>ETW\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EventData.h">
+    <ClInclude Include="CollectorManager.h">
       <Filter>Collectors\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Controllers.h">
