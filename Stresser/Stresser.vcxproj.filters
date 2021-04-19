@@ -143,6 +143,15 @@
     <Filter Include="ETW\Source Files">
       <UniqueIdentifier>{527a6985-0908-4fff-b23d-6594964620e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Collectors">
+      <UniqueIdentifier>{cfd3cbe9-1b50-4e08-a182-baf99a75c2b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collectors\Header Files">
+      <UniqueIdentifier>{51c6f9e0-aa71-4e33-9555-7b61fb0be504}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collectors\Source Files">
+      <UniqueIdentifier>{de3cffc8-122a-4b96-b190-b20d694b7f0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
