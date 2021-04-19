@@ -35,6 +35,12 @@
     <ClCompile Include="AutoEtwTraceSession.cpp">
       <Filter>ETW\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IEtwEventHandler.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IEventCollector.h">
+      <Filter>Collectors\Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h">

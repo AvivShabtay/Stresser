@@ -101,6 +101,8 @@
     <ClCompile Include="EndpointEntity.cpp" />
     <ClCompile Include="EventEntity.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
+    <ClCompile Include="IEtwEventHandler.h" />
+    <ClCompile Include="IEventCollector.h" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PolicyController.cpp" />
     <ClCompile Include="PolicyEntity.cpp" />
