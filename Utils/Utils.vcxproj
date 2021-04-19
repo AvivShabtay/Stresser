@@ -180,6 +180,7 @@
     <ClInclude Include="ShutdownSignal.h" />
     <ClInclude Include="StringUtils.h" />
     <ClInclude Include="TimeUtils.h" />
+    <ClInclude Include="WindowsEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AutoCriticalSection.cpp" />
@@ -201,6 +202,7 @@
     <ClCompile Include="ShutdownSignal.cpp" />
     <ClCompile Include="StringUtils.cpp" />
     <ClCompile Include="TimeUtils.cpp" />
+    <ClCompile Include="WindowsEvent.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
