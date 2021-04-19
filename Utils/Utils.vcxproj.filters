@@ -51,7 +51,7 @@
     <ClInclude Include="SehTranslatorGuard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ThreadWrapper.h">
+    <ClInclude Include="StandardThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WindowsEvent.h">
@@ -98,7 +98,7 @@
     <ClCompile Include="AutoHandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ThreadWrapper.cpp">
+    <ClCompile Include="StandardThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WindowsEvent.cpp">
