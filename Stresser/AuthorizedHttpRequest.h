@@ -8,7 +8,7 @@
 
 #include <boost/beast/http.hpp>
 
-#include <iostream>
+#include <string>
 
 using Json = nlohmann::json;
 
@@ -19,7 +19,13 @@ using Json = nlohmann::json;
 class AuthorizedHttpRequest
 {
 public:
-	static AuthorizedHttpRequest& getInstance(const ServerDetails& server);
+	/*
+	 * Return instance of this class for the given server configuration.
+	 * @param server - Current server configuration.
+	 * @shutdownEvent - Handle to signal object representing the application to stop.
+	 * @note - This class is NOT responsible to close the signale object.
+	 */
+	static AuthorizedHttpRequest& getInstance(const ServerDetails& server, const HANDLE& shutdownEvent);
 
 	/*
 	 * Start sending request to the server to keep the endpoint token valid.
@@ -38,7 +44,7 @@ public:
 
 private:
 	/* Keep class as singleton. */
-	AuthorizedHttpRequest(const ServerDetails& server);
+	AuthorizedHttpRequest(const ServerDetails& server, const HANDLE& shutdownEvent);
 
 	/*
 	 * Send HTTP request the expected arguments to the server for refreshing the
@@ -58,5 +64,6 @@ private:
 	std::string m_token;
 	AutoHandle m_ahTokenRefresherThread;
 	std::thread m_refreshTokenThread;
+	HANDLE m_shutdownEvent;
 };
 
