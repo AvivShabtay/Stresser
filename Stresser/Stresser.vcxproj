@@ -102,6 +102,7 @@
     <ClCompile Include="EtwEventTypes.h" />
     <ClCompile Include="EtwUtils.cpp" />
     <ClCompile Include="EventEntity.cpp" />
+    <ClCompile Include="EventParser.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="IEtwEventHandler.h" />
     <ClCompile Include="IEventCollector.h" />
@@ -122,6 +123,7 @@
     <ClInclude Include="Entities.h" />
     <ClInclude Include="EtwUtils.h" />
     <ClInclude Include="EventEntity.h" />
+    <ClInclude Include="EventParser.h" />
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="PolicyController.h" />
     <ClInclude Include="PolicyEntity.h" />

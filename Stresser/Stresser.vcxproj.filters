@@ -35,6 +35,9 @@
     <ClCompile Include="AutoEtwTraceSession.cpp">
       <Filter>ETW\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EventParser.cpp">
+      <Filter>ETW\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="IEtwEventHandler.h">
       <Filter>ETW\Header Files</Filter>
     </ClCompile>
@@ -81,6 +84,9 @@
       <Filter>Controllers\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AutoEtwTraceSession.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventParser.h">
       <Filter>ETW\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EtwManager.h">
