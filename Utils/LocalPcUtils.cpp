@@ -14,3 +14,10 @@ std::wstring LocalPcUtils::getLocalComputerName()
 
 	return std::wstring(&buffer[0]);
 }
+
+bool LocalPcUtils::doesFileExists(const std::wstring& path)
+{
+	const DWORD fileAttributes = GetFileAttributes(path.c_str());
+	return (fileAttributes != INVALID_FILE_ATTRIBUTES) &&
+		!(fileAttributes & FILE_ATTRIBUTE_DIRECTORY);
+}
