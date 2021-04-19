@@ -99,6 +99,7 @@
     <ClCompile Include="AutoEtwTraceSession.cpp" />
     <ClCompile Include="EndpointController.cpp" />
     <ClCompile Include="EndpointEntity.cpp" />
+    <ClCompile Include="EtwEventTypes.h" />
     <ClCompile Include="EventEntity.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="IEtwEventHandler.h" />
@@ -109,6 +110,7 @@
     <ClCompile Include="RuleController.cpp" />
     <ClCompile Include="RuleEntity.cpp" />
     <ClCompile Include="ServerDetails.cpp" />
+    <ClCompile Include="EtwManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h" />
@@ -122,6 +124,7 @@
     <ClInclude Include="RuleController.h" />
     <ClInclude Include="RuleEntity.h" />
     <ClInclude Include="ServerDetails.h" />
+    <ClInclude Include="EtwManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.vcxproj">

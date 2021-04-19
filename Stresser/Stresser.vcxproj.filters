@@ -38,6 +38,12 @@
     <ClCompile Include="IEtwEventHandler.h">
       <Filter>ETW\Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="EtwManager.cpp">
+      <Filter>ETW\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EtwEventTypes.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClCompile>
     <ClCompile Include="IEventCollector.h">
       <Filter>Collectors\Header Files</Filter>
     </ClCompile>
@@ -76,6 +82,12 @@
     <ClInclude Include="AutoEtwTraceSession.h">
       <Filter>ETW\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EtwManager.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventData.h">
+      <Filter>Collectors\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Configurations">
@@ -113,6 +125,15 @@
     </Filter>
     <Filter Include="Configurations\Header Files">
       <UniqueIdentifier>{0469e3dc-38f0-4b80-9512-0cf08195247b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ETW">
+      <UniqueIdentifier>{78205740-309a-451c-bd2d-a6a16bd59175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ETW\Header Files">
+      <UniqueIdentifier>{2b494fd6-4b1e-4df1-b4bf-7238b792880d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ETW\Source Files">
+      <UniqueIdentifier>{527a6985-0908-4fff-b23d-6594964620e7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
