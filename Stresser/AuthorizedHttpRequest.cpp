@@ -4,18 +4,19 @@
 #include "../Utils/ShutdownSignal.h"
 #include "../Utils/StringUtils.h"
 #include "../Utils/DebugPrint.h"
+#include "../Utils/SehTranslatorGuard.h"
 
 #include <Windows.h>
 
 
-AuthorizedHttpRequest& AuthorizedHttpRequest::getInstance(const ServerDetails& server)
+AuthorizedHttpRequest& AuthorizedHttpRequest::getInstance(const ServerDetails& server, const HANDLE& shutdownEvent)
 {
-	static AuthorizedHttpRequest g_tokenManager(server);
+	static AuthorizedHttpRequest g_tokenManager(server, shutdownEvent);
 	return g_tokenManager;
 }
 
-AuthorizedHttpRequest::AuthorizedHttpRequest(const ServerDetails& server)
-	: m_server(server)
+AuthorizedHttpRequest::AuthorizedHttpRequest(const ServerDetails& server, const HANDLE& shutdownEvent)
+	: m_server(server), m_shutdownEvent(shutdownEvent)
 {
 }
 
@@ -50,17 +51,13 @@ bool AuthorizedHttpRequest::startTokenRefresherThread(const std::string& endpoin
 	this->m_endpointId = endpointId;
 	this->m_token = initialToken;
 
-	auto threadStartRoutine = [](auto params) {
+	auto threadStartRoutine = [](auto params)
+	{
+		SehTranslatorGuard sehTranslatorGuard;
 
-		auto tokenManager = reinterpret_cast<AuthorizedHttpRequest*>(params);
+		auto* const tokenManager = reinterpret_cast<AuthorizedHttpRequest*>(params);
 
-		ShutdownSignal& g_signal = ShutdownSignal::GetInstance();
-		if (!g_signal.Get())
-		{
-			throw std::runtime_error("Could not get handle to shutdown event");
-		}
-
-		while (WAIT_TIMEOUT == WaitForSingleObject(g_signal.Get(), 10000))
+		while (WAIT_TIMEOUT == WaitForSingleObject(tokenManager->m_shutdownEvent, 1000))
 		{
 			tokenManager->refreshToken();
 		}

@@ -12,6 +12,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
 	  <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
 	  <ConformanceMode>true</ConformanceMode>
+	  <ExceptionHandling>Async</ExceptionHandling>
 	  <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
 	<Link>

@@ -170,20 +170,25 @@
     <ClInclude Include="AutoCriticalSection.h" />
     <ClInclude Include="CriticalSection.h" />
     <ClInclude Include="DebugPrint.h" />
-    <ClInclude Include="ExceptionWithWin32ErrorCode.h" />
+    <ClInclude Include="StandardThread.h" />
+    <ClInclude Include="Win32ErrorCodeException.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="LocalPcUtils.h" />
+    <ClInclude Include="SehException.h" />
+    <ClInclude Include="SehTranslatorGuard.h" />
     <ClInclude Include="Service.h" />
     <ClInclude Include="ShutdownSignal.h" />
     <ClInclude Include="StringUtils.h" />
     <ClInclude Include="TimeUtils.h" />
-    <ClInclude Include="UnexpectedHTTPStatusCodeException.h" />
+    <ClInclude Include="WindowsEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AutoCriticalSection.cpp" />
+    <ClCompile Include="AutoHandle.cpp" />
     <ClCompile Include="AutoHandle.h" />
     <ClCompile Include="CriticalSection.cpp" />
-    <ClCompile Include="ExceptionWithWin32ErrorCode.cpp" />
+    <ClCompile Include="StandardThread.cpp" />
+    <ClCompile Include="Win32ErrorCodeException.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -191,11 +196,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="LocalPcUtils.cpp" />
+    <ClCompile Include="SehException.cpp" />
+    <ClCompile Include="SehTranslatorGuard.cpp" />
     <ClCompile Include="Service.cpp" />
     <ClCompile Include="ShutdownSignal.cpp" />
     <ClCompile Include="StringUtils.cpp" />
     <ClCompile Include="TimeUtils.cpp" />
-    <ClCompile Include="UnexpectedHTTPStatusCodeException.cpp" />
+    <ClCompile Include="WindowsEvent.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -96,28 +96,43 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AuthorizedHttpRequest.cpp" />
+    <ClCompile Include="AutoEtwTraceSession.cpp" />
+    <ClCompile Include="CollectorManager.cpp" />
     <ClCompile Include="EndpointController.cpp" />
     <ClCompile Include="EndpointEntity.cpp" />
+    <ClCompile Include="EtwEventTypes.h" />
+    <ClCompile Include="EtwUtils.cpp" />
     <ClCompile Include="EventEntity.cpp" />
+    <ClCompile Include="EventParser.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
+    <ClCompile Include="IEtwEventHandler.h" />
+    <ClCompile Include="IEventCollector.h" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PolicyController.cpp" />
     <ClCompile Include="PolicyEntity.cpp" />
     <ClCompile Include="RuleController.cpp" />
     <ClCompile Include="RuleEntity.cpp" />
     <ClCompile Include="ServerDetails.cpp" />
+    <ClCompile Include="EtwManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h" />
+    <ClInclude Include="AutoEtwTraceSession.h" />
+    <ClInclude Include="CollectorManager.h" />
+    <ClInclude Include="Controllers.h" />
     <ClInclude Include="EndpointController.h" />
     <ClInclude Include="EndpointEntity.h" />
+    <ClInclude Include="Entities.h" />
+    <ClInclude Include="EtwUtils.h" />
     <ClInclude Include="EventEntity.h" />
+    <ClInclude Include="EventParser.h" />
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="PolicyController.h" />
     <ClInclude Include="PolicyEntity.h" />
     <ClInclude Include="RuleController.h" />
     <ClInclude Include="RuleEntity.h" />
     <ClInclude Include="ServerDetails.h" />
+    <ClInclude Include="EtwManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.vcxproj">

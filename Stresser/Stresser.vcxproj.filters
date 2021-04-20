@@ -32,6 +32,28 @@
     <ClCompile Include="RuleController.cpp">
       <Filter>Controllers\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AutoEtwTraceSession.cpp">
+      <Filter>ETW\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EventParser.cpp">
+      <Filter>ETW\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IEtwEventHandler.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EtwManager.cpp">
+      <Filter>ETW\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EtwEventTypes.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IEventCollector.h">
+      <Filter>Collectors\Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CollectorManager.cpp">
+      <Filter>Collectors\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EtwUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h">
@@ -64,6 +86,25 @@
     <ClInclude Include="RuleController.h">
       <Filter>Controllers\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AutoEtwTraceSession.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventParser.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EtwManager.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CollectorManager.h">
+      <Filter>Collectors\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers.h">
+      <Filter>Controllers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities.h">
+      <Filter>Entities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EtwUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Configurations">
@@ -101,6 +142,24 @@
     </Filter>
     <Filter Include="Configurations\Header Files">
       <UniqueIdentifier>{0469e3dc-38f0-4b80-9512-0cf08195247b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ETW">
+      <UniqueIdentifier>{78205740-309a-451c-bd2d-a6a16bd59175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ETW\Header Files">
+      <UniqueIdentifier>{2b494fd6-4b1e-4df1-b4bf-7238b792880d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ETW\Source Files">
+      <UniqueIdentifier>{527a6985-0908-4fff-b23d-6594964620e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collectors">
+      <UniqueIdentifier>{cfd3cbe9-1b50-4e08-a182-baf99a75c2b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collectors\Header Files">
+      <UniqueIdentifier>{51c6f9e0-aa71-4e33-9555-7b61fb0be504}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collectors\Source Files">
+      <UniqueIdentifier>{de3cffc8-122a-4b96-b190-b20d694b7f0f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

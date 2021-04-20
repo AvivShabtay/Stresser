@@ -39,13 +39,22 @@
     <ClInclude Include="DebugPrint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ExceptionWithWin32ErrorCode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UnexpectedHTTPStatusCodeException.h">
+    <ClInclude Include="Win32ErrorCodeException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LocalPcUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SehException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SehTranslatorGuard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,13 +83,25 @@
     <ClCompile Include="AutoCriticalSection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ExceptionWithWin32ErrorCode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UnexpectedHTTPStatusCodeException.cpp">
+    <ClCompile Include="Win32ErrorCodeException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LocalPcUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SehException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SehTranslatorGuard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsEvent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
