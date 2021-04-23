@@ -2,11 +2,11 @@
 #include "../Utils/StringUtils.h"
 
 PolicyEntity::PolicyEntity()
-	: m_id(""), m_name(""), m_numberOfRules(0), m_rules(std::vector<RuleEntity>()), m_updateCount(0)
+	: m_id(""), m_name(""), m_numberOfRules(0), m_rules(std::vector<std::string>()), m_updateCount(0)
 {
 }
 
-PolicyEntity::PolicyEntity(std::string id, std::string name, int numberOfRules, std::vector<RuleEntity> rules, int updateCount)
+PolicyEntity::PolicyEntity(std::string id, std::string name, int numberOfRules, std::vector<std::string> rules, int updateCount)
 	: m_id(id), m_name(name), m_numberOfRules(numberOfRules), m_rules(rules), m_updateCount(updateCount) { }
 
 std::string PolicyEntity::getId() const
@@ -24,7 +24,7 @@ int PolicyEntity::getSize() const
 	return this->m_numberOfRules;
 }
 
-std::vector<RuleEntity> PolicyEntity::getRules() const
+std::vector<std::string> PolicyEntity::getRulesIds() const
 {
 	return this->m_rules;
 }
@@ -41,15 +41,12 @@ PolicyEntity PolicyEntity::convertFromJson(Json jsonPolicy)
 	const int numberOfRules = stoi(StringUtils::RemoveQuotationMarks(jsonPolicy["numberOfRules"].dump()));
 	const int updateCount = stoi(StringUtils::RemoveQuotationMarks(jsonPolicy["updateCount"].dump()));
 
-	std::vector<RuleEntity> rules;
+	std::vector<std::string> rules;
 	rules.reserve(numberOfRules);
 
 	Json jsRules = jsonPolicy["rules"];
 	for (const auto& jsRuleId : jsRules)
-	{
-		RuleEntity rule(StringUtils::RemoveQuotationMarks(jsRuleId.dump()));
-		rules.push_back(rule);
-	}
+		rules.push_back(StringUtils::RemoveQuotationMarks(jsRuleId.dump()));
 
 	return PolicyEntity(policyID, policyName, numberOfRules, rules, updateCount);
 }
@@ -62,13 +59,10 @@ Json PolicyEntity::convertFromEntity(const PolicyEntity& policyEntity)
 	jsPolicy["numberOfRules"] = std::string("" + policyEntity.getSize());
 
 	Json jsRules = Json::array();
-	auto rules = policyEntity.getRules();
+	auto rules = policyEntity.getRulesIds();
 
-	for (int i = 0; i < policyEntity.getSize(); i++)
-	{
-		auto jsRule = RuleEntity::convertFromEntity(rules.at(i));
+	for (const auto& jsRule : rules) 
 		jsRules.push_back(jsRule);
-	}
 
 	jsPolicy["rules"] = jsRules;
 	jsPolicy["updateCount"] = std::string("" + policyEntity.getUpdateCount());
