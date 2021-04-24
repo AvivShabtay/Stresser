@@ -92,9 +92,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\x64\Release\FakeProcess.exe" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ArtifactFactory.cpp" />
     <ClCompile Include="AuthorizedHttpRequest.cpp" />
     <ClCompile Include="AutoEtwTraceSession.cpp" />
     <ClCompile Include="CollectorManager.cpp" />
@@ -104,18 +106,23 @@
     <ClCompile Include="EtwUtils.cpp" />
     <ClCompile Include="EventEntity.cpp" />
     <ClCompile Include="EventParser.cpp" />
+    <ClCompile Include="FileArtifact.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
+    <ClCompile Include="IArtifact.cpp" />
     <ClCompile Include="IEtwEventHandler.h" />
     <ClCompile Include="IEventCollector.h" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PolicyController.cpp" />
     <ClCompile Include="PolicyEntity.cpp" />
+    <ClCompile Include="ProcessArtifact.cpp" />
+    <ClCompile Include="RegistryArtifact.cpp" />
     <ClCompile Include="RuleController.cpp" />
     <ClCompile Include="RuleEntity.cpp" />
     <ClCompile Include="ServerDetails.cpp" />
     <ClCompile Include="EtwManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArtifactFactory.h" />
     <ClInclude Include="AuthorizedHttpRequest.h" />
     <ClInclude Include="AutoEtwTraceSession.h" />
     <ClInclude Include="CollectorManager.h" />
@@ -126,9 +133,14 @@
     <ClInclude Include="EtwUtils.h" />
     <ClInclude Include="EventEntity.h" />
     <ClInclude Include="EventParser.h" />
+    <ClInclude Include="FileArtifact.h" />
     <ClInclude Include="HttpRequest.h" />
+    <ClInclude Include="IArtifact.h" />
     <ClInclude Include="PolicyController.h" />
     <ClInclude Include="PolicyEntity.h" />
+    <ClInclude Include="ProcessArtifact.h" />
+    <ClInclude Include="RegistryArtifact.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="RuleController.h" />
     <ClInclude Include="RuleEntity.h" />
     <ClInclude Include="ServerDetails.h" />
@@ -139,11 +151,15 @@
       <Project>{bb0147eb-6672-4d50-b5bb-9ebeff8d5ed7}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Stresser.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\boost.1.72.0.0\build\boost.targets" Condition="Exists('..\packages\boost.1.72.0.0\build\boost.targets')" />
     <Import Project="..\packages\nlohmann.json.3.9.1\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.9.1\build\native\nlohmann.json.targets')" />
     <Import Project="..\packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets" Condition="Exists('..\packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets')" />
+    <Import Project="..\packages\Microsoft.Windows.ImplementationLibrary.1.0.210204.1\build\native\Microsoft.Windows.ImplementationLibrary.targets" Condition="Exists('..\packages\Microsoft.Windows.ImplementationLibrary.1.0.210204.1\build\native\Microsoft.Windows.ImplementationLibrary.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -152,5 +168,6 @@
     <Error Condition="!Exists('..\packages\boost.1.72.0.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.72.0.0\build\boost.targets'))" />
     <Error Condition="!Exists('..\packages\nlohmann.json.3.9.1\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.9.1\build\native\nlohmann.json.targets'))" />
     <Error Condition="!Exists('..\packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Windows.ImplementationLibrary.1.0.210204.1\build\native\Microsoft.Windows.ImplementationLibrary.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.ImplementationLibrary.1.0.210204.1\build\native\Microsoft.Windows.ImplementationLibrary.targets'))" />
   </Target>
 </Project>
