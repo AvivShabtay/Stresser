@@ -1,6 +1,6 @@
 #pragma once
-
 #include <string>
+#include <Windows.h>
 
 class Win32ErrorCodeException : public std::exception
 {
