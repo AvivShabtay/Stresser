@@ -15,7 +15,6 @@ RegistryArtifact::~RegistryArtifact()
 void RegistryArtifact::install() const
 {
 	HKEY hKey;
-	AutoRegistryKeyHandle autoHKey(hKey);
 
 	auto createRegStatus = RegCreateKeyExA(
 		this->registryPrefix, 			// Registry key
@@ -28,6 +27,8 @@ void RegistryArtifact::install() const
 		&hKey, 							// Handle to the opened key
 		NULL 							// Determine either the key exists or not
 	);
+
+	AutoRegistryKeyHandle autoHKey(hKey);
 
 	if (createRegStatus != ERROR_SUCCESS) 
 		throw Win32ErrorCodeException("Failed to create registry key!");
