@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utils", "Utils\Utils.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Stresser", "Stresser\Stresser.vcxproj", "{42CDE09C-C687-46B9-A708-B68B2B8F87DD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FakeProcess", "FakeProcess\FakeProcess.vcxproj", "{74059D08-48AF-42DC-B2D2-8F8FBB939927}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -111,6 +113,18 @@ Global
 		{42CDE09C-C687-46B9-A708-B68B2B8F87DD}.Release|x64.Build.0 = Release|x64
 		{42CDE09C-C687-46B9-A708-B68B2B8F87DD}.Release|x86.ActiveCfg = Release|Win32
 		{42CDE09C-C687-46B9-A708-B68B2B8F87DD}.Release|x86.Build.0 = Release|Win32
+		{74059D08-48AF-42DC-B2D2-8F8FBB939927}.Debug|ARM.ActiveCfg = Debug|Win32
+		{74059D08-48AF-42DC-B2D2-8F8FBB939927}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{74059D08-48AF-42DC-B2D2-8F8FBB939927}.Debug|x64.ActiveCfg = Debug|x64
+		{74059D08-48AF-42DC-B2D2-8F8FBB939927}.Debug|x64.Build.0 = Debug|x64
+		{74059D08-48AF-42DC-B2D2-8F8FBB939927}.Debug|x86.ActiveCfg = Debug|Win32
+		{74059D08-48AF-42DC-B2D2-8F8FBB939927}.Debug|x86.Build.0 = Debug|Win32
+		{74059D08-48AF-42DC-B2D2-8F8FBB939927}.Release|ARM.ActiveCfg = Release|Win32
+		{74059D08-48AF-42DC-B2D2-8F8FBB939927}.Release|ARM64.ActiveCfg = Release|Win32
+		{74059D08-48AF-42DC-B2D2-8F8FBB939927}.Release|x64.ActiveCfg = Release|x64
+		{74059D08-48AF-42DC-B2D2-8F8FBB939927}.Release|x64.Build.0 = Release|x64
+		{74059D08-48AF-42DC-B2D2-8F8FBB939927}.Release|x86.ActiveCfg = Release|Win32
+		{74059D08-48AF-42DC-B2D2-8F8FBB939927}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
