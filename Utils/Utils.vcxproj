@@ -173,6 +173,7 @@
     <ClInclude Include="DebugPrint.h" />
     <ClInclude Include="EventsNames.h" />
     <ClInclude Include="PeResource.h" />
+    <ClInclude Include="ProcessArtifactUtils.h" />
     <ClInclude Include="RegistryArtifactUtils.h" />
     <ClInclude Include="StandardThread.h" />
     <ClInclude Include="Win32ErrorCodeException.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="AutoRegistryKeyHandle.cpp" />
     <ClCompile Include="CriticalSection.cpp" />
     <ClCompile Include="PeResource.cpp" />
+    <ClCompile Include="ProcessArtifactUtils.cpp" />
     <ClCompile Include="RegistryArtifactUtils.cpp" />
     <ClCompile Include="StandardThread.cpp" />
     <ClCompile Include="Win32ErrorCodeException.cpp" />

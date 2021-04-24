@@ -69,6 +69,9 @@
     <ClInclude Include="EventsNames.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ProcessArtifactUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -123,6 +126,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RegistryArtifactUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessArtifactUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
