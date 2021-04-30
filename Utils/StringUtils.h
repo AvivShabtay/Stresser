@@ -16,7 +16,5 @@ public:
 	static bool DoesEmptyJSON(const std::wstring data);
 
 	static bool DoesEmptyJSON(const std::string data);
-
-	static std::wstring ConvertToWideString(const std::string data);
 };
 

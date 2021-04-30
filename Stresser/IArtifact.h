@@ -4,11 +4,11 @@
 class IArtifact 
 {
 public:
-	explicit IArtifact(std::string name, std::string data);
+	explicit IArtifact(const std::string& name, const std::string& data);
 	virtual ~IArtifact() = default;
 
-	std::string getData();
-	std::string getName();
+	std::string getData() const;
+	std::string getName() const;
 
 	virtual void install() const = 0;
 	virtual void uninstall() const = 0;

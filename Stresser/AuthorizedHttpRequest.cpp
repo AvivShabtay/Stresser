@@ -36,7 +36,7 @@ void AuthorizedHttpRequest::refreshToken()
 	}
 
 	const std::string newToken = StringUtils::RemoveQuotationMarks(jsResponse["apiKey"].dump());
-	DEBUG_PRINT("[+] Changing token from: " + this->m_token + ", to: " + newToken);
+	//DEBUG_PRINT("[+] Changing token from: " + this->m_token + ", to: " + newToken);
 	this->setToken(newToken);
 }
 

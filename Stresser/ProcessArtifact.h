@@ -2,15 +2,15 @@
 #include "IArtifact.h"
 #include "resource.h"
 #include "../Utils/PeResource.h"
-#include "../Utils/ProcessArtifactUtils.h"
+#include "../Utils/LocalPcUtils.h"
 
+#include <atlconv.h>
 
-#include <Windows.h>
 
 class ProcessArtifact : public IArtifact
 {
 public:
-	explicit ProcessArtifact(std::string name, std::string data);
+	explicit ProcessArtifact(const std::string& name, const std::string& data);
 	virtual ~ProcessArtifact();
 
 	virtual void install() const;

@@ -61,8 +61,10 @@ Json PolicyEntity::convertFromEntity(const PolicyEntity& policyEntity)
 	Json jsRules = Json::array();
 	auto rules = policyEntity.getRulesIds();
 
-	for (const auto& jsRule : rules) 
+	for (const auto& jsRule : rules)
+	{
 		jsRules.push_back(jsRule);
+	}
 
 	jsPolicy["rules"] = jsRules;
 	jsPolicy["updateCount"] = std::string("" + policyEntity.getUpdateCount());

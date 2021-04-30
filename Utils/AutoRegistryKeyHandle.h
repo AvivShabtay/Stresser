@@ -1,5 +1,6 @@
 #pragma once
 #include "Win32ErrorCodeException.h"
+#include "DebugPrint.h"
 #include <Windows.h>
 
 class AutoRegistryKeyHandle final

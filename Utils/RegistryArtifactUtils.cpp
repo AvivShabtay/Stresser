@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "RegistryArtifactUtils.h"
 
-const std::map<std::string, HKEY> RegistryArtifactUtils::RegistryPrefixDict = {
+const std::map<std::string, HKEY> RegistryArtifactUtils::REGISTRY_PREFIX_DICTIONARY = {
 	{ "HKLM", HKEY_LOCAL_MACHINE },
 	{ "HKCR", HKEY_CLASSES_ROOT },
 	{ "HKU", HKEY_USERS },
@@ -11,7 +11,7 @@ const std::map<std::string, HKEY> RegistryArtifactUtils::RegistryPrefixDict = {
 HKEY RegistryArtifactUtils::getRegistryPrefix(std::string regKey)
 {
     std::string regPrefix = regKey.substr(0, regKey.find_first_of("\\"));
-    return RegistryArtifactUtils::RegistryPrefixDict.at(regPrefix);
+    return REGISTRY_PREFIX_DICTIONARY.at(regPrefix);
 }
 
 std::string RegistryArtifactUtils::getRegistrySubKey(std::string regKey)

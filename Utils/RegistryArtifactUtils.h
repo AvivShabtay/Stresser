@@ -10,6 +10,6 @@ public:
 	static std::string getRegistrySubKey(std::string regKey);
 
 private:
-	static const std::map<std::string, HKEY> RegistryPrefixDict;
+	static const std::map<std::string, HKEY> REGISTRY_PREFIX_DICTIONARY;
 };
 

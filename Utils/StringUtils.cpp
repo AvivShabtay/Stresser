@@ -99,11 +99,3 @@ bool StringUtils::DoesEmptyJSON(const std::string data)
 
 	return false;
 }
-
-std::wstring StringUtils::ConvertToWideString(const std::string data)
-{
-	std::wstring wideString(data.length(), ' ');
-	std::copy(data.begin(), data.end(), wideString.begin());
-	
-	return wideString;
-}

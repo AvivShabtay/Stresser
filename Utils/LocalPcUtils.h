@@ -12,5 +12,7 @@ public:
 	static std::wstring getLocalComputerName();
 
 	static bool doesFileExists(const std::wstring& path);
+
+	static std::wstring getTempPath();
 };
 
