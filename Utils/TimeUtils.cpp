@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "TimeUtils.h"
 
+#include <ctime>
+
 // Add before any ATL header:
 // https://social.msdn.microsoft.com/Forums/vstudio/en-US/371a069b-f428-47b5-8f7b-e9ad85964bce/guidnull-undeclared-identifier?forum=vclanguage
 #include <cguid.h>
-
 #include <atlbase.h>
 #include <atltime.h>
 

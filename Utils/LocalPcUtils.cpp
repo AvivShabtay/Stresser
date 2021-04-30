@@ -21,3 +21,14 @@ bool LocalPcUtils::doesFileExists(const std::wstring& path)
 	return (fileAttributes != INVALID_FILE_ATTRIBUTES) &&
 		!(fileAttributes & FILE_ATTRIBUTE_DIRECTORY);
 }
+
+std::wstring LocalPcUtils::getTempPath()
+{
+	std::vector<WCHAR> tempPath[MAX_PATH + 1];
+	if (GetTempPath(MAX_PATH + 1, reinterpret_cast<LPWSTR>(&tempPath[0])) == 0)
+	{
+		throw Win32ErrorCodeException("Can't retrieve the temp directory path!");
+	}
+
+	return std::wstring(reinterpret_cast<LPWSTR>(&tempPath[0]));
+}
