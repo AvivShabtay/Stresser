@@ -6,6 +6,7 @@
 
 #include <atlconv.h>
 
+constexpr size_t PROCESS_TERMINATE_WAIT_TIME = 10000;
 
 class ProcessArtifact : public IArtifact
 {
@@ -18,5 +19,6 @@ public:
 
 private:
 	std::wstring filePath;
+	DWORD pid;
 };
 

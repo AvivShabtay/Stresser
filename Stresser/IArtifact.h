@@ -6,7 +6,7 @@ class IArtifact
 public:
 	explicit IArtifact(const std::string& name, const std::string& data);
 	virtual ~IArtifact() = default;
-	
+
 	std::string getData() const;
 	std::string getName() const;
 
