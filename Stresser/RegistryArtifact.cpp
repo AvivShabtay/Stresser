@@ -2,14 +2,14 @@
 
 RegistryArtifact::RegistryArtifact(const std::string& name, const std::string& data) : IArtifact(name, data)
 {
-	this->registryPrefix = RegistryArtifactUtils::getRegistryPrefix(this->data);
-	this->registrySubKey = RegistryArtifactUtils::getRegistrySubKey(this->data);
-	this->install();
+	this->m_registryPrefix = RegistryArtifactUtils::getRegistryPrefix(this->m_data);
+	this->m_registrySubKey = RegistryArtifactUtils::getRegistrySubKey(this->m_data);
+	this->RegistryArtifact::install();
 }
 
 RegistryArtifact::~RegistryArtifact()
 {
-	this->uninstall();
+	this->RegistryArtifact::uninstall();
 }
 
 void RegistryArtifact::install()
@@ -17,8 +17,8 @@ void RegistryArtifact::install()
 	HKEY hKey;
 
 	LSTATUS createRegStatus = RegCreateKeyExA(
-		this->registryPrefix, 			// Registry key
-		this->registrySubKey.c_str(), 	// Sub key
+		this->m_registryPrefix, 			// Registry key
+		this->m_registrySubKey.c_str(), 	// Sub key
 		0, 								// Reserved and must be 0
 		nullptr, 							// Class type of the key
 		REG_OPTION_NON_VOLATILE,		// Keep the key after reboot
@@ -38,9 +38,7 @@ void RegistryArtifact::install()
 
 void RegistryArtifact::uninstall()
 {
-	LSTATUS result = RegDeleteKeyA(this->registryPrefix, this->registrySubKey.c_str());
-
-	if (ERROR_SUCCESS != result)
+	if (ERROR_SUCCESS != RegDeleteKeyA(this->m_registryPrefix, this->m_registrySubKey.c_str()))
 	{
 		throw Win32ErrorCodeException("Failed to delete the registry key!");
 	}

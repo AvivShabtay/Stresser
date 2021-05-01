@@ -1,10 +1,11 @@
 #pragma once
 #include <string>
+#include <utility>
 
 class IArtifact 
 {
 public:
-	explicit IArtifact(const std::string& name, const std::string& data);
+	explicit IArtifact(std::string name, std::string data);
 	virtual ~IArtifact() = default;
 
 	std::string getData() const;
@@ -14,6 +15,6 @@ public:
 	virtual void uninstall() = 0;
 
 protected:
-	std::string data;
-	std::string name;
+	std::string m_data;
+	std::string m_name;
 };

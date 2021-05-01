@@ -99,3 +99,13 @@ bool StringUtils::DoesEmptyJSON(const std::string data)
 
 	return false;
 }
+
+std::wstring StringUtils::stringToWString(const std::string& data)
+{
+	return std::wstring(ATL::CA2W(data.c_str()));
+}
+
+std::string StringUtils::wstringToString(const std::wstring& data)
+{
+	return std::string(ATL::CW2A(data.c_str()));
+}

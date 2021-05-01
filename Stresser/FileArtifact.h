@@ -9,6 +9,6 @@ public:
 	explicit FileArtifact(const std::string& name, const std::string& data);
 	virtual ~FileArtifact();
 
-	virtual void install();
-	virtual void uninstall();
+	void install() override;
+	void uninstall() override;
 };

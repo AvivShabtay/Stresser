@@ -1,16 +1,16 @@
 #include "IArtifact.h"
 
-IArtifact::IArtifact(const std::string& name, const std::string& data) : data(data), name(name)
+IArtifact::IArtifact(std::string name, std::string data) : m_data(std::move(data)), m_name(std::move(name))
 {
 }
 
 std::string IArtifact::getData() const
 {
-	return this->data;
+	return this->m_data;
 }
 
 std::string IArtifact::getName() const
 {
-	return this->name;
+	return this->m_name;
 }
 
