@@ -1,6 +1,6 @@
 #include "IArtifact.h"
 
-IArtifact::IArtifact(std::string& name, std::string& data) : data(data), name(name)
+IArtifact::IArtifact(const std::string& name, const std::string& data) : data(data), name(name)
 {
 }
 

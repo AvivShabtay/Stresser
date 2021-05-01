@@ -10,7 +10,7 @@ FileArtifact::~FileArtifact()
 	this->uninstall();
 }
 
-void FileArtifact::install() const
+void FileArtifact::install()
 {
 	const std::string fileName = this->data;
 
@@ -30,7 +30,7 @@ void FileArtifact::install() const
 	}
 }
 
-void FileArtifact::uninstall() const
+void FileArtifact::uninstall()
 {
 	const std::string fileName = this->data;
 

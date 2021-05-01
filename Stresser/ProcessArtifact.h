@@ -13,8 +13,8 @@ public:
 	explicit ProcessArtifact(const std::string& name, const std::string& data);
 	virtual ~ProcessArtifact();
 
-	virtual void install() const;
-	virtual void uninstall() const;
+	virtual void install();
+	virtual void uninstall();
 
 private:
 	std::wstring filePath;

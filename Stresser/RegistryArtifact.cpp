@@ -12,7 +12,7 @@ RegistryArtifact::~RegistryArtifact()
 	this->uninstall();
 }
 
-void RegistryArtifact::install() const
+void RegistryArtifact::install()
 {
 	HKEY hKey;
 
@@ -36,7 +36,7 @@ void RegistryArtifact::install() const
 	AutoRegistryKeyHandle autoHKey(hKey);
 }
 
-void RegistryArtifact::uninstall() const
+void RegistryArtifact::uninstall()
 {
 	LSTATUS result = RegDeleteKeyA(this->registryPrefix, this->registrySubKey.c_str());
 

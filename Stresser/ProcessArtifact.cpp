@@ -3,7 +3,7 @@
 ProcessArtifact::ProcessArtifact(const std::string& name, const std::string& data) : IArtifact(name, data)
 {
     std::wstring tempPath = LocalPcUtils::getTempPath();
-    std::wstring wideFileName = std::wstring(ATL::CA2W(name.c_str()));
+    std::wstring wideFileName = std::wstring(ATL::CA2W(data.c_str()));
 
     this->filePath = std::wstring(tempPath + wideFileName);
 	this->install();
@@ -14,7 +14,7 @@ ProcessArtifact::~ProcessArtifact()
 	this->uninstall();
 }
 
-void ProcessArtifact::install() const
+void ProcessArtifact::install()
 {  
     PeResource fakeProcess(FAKE_PROCESS, L"BIN");
 
@@ -42,7 +42,7 @@ void ProcessArtifact::install() const
     AutoHandle autoThreadHandle(processInfo.hThread);
 }
 
-void ProcessArtifact::uninstall() const
+void ProcessArtifact::uninstall()
 {
     Sleep(2000);
     if (!DeleteFile(this->filePath.c_str()))

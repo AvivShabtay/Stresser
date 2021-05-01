@@ -9,8 +9,8 @@ public:
 	explicit RegistryArtifact(const std::string& name, const std::string& data);
 	virtual ~RegistryArtifact();
 
-	virtual void install() const;
-	virtual void uninstall() const;
+	virtual void install();
+	virtual void uninstall();
 
 private:
 	HKEY registryPrefix;
