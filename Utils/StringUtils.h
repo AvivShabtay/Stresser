@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <atlconv.h>
 
 class StringUtils final
 {
@@ -16,5 +17,9 @@ public:
 	static bool DoesEmptyJSON(const std::wstring data);
 
 	static bool DoesEmptyJSON(const std::string data);
+
+	static std::wstring stringToWString(const std::string& data);
+
+	static std::string wstringToString(const std::wstring& data);
 };
 

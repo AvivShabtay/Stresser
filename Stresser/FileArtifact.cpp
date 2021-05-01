@@ -2,17 +2,17 @@
 
 FileArtifact::FileArtifact(const std::string& name, const  std::string& data) : IArtifact(name, data)
 {
-	this->install();
+	this->FileArtifact::install();
 }
 
 FileArtifact::~FileArtifact()
 {
-	this->uninstall();
+	this->FileArtifact::uninstall();
 }
 
-void FileArtifact::install() const
+void FileArtifact::install()
 {
-	const std::string fileName = this->data;
+	const std::string fileName = this->m_data;
 
 	const AutoHandle hFile(CreateFileA(
 		fileName.c_str(),		// Open file
@@ -30,9 +30,9 @@ void FileArtifact::install() const
 	}
 }
 
-void FileArtifact::uninstall() const
+void FileArtifact::uninstall()
 {
-	const std::string fileName = this->data;
+	const std::string fileName = this->m_data;
 
 	if (!DeleteFileA(fileName.c_str()))
 	{
