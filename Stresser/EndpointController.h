@@ -4,6 +4,7 @@
 #include "EndpointEntity.h"
 
 #include "../Utils/AutoHandle.h"
+#include "../Utils/StringUtils.h"
 
 #include "nlohmann/json.hpp"
 
@@ -52,6 +53,5 @@ private:
 
 	AuthorizedHttpRequest& m_authorizedHttpRequest;
 	std::wstring m_computerName;
-	AutoHandle m_ahKeepAliveThread;
 };
 
