@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArtifactFactory.cpp" />
+    <ClCompile Include="ArtifactManager.cpp" />
     <ClCompile Include="AuthorizedHttpRequest.cpp" />
     <ClCompile Include="AutoEtwTraceSession.cpp" />
     <ClCompile Include="CollectorManager.cpp" />
@@ -123,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArtifactFactory.h" />
+    <ClInclude Include="ArtifactManager.h" />
     <ClInclude Include="AuthorizedHttpRequest.h" />
     <ClInclude Include="AutoEtwTraceSession.h" />
     <ClInclude Include="CollectorManager.h" />

@@ -23,11 +23,13 @@
 
 #include <Windows.h>
 
+#include "ArtifactManager.h"
+
 using Json = nlohmann::json;
 
 // Used to signal events in the main thread:
 WindowsEvent g_shutdownEvent(STOP_STRESSER);
-WindowsEvent g_stopPolicy(STOP_POLICY);
+
 
 BOOL consoleHandler(DWORD signal);
 
@@ -39,8 +41,6 @@ void OnEvent(PEVENT_RECORD rec);
 
 int wmain(int argc, PWCHAR argv[])
 {
-	std::vector<std::unique_ptr<IArtifact>> artifactsVector;
-
 	try
 	{
 		SehTranslatorGuard sehTranslatorGuard;
@@ -65,10 +65,12 @@ int wmain(int argc, PWCHAR argv[])
 		// TODO: Move from here !
 		EndpointEntity endpoint = endpointController.createEndpoint();
 		std::string endpointId = endpoint.GetID();
-
+		
 		// Start token manager:
 		authorizedHttpRequest.startTokenRefresherThread(endpointId, endpoint.GetAPIKey());
 
+		ArtifactManager artifactManager(endpointId, g_shutdownEvent.get(), endpointController, policyController, ruleController);
+		
 		// Define ETW event types to be collected:
 		// TODO: Move from here !
 		std::vector<EtwEventTypes> eventTypes =
@@ -83,35 +85,6 @@ int wmain(int argc, PWCHAR argv[])
 		// TODO: Move from here !
 		EtwManager mgr(eventTypes, OnEvent);
 		mgr.start();
-
-		// Create background thread to fetch endpoint configuration from the server:
-		// TODO: Move from here !
-		StandardThread communication([&endpointController, &policyController, &endpointId, &ruleController, &artifactsVector]()
-			{
-				EndpointEntity endpointEntity = endpointController.getEndpoint(endpointId);
-				DEBUG_PRINT(endpointEntity);
-
-				// Check if there is CTRL + C signal:
-				while (WAIT_TIMEOUT == WaitForSingleObject(g_shutdownEvent.get(), 10000))
-				{
-					PolicyEntity policyEntity = policyController.getPolicy(endpointEntity.GetPolicyID());
-					DEBUG_PRINT("Policy ID: " + policyEntity.getId());
-					
-					g_stopPolicy.setEvent();
-					artifactsVector.clear();
-					g_stopPolicy.resetEvent();
-
-					for (std::string& ruleId : policyEntity.getRulesIds())
-					{
-						RuleEntity ruleEntity = ruleController.getRule(ruleId);				
-
-						auto artifact = ArtifactFactory::BuildArtifact(ruleEntity.getType(), ruleEntity.getName(), ruleEntity.getData());
-						artifactsVector.push_back(std::move(artifact));
-						
-						DEBUG_PRINT(ruleEntity);
-					}
-				}
-			});
 
 		// Keep the main thread running until user CTRL + C:
 		WaitForSingleObject(g_shutdownEvent.get(), INFINITE);
