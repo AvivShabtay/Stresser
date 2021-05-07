@@ -63,16 +63,16 @@ int wmain(int argc, PWCHAR argv[])
 		// TODO: Move from here !
 		EndpointEntity endpoint = endpointController.createEndpoint();
 		std::string endpointId = endpoint.GetID();
-		
+
 		// Start token manager:
 		authorizedHttpRequest.startTokenRefresherThread(endpointId, endpoint.GetAPIKey());
 
 		PolicyNotifications policyNotifications(endpointId, g_shutdownEvent.get(), endpointController, policyController, ruleController);
-		
+
 		ArtifactManager artifactManager;
 
 		policyNotifications.subscribe(&artifactManager);
-		
+
 		// Define ETW event types to be collected:
 		// TODO: Move from here !
 		std::vector<EtwEventTypes> eventTypes =

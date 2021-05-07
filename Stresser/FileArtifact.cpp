@@ -2,11 +2,13 @@
 
 FileArtifact::FileArtifact(const std::string& name, const  std::string& data) : IArtifact(name, data)
 {
+	// https://stackoverflow.com/a/962148
 	this->FileArtifact::install();
 }
 
 FileArtifact::~FileArtifact()
 {
+	// https://stackoverflow.com/a/962148
 	this->FileArtifact::uninstall();
 }
 

@@ -14,6 +14,11 @@ m_endpointId(endpointId), m_changePolicyEvent(CHANGE_POLICY), m_shutdownEvent(sh
 
 void PolicyNotifications::subscribe(IPolicySubscriber* subscriber)
 {
+	if (nullptr == subscriber)
+	{
+		throw std::runtime_error("Received null pointer");
+	}
+
 	this->m_subscribers.push_back(subscriber);
 }
 
@@ -38,7 +43,7 @@ void PolicyNotifications::changePolicyThreadFunction(const EndpointController& e
 
 		this->m_changePolicyEvent.setEvent();
 		this->m_changePolicyEvent.resetEvent();
-		
+
 		for (std::string& ruleId : this->m_currentPolicy.getRulesIds())
 		{
 			RuleEntity ruleEntity = ruleController.getRule(ruleId);
