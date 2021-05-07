@@ -3,6 +3,9 @@
 #include "ServerDetails.h"
 #include "AuthorizedHttpRequest.h"
 
+#include "ArtifactManager.h"
+#include "PolicyNotifications.h"
+
 #include "EventParser.h"
 #include "EtwManager.h"
 #include "EtwUtils.h"
@@ -10,20 +13,15 @@
 #include "../Utils/AutoCriticalSection.h"
 #include "../Utils/DebugPrint.h"
 #include "../Utils/SehTranslatorGuard.h"
-#include "../Utils/StandardThread.h"
 #include "../Utils/WindowsEvent.h"
 #include "../Utils/TimeUtils.h"
 #include "../Utils/EventsNames.h"
 
 #include "nlohmann/json.hpp"
 
-#include "ArtifactFactory.h"
-
 #include <iostream>
 
 #include <Windows.h>
-
-#include "ArtifactManager.h"
 
 using Json = nlohmann::json;
 
@@ -69,7 +67,11 @@ int wmain(int argc, PWCHAR argv[])
 		// Start token manager:
 		authorizedHttpRequest.startTokenRefresherThread(endpointId, endpoint.GetAPIKey());
 
-		ArtifactManager artifactManager(endpointId, g_shutdownEvent.get(), endpointController, policyController, ruleController);
+		PolicyNotifications policyNotifications(endpointId, g_shutdownEvent.get(), endpointController, policyController, ruleController);
+		
+		ArtifactManager artifactManager;
+
+		policyNotifications.subscribe(&artifactManager);
 		
 		// Define ETW event types to be collected:
 		// TODO: Move from here !
