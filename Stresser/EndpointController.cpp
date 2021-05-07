@@ -2,6 +2,7 @@
 
 #include "../Utils/TimeUtils.h"
 #include "../Utils/LocalPcUtils.h"
+#include "../Utils/StringUtils.h"
 
 #include <atlstr.h>
 #include <Windows.h>
@@ -35,8 +36,8 @@ EndpointController& EndpointController::getInstance(AuthorizedHttpRequest& autho
 EndpointEntity EndpointController::createEndpoint() const
 {
 	EndpointEntity endpointEntity;
-	endpointEntity.SetIPAddress("10.10.10.10");
-	endpointEntity.SetHostname(std::string(CW2A(this->m_computerName.c_str())));
+	endpointEntity.SetIPAddress("10.10.10.10"); // TODO: Get the machine ip!
+	endpointEntity.SetHostname(StringUtils::wstringToString(this->m_computerName));
 
 	const Json jsEndpoint = EndpointEntity::ConvertFromEntity(endpointEntity);
 	const std::string targetPath("/endpoint");

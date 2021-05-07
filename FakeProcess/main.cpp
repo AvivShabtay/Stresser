@@ -10,7 +10,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		SehTranslatorGuard sehTranslatorGuard;
 		
 		AutoHandle events[2]{
-			AutoHandle(OpenEvent(SYNCHRONIZE, FALSE, STOP_POLICY)),
+			AutoHandle(OpenEvent(SYNCHRONIZE, FALSE, CHANGE_POLICY)),
 			AutoHandle(OpenEvent(SYNCHRONIZE, FALSE, STOP_STRESSER))
 		};
 

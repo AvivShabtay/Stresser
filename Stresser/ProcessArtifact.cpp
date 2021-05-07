@@ -7,16 +7,19 @@ ProcessArtifact::ProcessArtifact(const std::string& name, const std::string& dat
 
     this->m_filePath = std::wstring(tempPath + wideFileName);
     this->m_pid = INVALID_PID;
+
+	// https://stackoverflow.com/a/962148
 	this->ProcessArtifact::install();
 }
 
 ProcessArtifact::~ProcessArtifact()
 {
+	// https://stackoverflow.com/a/962148
 	this->ProcessArtifact::uninstall();
 }
 
 void ProcessArtifact::install()
-{  
+{
     const PeResource fakeProcess(FAKE_PROCESS, L"BIN");
 
     fakeProcess.saveResourceToFileSystem(this->m_filePath);
@@ -39,8 +42,8 @@ void ProcessArtifact::install()
         throw Win32ErrorCodeException("Failed to create a process!");
     }
 
-    AutoHandle hProcess(processInfo.hProcess); 
-    AutoHandle hThread(processInfo.hThread);
+    AutoHandle process(processInfo.hProcess);
+    AutoHandle thread(processInfo.hThread);
     this->m_pid = processInfo.dwProcessId;
 }
 
@@ -58,7 +61,7 @@ void ProcessArtifact::uninstall()
 	{
         WaitForSingleObject(process.get(), PROCESS_TERMINATE_WAIT_TIME);
 	}
-	
+
     if (!DeleteFile(this->m_filePath.c_str()))
     {
 	    throw Win32ErrorCodeException("Failed to delete the fake process file!");

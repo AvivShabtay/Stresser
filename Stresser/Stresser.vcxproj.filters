@@ -69,6 +69,12 @@
     <ClCompile Include="ArtifactFactory.cpp">
       <Filter>Artifacts\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ArtifactManager.cpp">
+      <Filter>Artifacts\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PolicyNotifications.cpp">
+      <Filter>PolicyNotifications</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h">
@@ -136,6 +142,15 @@
       <Filter>Artifacts\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="ArtifactManager.h">
+      <Filter>Artifacts\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PolicyNotifications.h">
+      <Filter>PolicyNotifications</Filter>
+    </ClInclude>
+    <ClInclude Include="IPolicySubscriber.h">
+      <Filter>PolicyNotifications</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Configurations">
@@ -200,6 +215,9 @@
     </Filter>
     <Filter Include="Artifacts\Source Files">
       <UniqueIdentifier>{3efedbac-158a-40e2-ae6e-6504a3526100}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PolicyNotifications">
+      <UniqueIdentifier>{c5ce2fbe-7a94-47e4-ae25-9f8864b7faab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
