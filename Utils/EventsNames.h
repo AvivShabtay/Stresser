@@ -1,3 +1,3 @@
 #pragma once
-#define STOP_STRESSER	L"Global\\StopStresser"
-#define CHANGE_POLICY	L"Global\\ChangePolicy"
+constexpr wchar_t STOP_STRESSER[] = L"Global\\StopStresser";
+constexpr wchar_t CHANGE_POLICY[] = L"Global\\ChangePolicy";

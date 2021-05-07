@@ -90,13 +90,13 @@ std::ostream& operator<<(std::ostream& out, const PolicyEntity& policyEntity)
 	return out;
 }
 
-bool operator==(const PolicyEntity& lPolicy, const PolicyEntity& rPolicy)
+bool PolicyEntity::operator==(const PolicyEntity& rPolicy) const
 {
-	if (lPolicy.m_id != rPolicy.m_id)
+	if (this->m_id != rPolicy.m_id)
 	{
 		return false;
 	}
-	if (lPolicy.m_updateCount != rPolicy.m_updateCount)
+	if (this->m_updateCount != rPolicy.m_updateCount)
 	{
 		return false;
 	}

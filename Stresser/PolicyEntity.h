@@ -30,7 +30,7 @@ public:
 	static Json convertFromEntity(const PolicyEntity& policyEntity);
 
 	friend std::ostream& operator << (std::ostream& out, const PolicyEntity& policyEntity);
-	friend bool operator== (const PolicyEntity& lPolicy, const PolicyEntity& rPolicy);
+	bool operator==(const PolicyEntity& rPolicy) const;
 
 private:
 	std::string m_id;

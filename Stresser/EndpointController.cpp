@@ -2,6 +2,7 @@
 
 #include "../Utils/TimeUtils.h"
 #include "../Utils/LocalPcUtils.h"
+#include "../Utils/StringUtils.h"
 
 #include <atlstr.h>
 #include <Windows.h>

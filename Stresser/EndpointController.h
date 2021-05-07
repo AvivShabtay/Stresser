@@ -4,7 +4,6 @@
 #include "EndpointEntity.h"
 
 #include "../Utils/AutoHandle.h"
-#include "../Utils/StringUtils.h"
 
 #include "nlohmann/json.hpp"
 
