@@ -32,7 +32,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="StresserEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="GenericHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DriverConfiguration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="String.h">

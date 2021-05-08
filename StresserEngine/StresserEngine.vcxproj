@@ -146,8 +146,10 @@
     <ClInclude Include="AutoLock.h" />
     <ClInclude Include="AutoObjectDereference.h" />
     <ClInclude Include="AutoBuffer.h" />
+    <ClInclude Include="DriverConfiguration.h" />
     <ClInclude Include="FastMutex.h" />
     <ClInclude Include="List.h" />
+    <ClInclude Include="StresserEngine.h" />
     <ClInclude Include="GenericHandle.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="Value.h" />
