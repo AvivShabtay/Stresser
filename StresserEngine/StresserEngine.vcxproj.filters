@@ -30,6 +30,9 @@
     <ClCompile Include="IrpUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectNotification.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ProcessUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IrpUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectNotification.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HelperMacros.h">

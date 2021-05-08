@@ -143,6 +143,7 @@
     <ClCompile Include="FastMutex.cpp" />
     <ClCompile Include="IrpUtils.cpp" />
     <ClCompile Include="Memory.cpp" />
+    <ClCompile Include="ObjectNotification.cpp" />
     <ClCompile Include="ProcessUtils.cpp" />
     <ClCompile Include="StresserEngine.cpp" />
   </ItemGroup>
@@ -156,6 +157,7 @@
     <ClInclude Include="List.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Move.h" />
+    <ClInclude Include="ObjectNotification.h" />
     <ClInclude Include="ProcessUtils.h" />
     <ClInclude Include="StresserEngine.h" />
     <ClInclude Include="GenericHandle.h" />
