@@ -35,6 +35,9 @@
     <ClInclude Include="GenericHandle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="String.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Value.h">
       <Filter>Header Files</Filter>
     </ClInclude>
