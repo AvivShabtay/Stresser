@@ -35,6 +35,9 @@
     <ClInclude Include="StresserEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HelperMacros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="GenericHandle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
