@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FastMutex.cpp" />
+    <ClCompile Include="IrpUtils.cpp" />
     <ClCompile Include="StresserEngine.cpp" />
   </ItemGroup>
     <ClInclude Include="AutoLock.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="DriverConfiguration.h" />
     <ClInclude Include="FastMutex.h" />
     <ClInclude Include="HelperMacros.h" />
+    <ClInclude Include="IrpUtils.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="StresserEngine.h" />
     <ClInclude Include="GenericHandle.h" />
