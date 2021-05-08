@@ -33,6 +33,9 @@
     <ClCompile Include="ProcessUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Memory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="FastMutex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ProcessUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GenericHandle.h">

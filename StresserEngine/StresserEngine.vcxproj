@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="FastMutex.cpp" />
     <ClCompile Include="IrpUtils.cpp" />
+    <ClCompile Include="Memory.cpp" />
     <ClCompile Include="ProcessUtils.cpp" />
     <ClCompile Include="StresserEngine.cpp" />
   </ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="HelperMacros.h" />
     <ClInclude Include="IrpUtils.h" />
     <ClInclude Include="List.h" />
+    <ClInclude Include="Memory.h" />
     <ClInclude Include="ProcessUtils.h" />
     <ClInclude Include="StresserEngine.h" />
     <ClInclude Include="GenericHandle.h" />
