@@ -147,6 +147,7 @@
     <ClCompile Include="ProcessUtils.cpp" />
     <ClCompile Include="StresserEngine.cpp" />
   </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="AutoLock.h" />
     <ClInclude Include="AutoObjectDereference.h" />
     <ClInclude Include="AutoBuffer.h" />
@@ -160,9 +161,11 @@
     <ClInclude Include="ObjectNotification.h" />
     <ClInclude Include="ProcessUtils.h" />
     <ClInclude Include="StresserEngine.h" />
+    <ClInclude Include="StresserEngineCommon.h" />
     <ClInclude Include="GenericHandle.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="Value.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
