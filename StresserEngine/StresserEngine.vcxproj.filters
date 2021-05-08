@@ -68,6 +68,9 @@
     <ClInclude Include="Value.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Move.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="AutoObjectDereference.h">
       <Filter>Header Files</Filter>
     </ClInclude>
