@@ -28,6 +28,27 @@ Value<const ULONG, ProcessUtils::ErrorCodes> ProcessUtils::getPidFromProcess(con
 	return pid;
 }
 
+bool ProcessUtils::doesValidProcessId(ULONG processId)
+{
+	if (ProcessUtils::INVALID_PID_VALUE == processId)
+	{
+		return false;
+	}
+
+	if (ProcessUtils::SYSTEM_PID_VALUE == processId)
+	{
+		return false;
+	}
+
+	/*
+	 * TODO: Verify PID value:
+	 * Possible solution: iterates over all the running processes and verify
+	 * if the PID exists in the system.
+	 */
+
+	return true;
+}
+
 Value<StresserString, NTSTATUS> ProcessUtils::getProcessFileNameByPid(const ULONG processId)
 {
 	if (0 == processId)
