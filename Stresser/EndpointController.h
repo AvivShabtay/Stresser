@@ -52,6 +52,5 @@ private:
 
 	AuthorizedHttpRequest& m_authorizedHttpRequest;
 	std::wstring m_computerName;
-	AutoHandle m_ahKeepAliveThread;
 };
 

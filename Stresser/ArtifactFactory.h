@@ -1,6 +1,4 @@
 #pragma once
-#include <functional>
-
 #include "FileArtifact.h"
 #include "ProcessArtifact.h"
 #include "RegistryArtifact.h"

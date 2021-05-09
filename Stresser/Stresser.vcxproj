@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArtifactFactory.cpp" />
+    <ClCompile Include="ArtifactManager.cpp" />
     <ClCompile Include="AuthorizedHttpRequest.cpp" />
     <ClCompile Include="AutoEtwTraceSession.cpp" />
     <ClCompile Include="CollectorManager.cpp" />
@@ -114,6 +115,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PolicyController.cpp" />
     <ClCompile Include="PolicyEntity.cpp" />
+    <ClCompile Include="PolicyNotifications.cpp" />
     <ClCompile Include="ProcessArtifact.cpp" />
     <ClCompile Include="RegistryArtifact.cpp" />
     <ClCompile Include="RuleController.cpp" />
@@ -123,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArtifactFactory.h" />
+    <ClInclude Include="ArtifactManager.h" />
     <ClInclude Include="AuthorizedHttpRequest.h" />
     <ClInclude Include="AutoEtwTraceSession.h" />
     <ClInclude Include="CollectorManager.h" />
@@ -138,6 +141,8 @@
     <ClInclude Include="IArtifact.h" />
     <ClInclude Include="PolicyController.h" />
     <ClInclude Include="PolicyEntity.h" />
+    <ClInclude Include="PolicyNotifications.h" />
+    <ClInclude Include="IPolicySubscriber.h" />
     <ClInclude Include="ProcessArtifact.h" />
     <ClInclude Include="RegistryArtifact.h" />
     <ClInclude Include="resource.h" />

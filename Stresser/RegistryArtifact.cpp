@@ -4,11 +4,14 @@ RegistryArtifact::RegistryArtifact(const std::string& name, const std::string& d
 {
 	this->m_registryPrefix = RegistryArtifactUtils::getRegistryPrefix(this->m_data);
 	this->m_registrySubKey = RegistryArtifactUtils::getRegistrySubKey(this->m_data);
+
+	// https://stackoverflow.com/a/962148
 	this->RegistryArtifact::install();
 }
 
 RegistryArtifact::~RegistryArtifact()
 {
+	// https://stackoverflow.com/a/962148
 	this->RegistryArtifact::uninstall();
 }
 
@@ -32,7 +35,7 @@ void RegistryArtifact::install()
 	{
 		throw Win32ErrorCodeException("Failed to create registry key!");
 	}
-	
+
 	AutoRegistryKeyHandle autoHKey(hKey);
 }
 
