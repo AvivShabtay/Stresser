@@ -1,34 +1,26 @@
-#include "pch.h"
-#include "..\Utils\Service.h"
+#include "../Utils/AutoHandle.h"
+#include "../Utils/DebugPrint.h"
+#include "../Utils/SehTranslatorGuard.h"
+
+#include <exception>
+
+#include <Windows.h>
 
 int main() {
 
-	bool isInstalled = false;
-	bool isStarted = false;
+	//SehTranslatorGuard sehTranslatorGuard;
 
+	try
+	{
 
-	Service service(L"stresser", L"C:\\temp\\StresserEngine.sys", SERVICE_KERNEL_DRIVER);
+		DEBUG_PRINT("bla");
 
-	do {
-		isInstalled = service.Install();
-		if (!isInstalled)
-			break;
-
-		std::wcout << "[+] Service installed" << std::endl;
-
-		isStarted = service.Start();
-		if (!isStarted)
-			break;
-
-		std::wcout << "[+] Service started" << std::endl;
-
-	} while (false);
-
-	if (isStarted)
-		service.Stop();
-
-	if (isInstalled)
-		service.Remove();
+	}
+	catch (std::exception& exception)
+	{
+		DEBUG_PRINT(exception.what());
+		return -1;
+	}
 
 	return 0;
 }
