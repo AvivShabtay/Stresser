@@ -17,5 +17,11 @@ DRIVER_DISPATCH StresserEngineDeviceControl;
 /* Helper function to return the IRP to the caller. */
 NTSTATUS CompleteIrp(PIRP Irp, NTSTATUS status = STATUS_SUCCESS, ULONG_PTR info = 0);
 
-/* Dispatch function for device control I\O requests. */
-NTSTATUS RegisterEventHandle(_In_ PIRP Irp, _In_ PIO_STACK_LOCATION StackLocation);
+/* Handler function for registering event  from user mode. */
+NTSTATUS RegisterEventHandler(_In_ PIRP Irp, _In_ PIO_STACK_LOCATION StackLocation);
+
+/* Handler function for adding fake process ID to be monitored. */
+NTSTATUS AddFakeProcessIdHandler(_In_ PIRP Irp, _In_ PIO_STACK_LOCATION StackLocation);
+
+/* Handler function for removing fake process ID from being monitored. */
+NTSTATUS RemoveFakeProcessIdHandler(_In_ PIRP Irp, _In_ PIO_STACK_LOCATION StackLocation);

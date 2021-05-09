@@ -4,9 +4,13 @@
 #include "HelperMacros.h"
 #include "IrpUtils.h"
 #include "ObjectNotification.h"
+#include "Vector.h"
+#include "Memory.h"
+#include "ProcessUtils.h"
 
 PKEVENT g_notificationEvent = nullptr;
 PVOID g_registrationHandle = nullptr;
+Vector<FakeProcessId*, DRIVER_TAG>* g_fakeProcessIds = nullptr;
 
 /*
  * Driver entry point.
@@ -42,12 +46,20 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 
 		symbolicLinkCreated = true;
 
+		// Initialize data structures:
+		g_fakeProcessIds = new (NonPagedPool, DRIVER_TAG) Vector<FakeProcessId*, DRIVER_TAG>();
+		if (nullptr == g_fakeProcessIds)
+		{
+			status = STATUS_INSUFFICIENT_RESOURCES;
+			BREAK_ON_FAILURE(status);
+		}
+
 		// Register to object notifications:
-		// VISTA_AND_ABOVE("OS version doesn't support Object notifications");
+		// TODO: Verify we are on Vista and above, otherwise: "OS version doesn't support Object notifications"
 
 		OB_OPERATION_REGISTRATION objectOperationsRegistration[STRESSER_OBJECT_CALLBACK_COUNT];
 
-		ASSERT(STRESSER_PROCESS_OBJECT_TYPE < STRESSER_OBJECT_CALLBACK_COUNT);
+		static_assert(STRESSER_PROCESS_OBJECT_TYPE < STRESSER_OBJECT_CALLBACK_COUNT, "Out of bounds");
 
 		// Set object notification callbacks:
 		objectOperationsRegistration[STRESSER_PROCESS_OBJECT_TYPE] =
@@ -91,6 +103,10 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 		{
 			ObUnRegisterCallbacks(g_registrationHandle);
 		}
+		if (nullptr != g_fakeProcessIds)
+		{
+			delete g_fakeProcessIds;
+		}
 	}
 
 	for (int i = 0; i < IRP_MJ_MAXIMUM_FUNCTION; ++i)
@@ -119,6 +135,15 @@ void StresserEngineUnload(PDRIVER_OBJECT DriverObject)
 		ObUnRegisterCallbacks(g_registrationHandle);
 		KdPrint((DRIVER_PREFIX "Remove object notification callback successfully\n"));
 	}
+
+	// Free allocated memory for fake process IDs:
+	for (auto& item : *g_fakeProcessIds)
+	{
+		delete item;
+	}
+
+	delete g_fakeProcessIds;
+	KdPrint((DRIVER_PREFIX "Release memory for holding fake process IDs\n"));
 
 	// Free notification event reference:
 	if (nullptr != g_notificationEvent)
@@ -184,7 +209,12 @@ NTSTATUS StresserEngineDeviceControl(PDEVICE_OBJECT, PIRP Irp)
 	switch (controlCode) {
 	case IOCTL_STRESSER_ENGINE_REGISTER_EVENT:
 	{
-		status = RegisterEventHandle(Irp, stack);
+		status = RegisterEventHandler(Irp, stack);
+		break;
+	}
+	case IOCTL_STRESSER_ENGINE_ADD_FAKE_PID:
+	{
+		status = AddFakeProcessIdHandler(Irp, stack);
 		break;
 	}
 
@@ -200,21 +230,27 @@ NTSTATUS StresserEngineDeviceControl(PDEVICE_OBJECT, PIRP Irp)
 	return CompleteIrp(Irp, status);
 }
 
-NTSTATUS RegisterEventHandle(PIRP Irp, PIO_STACK_LOCATION StackLocation)
+NTSTATUS RegisterEventHandler(PIRP Irp, PIO_STACK_LOCATION StackLocation)
 {
-	KdPrint((DRIVER_PREFIX "RegisterEventHandle started\n"));
+	KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " started\n"));
 
 	if (!IrpUtils::isValidInputBuffer(StackLocation, REGISTER_EVENT_SIZE))
 	{
-		KdPrint((DRIVER_PREFIX "RegisterEventHandle user buffer is inbvalid\n"));
+		KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " user buffer is invalid\n"));
 
 		return STATUS_BUFFER_TOO_SMALL;
 	}
 
 	auto* const registerEvent = static_cast<RegisterEvent*>(Irp->AssociatedIrp.SystemBuffer);
+	if (nullptr == registerEvent)
+	{
+		KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " Invalid memory\n"));
+		STATUS_INVALID_PARAMETER;
+	}
+
 	if (nullptr == registerEvent->eventHandle)
 	{
-		KdPrint((DRIVER_PREFIX "RegisterEventHandle Invalid type for request\n"));
+		KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " Invalid type for request\n"));
 		return STATUS_INVALID_PARAMETER;
 	}
 
@@ -231,11 +267,90 @@ NTSTATUS RegisterEventHandle(PIRP Irp, PIO_STACK_LOCATION StackLocation)
 
 	if (!NT_SUCCESS(status))
 	{
-		KdPrint((DRIVER_PREFIX "RegisterEventHandle could not get handle for event object status: (0x%08X)\n", status));
+		KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " could not get handle for event object status: (0x%08X)\n", status));
 		return status;
 	}
 
-	KdPrint((DRIVER_PREFIX "RegisterEventHandle completed successfully\n"));
+	KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " completed successfully\n"));
 
 	return STATUS_SUCCESS;
+}
+
+NTSTATUS AddFakeProcessIdHandler(_In_ PIRP Irp, _In_ PIO_STACK_LOCATION StackLocation)
+{
+	KdPrint((DRIVER_PREFIX STRINGIFY(AddFakeProcessIdHandler) " started\n"));
+
+	if (!IrpUtils::isValidInputBuffer(StackLocation, FAKE_PROCESS_ID_SIZE))
+	{
+		KdPrint((DRIVER_PREFIX STRINGIFY(AddFakeProcessIdHandler) " user buffer is invalid\n"));
+
+		return STATUS_BUFFER_TOO_SMALL;
+	}
+
+	auto* const fakeProcessId = static_cast<FakeProcessId*>(Irp->AssociatedIrp.SystemBuffer);
+	if (nullptr == fakeProcessId)
+	{
+		KdPrint((DRIVER_PREFIX STRINGIFY(AddFakeProcessIdHandler) " Invalid type for request\n"));
+		return STATUS_INVALID_PARAMETER;
+	}
+
+	if (!ProcessUtils::doesValidProcessId(fakeProcessId->processId))
+	{
+		KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " Invalid process ID\n"));
+		return STATUS_INVALID_PARAMETER;
+	}
+
+	auto* processId = new (NonPagedPool, DRIVER_TAG) FakeProcessId;
+
+	processId->processId = fakeProcessId->processId;
+
+	g_fakeProcessIds->add(processId);
+	KdPrint((DRIVER_PREFIX STRINGIFY(AddFakeProcessIdHandler)" Add fake process ID=%d\n", processId->processId));
+
+	KdPrint((DRIVER_PREFIX STRINGIFY(AddFakeProcessIdHandler) " completed successfully\n"));
+
+	return STATUS_SUCCESS;
+}
+
+NTSTATUS RemoveFakeProcessIdHandler(PIRP Irp, PIO_STACK_LOCATION StackLocation)
+{
+	KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler) " started\n"));
+
+	if (!IrpUtils::isValidInputBuffer(StackLocation, FAKE_PROCESS_ID_SIZE))
+	{
+		KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler) " user buffer is invalid\n"));
+
+		return STATUS_BUFFER_TOO_SMALL;
+	}
+
+	auto* const fakeProcessId = static_cast<FakeProcessId*>(Irp->AssociatedIrp.SystemBuffer);
+	if (nullptr == fakeProcessId)
+	{
+		KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler) " invalid type for request\n"));
+		return STATUS_INVALID_PARAMETER;
+	}
+
+	if (!ProcessUtils::doesValidProcessId(fakeProcessId->processId))
+	{
+		KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler) " invalid process ID\n"));
+		return STATUS_INVALID_PARAMETER;
+	}
+
+	for (ULONG i = 0; i < g_fakeProcessIds->size(); ++i)
+	{
+		const FakeProcessId* current = g_fakeProcessIds->getAt(i);
+		if (fakeProcessId->processId == current->processId)
+		{
+			KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler)" remove fake process ID=%d\n", current->processId));
+
+			g_fakeProcessIds->removeAt(i);
+			delete current;
+
+			KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler) " completed successfully\n"));
+			return STATUS_SUCCESS;
+		}
+	}
+
+	KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler) " could not remove process ID=%d\n", fakeProcessId->processId));
+	return STATUS_INVALID_PARAMETER;
 }
