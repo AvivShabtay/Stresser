@@ -2,7 +2,6 @@
 
 #include "String.h"
 #include "AutoBuffer.h"
-#include "List.h"
 
 #define DRIVER_PREFIX "Stresser Engine: "
 #define DRIVER_TAG 'Strs'
