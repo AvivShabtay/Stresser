@@ -59,17 +59,19 @@ do {																\
 } while (false);
 
   /*
-	  Verify if the OS version is above vista, otherwise print message and break.
-   */
-   /*
-   #define VISTA_AND_ABOVE(failureMsg)					\
-   do {												\
-	   if(!(NTDDI_VERSION >= NTDDI_VISTA))				\
-	   {												\
-		   KdPrint((DRIVER_PREFIX failureMsg "\n"));	\
-		   break;										\
-	   }												\
-   } while (false);
-   */
 
-#define DO_NOTHING (void)0
+   */
+#define RETURN_ON_CONDITION(condition, message, status)			\
+do {															\
+	if(condition)												\
+	{															\
+		KdPrint((DRIVER_PREFIX message " (0x%08X)\n", status));	\
+		return status;											\
+	}															\
+} while (false);
+
+   /*
+	   Return the token himself.
+	   https://stackoverflow.com/q/55636670
+   */
+#define STRINGIFY(x) #x
