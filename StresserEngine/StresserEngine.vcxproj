@@ -178,6 +178,7 @@
     <ClInclude Include="GenericHandle.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="Value.h" />
+    <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
