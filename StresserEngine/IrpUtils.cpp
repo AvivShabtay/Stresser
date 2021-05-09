@@ -2,11 +2,6 @@
 
 bool IrpUtils::isValidInputBuffer(PIO_STACK_LOCATION StackLocation, ULONGLONG validSize)
 {
-	if (nullptr != StackLocation)
-	{
-		return false;
-	}
-
 	auto& deviceIoControl = StackLocation->Parameters.DeviceIoControl;
 
 	if (validSize > deviceIoControl.InputBufferLength)
@@ -19,11 +14,6 @@ bool IrpUtils::isValidInputBuffer(PIO_STACK_LOCATION StackLocation, ULONGLONG va
 
 bool IrpUtils::isValidOutputBuffer(PIO_STACK_LOCATION StackLocation, ULONGLONG validSize)
 {
-	if (nullptr != StackLocation)
-	{
-		return false;
-	}
-
 	auto& deviceIoControl = StackLocation->Parameters.DeviceIoControl;
 
 	if (validSize > deviceIoControl.OutputBufferLength)
