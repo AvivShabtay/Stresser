@@ -110,6 +110,7 @@
     <ClCompile Include="FileArtifact.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="IArtifact.cpp" />
+    <ClCompile Include="IEtwEventHandler.cpp" />
     <ClCompile Include="IEtwEventHandler.h" />
     <ClCompile Include="IEventCollector.h" />
     <ClCompile Include="Main.cpp" />
@@ -133,9 +134,11 @@
     <ClInclude Include="EndpointController.h" />
     <ClInclude Include="EndpointEntity.h" />
     <ClInclude Include="Entities.h" />
+    <ClInclude Include="EtwEventsGuid.h" />
     <ClInclude Include="EtwUtils.h" />
     <ClInclude Include="EventEntity.h" />
     <ClInclude Include="EventParser.h" />
+    <ClInclude Include="EventProvidersGuid.h" />
     <ClInclude Include="FileArtifact.h" />
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="IArtifact.h" />

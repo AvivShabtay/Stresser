@@ -1,9 +1,10 @@
+#pragma once
 #include <Windows.h>
 
 // must be after Windows.h:
 #include <evntrace.h>
 
-enum EtwEventTypes : ULONG
+enum class EtwEventTypes : ULONG
 {
 	DiskIo = EVENT_TRACE_FLAG_DISK_IO,
 	DiskFileIo = EVENT_TRACE_FLAG_DISK_FILE_IO,

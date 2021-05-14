@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -75,6 +75,9 @@
     <ClCompile Include="PolicyNotifications.cpp">
       <Filter>PolicyNotifications</Filter>
     </ClCompile>
+    <ClCompile Include="IEtwEventHandler.cpp">
+      <Filter>ETW\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h">
@@ -150,6 +153,15 @@
     </ClInclude>
     <ClInclude Include="IPolicySubscriber.h">
       <Filter>PolicyNotifications</Filter>
+    </ClInclude>
+    <ClInclude Include="RegistryEventHandler.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventProvidersGuid.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EtwEventsGuid.h">
+      <Filter>ETW\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
