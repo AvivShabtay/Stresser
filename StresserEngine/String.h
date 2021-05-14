@@ -208,6 +208,11 @@ public:
 		return this->m_length;
 	}
 
+	bool empty() const
+	{
+		return 0 == this->m_length;
+	}
+
 	/*
 	 * Return copy of this String with lower case data.
 	 */
@@ -328,6 +333,16 @@ public:
 		return nullptr != this->findOccurrence(other);
 	}
 
+	/* Release allocated memory for class data. */
+	void release()
+	{
+		if (nullptr != this->m_data)
+		{
+			delete this->m_data;
+			this->m_data = nullptr;
+		}
+	}
+
 private:
 	/* Allocate memory and copy the data from the source to the new allocated memory. */
 	PWCHAR allocate(size_t numOfChars, const PWCHAR source = nullptr) const
@@ -360,16 +375,6 @@ private:
 			RtlZeroMemory(buffer, bufferSize);
 		}
 		return buffer;
-	}
-
-	/* Release allocated memory for class data. */
-	void release()
-	{
-		if (nullptr != this->m_data)
-		{
-			delete this->m_data;
-			this->m_data = nullptr;
-		}
 	}
 
 	/* Concatenate another string to this string. */
