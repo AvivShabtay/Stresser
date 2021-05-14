@@ -170,6 +170,7 @@
     <ClInclude Include="AutoCriticalSection.h" />
     <ClInclude Include="AutoRegistryKeyHandle.h" />
     <ClInclude Include="AutoServiceHandle.h" />
+    <ClInclude Include="AutoSignedImageVerifier.h" />
     <ClInclude Include="CriticalSection.h" />
     <ClInclude Include="DebugPrint.h" />
     <ClInclude Include="EventsNames.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="AutoHandle.h" />
     <ClCompile Include="AutoRegistryKeyHandle.cpp" />
     <ClCompile Include="AutoServiceHandle.cpp" />
+    <ClCompile Include="AutoSignedImageVerifier.cpp" />
     <ClCompile Include="CriticalSection.cpp" />
     <ClCompile Include="PeResource.cpp" />
     <ClCompile Include="RegistryArtifactUtils.cpp" />
