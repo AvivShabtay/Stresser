@@ -153,6 +153,7 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Event.cpp" />
     <ClCompile Include="FastMutex.cpp" />
     <ClCompile Include="IrpUtils.cpp" />
     <ClCompile Include="Memory.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="AutoObjectDereference.h" />
     <ClInclude Include="AutoBuffer.h" />
     <ClInclude Include="DriverConfiguration.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="FastMutex.h" />
     <ClInclude Include="HelperMacros.h" />
     <ClInclude Include="IrpUtils.h" />
