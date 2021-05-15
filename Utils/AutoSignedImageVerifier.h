@@ -32,8 +32,8 @@ public:
 	VerificationResult verify();
 
 private:
-	WINTRUST_FILE_INFO createFileInfo() const;
-	WINTRUST_DATA createWinTrustData() const;
+	WINTRUST_FILE_INFO getDefaultFileInfo() const;
+	WINTRUST_DATA getDefaultWinTrustData() const;
 
 	void closeResources();
 

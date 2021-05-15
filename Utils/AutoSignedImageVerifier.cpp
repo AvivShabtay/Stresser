@@ -13,8 +13,8 @@ AutoSignedImageVerifier::AutoSignedImageVerifier(std::wstring filePath, GUID tru
 		throw std::runtime_error("Invalid filename");
 	}
 
-	this->m_fileInfo = this->createFileInfo();
-	this->m_winTrustData = this->createWinTrustData();
+	this->m_fileInfo = this->getDefaultFileInfo();
+	this->m_winTrustData = this->getDefaultWinTrustData();
 }
 
 AutoSignedImageVerifier::~AutoSignedImageVerifier()
@@ -46,7 +46,7 @@ VerificationResult AutoSignedImageVerifier::verify()
 	}
 }
 
-WINTRUST_FILE_INFO AutoSignedImageVerifier::createFileInfo() const
+WINTRUST_FILE_INFO AutoSignedImageVerifier::getDefaultFileInfo() const
 {
 	const WINTRUST_FILE_INFO fileInfo
 	{
@@ -59,7 +59,7 @@ WINTRUST_FILE_INFO AutoSignedImageVerifier::createFileInfo() const
 	return fileInfo;
 }
 
-WINTRUST_DATA AutoSignedImageVerifier::createWinTrustData() const
+WINTRUST_DATA AutoSignedImageVerifier::getDefaultWinTrustData() const
 {
 	WINTRUST_DATA winTrustData{ 0 };
 
