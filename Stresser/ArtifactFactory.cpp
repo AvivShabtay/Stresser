@@ -4,15 +4,15 @@ std::unique_ptr<IArtifact> ArtifactFactory::BuildArtifact(const std::string& rul
 {
 	if (ruleType == "Registry")
 	{
-		return std::make_unique<RegistryArtifact>(ruleName, data);
+		return std::make_unique<RegistryArtifact>(ruleName, data, ruleType);
 	}
 	if (ruleType == "File")
 	{
-		return std::make_unique<FileArtifact>(ruleName, data);
+		return std::make_unique<FileArtifact>(ruleName, data, ruleType);
 	}
 	if (ruleType == "Process")
 	{
-		return std::make_unique<ProcessArtifact>(ruleName, data);
+		return std::make_unique<ProcessArtifact>(ruleName, data, ruleType);
 	}
 
 	throw std::runtime_error("Unknown rule type!");

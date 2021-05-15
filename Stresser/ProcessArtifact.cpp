@@ -1,6 +1,6 @@
 #include "ProcessArtifact.h"
 
-ProcessArtifact::ProcessArtifact(const std::string& name, const std::string& data) : IArtifact(name, data)
+ProcessArtifact::ProcessArtifact(const std::string& name, const std::string& data, const std::string& type) : IArtifact(name, data, type)
 {
 	const std::wstring tempPath = LocalPcUtils::getTempPath();
     const std::wstring wideFileName = StringUtils::stringToWString(data);

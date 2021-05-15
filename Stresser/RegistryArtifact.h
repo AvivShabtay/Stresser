@@ -6,7 +6,7 @@
 class RegistryArtifact : public IArtifact
 {
 public:
-	explicit RegistryArtifact(const std::string& name, const std::string& data);
+	explicit RegistryArtifact(const std::string& name, const std::string& data, const std::string type);
 	virtual ~RegistryArtifact();
 
 	void install() override;
