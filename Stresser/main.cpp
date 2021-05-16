@@ -6,15 +6,14 @@
 #include "ArtifactManager.h"
 #include "PolicyNotifications.h"
 
-#include "EventParser.h"
 #include "EtwManager.h"
-#include "EtwUtils.h"
+
+#include "RegistryEventHandler.h"
 
 #include "../Utils/AutoCriticalSection.h"
 #include "../Utils/DebugPrint.h"
 #include "../Utils/SehTranslatorGuard.h"
 #include "../Utils/WindowsEvent.h"
-#include "../Utils/TimeUtils.h"
 #include "../Utils/EventsNames.h"
 
 #include "nlohmann/json.hpp"
@@ -30,12 +29,6 @@ WindowsEvent g_shutdownEvent(STOP_STRESSER);
 
 
 BOOL consoleHandler(DWORD signal);
-
-/*
- * Handler function for ETW events.
- * TODO: Move from here !
- */
-void OnEvent(PEVENT_RECORD rec);
 
 int wmain(int argc, PWCHAR argv[])
 {
@@ -71,21 +64,18 @@ int wmain(int argc, PWCHAR argv[])
 
 		ArtifactManager artifactManager;
 
-		policyNotifications.subscribe(&artifactManager);
+		RegistryEventHandler registryEventHandler;
 
-		// Define ETW event types to be collected:
-		// TODO: Move from here !
-		std::vector<EtwEventTypes> eventTypes =
-		{
-			EtwEventTypes::DiskIo,
-			EtwEventTypes::DiskFileIo,
-			EtwEventTypes::FileIo,
-			EtwEventTypes::FileIoInit
-		};
+		artifactManager.subscribe(&registryEventHandler);
+
+		policyNotifications.subscribe(&artifactManager);
 
 		//Create ETW collector:
 		// TODO: Move from here !
-		EtwManager mgr(eventTypes, OnEvent);
+		EtwManager mgr;
+
+		mgr.registerEventHandle(registryEventHandler);
+
 		mgr.start();
 
 		// Keep the main thread running until user CTRL + C:
@@ -97,74 +87,6 @@ int wmain(int argc, PWCHAR argv[])
 	}
 
 	return 0;
-}
-
-void OnEvent(PEVENT_RECORD rec) {
-
-	const EventParser parser(rec);
-
-	const std::wstring timestamp = TimeUtils::systemTimeToTimestamp(parser.getEventHeader().TimeStamp);
-	const std::uint32_t processPid = parser.getProcessId();
-	const std::wstring eventData = L"Time= " + timestamp + L", PID= " + std::to_wstring(processPid);
-	const std::wstring FAKE_FILE(L"StresserTest.txt");
-
-	const UCHAR eventOpcode = parser.getEventHeader().EventDescriptor.Opcode;
-
-	// FileIo_Name, [EventType{0, 32, 35, 36}, EventTypeName{"Name", "FileCreate", "FileDelete", "FileRundown"}]
-	if (0 == eventOpcode || 32 == eventOpcode || 35 == eventOpcode || 36 == eventOpcode)
-	{
-		std::wstring eventType = EtwUtils::getFileIoNameEventTypes()[eventOpcode];
-		const EventProperty* fileNameProperty = parser.getProperty(L"FileName");
-		if (nullptr != fileNameProperty)
-		{
-			const std::wstring fileName(fileNameProperty->getUnicodeString());
-			if (std::wstring::npos != fileName.find(FAKE_FILE))
-			{
-				std::wcout << "[!!!] " << eventData << ", " << eventType << ", File name= " << fileName << std::endl;
-			}
-		}
-	}
-
-	// FileIo_Create, [EventType{64}, EventTypeName{"Create"}]
-	if (64 == eventOpcode)
-	{
-		std::wstring eventType = L"FileIo_Create";
-		const EventProperty* openPathProperty = parser.getProperty(L"OpenPath");
-		if (nullptr != openPathProperty)
-		{
-			const std::wstring openPath(openPathProperty->getUnicodeString());
-			if (std::wstring::npos != openPath.find(FAKE_FILE))
-			{
-				std::wcout << eventData << ", " << eventType << ", Open path= " << openPath << std::endl;
-			}
-		}
-	}
-
-	// FileIo_DirEnum, [EventType{72, 77}, EventTypeName{"DirEnum", "DirNotify"}]
-	if (72 == eventOpcode || 77 == eventOpcode)
-	{
-		std::wstring eventType = EtwUtils::getFileIoNameEventTypes()[eventOpcode];
-		const EventProperty* fileNameProperty = parser.getProperty(L"FileName");
-		if (nullptr != fileNameProperty)
-		{
-			const std::wstring fileName(fileNameProperty->getUnicodeString());
-			if (std::wstring::npos != fileName.find(FAKE_FILE))
-			{
-				std::wcout << eventData << ", " << eventType << ", File name= " << fileName << std::endl;
-			}
-		}
-	}
-
-	if (EVENT_TRACE_TYPE_REGOPEN == eventOpcode)
-	{
-		const std::wstring eventType = L"Open key event";
-		const EventProperty* keyNameProperty = parser.getProperty(L"KeyName");
-		if (nullptr != keyNameProperty)
-		{
-			const std::wstring keyName(keyNameProperty->getUnicodeString());
-			std::wcout << eventData << ", " << eventType << ", Open path= " << keyName << std::endl;
-		}
-	}
 }
 
 BOOL consoleHandler(DWORD signal) {
