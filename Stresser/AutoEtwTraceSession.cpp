@@ -65,7 +65,7 @@ void AutoEtwTraceSession::startTrace()
 	auto* properties = reinterpret_cast<PEVENT_TRACE_PROPERTIES>(this->m_propertiesBuffer.get());
 
 	// If exists stop the trace session with the same name
-	EVENT_TRACE_PROPERTIES prop = { 1024 };
+	EVENT_TRACE_PROPERTIES prop = { sizeof(EVENT_TRACE_PROPERTIES) };
 	ControlTrace(NULL, this->m_sessionName.c_str(), &prop, EVENT_TRACE_CONTROL_STOP);
 
 	ULONG error = ::StartTrace(&this->m_traceSessionHandle, this->m_sessionName.c_str(), properties);
