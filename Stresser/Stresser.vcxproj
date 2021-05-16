@@ -110,6 +110,7 @@
     <ClCompile Include="FileArtifact.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="IArtifact.cpp" />
+    <ClCompile Include="IArtifactSubscriber.cpp" />
     <ClCompile Include="IEtwEventHandler.cpp" />
     <ClCompile Include="IEtwEventHandler.h" />
     <ClCompile Include="IEventCollector.h" />
@@ -142,6 +143,7 @@
     <ClInclude Include="FileArtifact.h" />
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="IArtifact.h" />
+    <ClInclude Include="IArtifactSubscriber.h" />
     <ClInclude Include="PolicyController.h" />
     <ClInclude Include="PolicyEntity.h" />
     <ClInclude Include="PolicyNotifications.h" />

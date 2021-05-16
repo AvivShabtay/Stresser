@@ -78,6 +78,9 @@
     <ClCompile Include="IEtwEventHandler.cpp">
       <Filter>ETW\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IArtifactSubscriber.cpp">
+      <Filter>Artifacts\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h">
@@ -162,6 +165,9 @@
     </ClInclude>
     <ClInclude Include="EtwEventsGuid.h">
       <Filter>ETW\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IArtifactSubscriber.h">
+      <Filter>Artifacts\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
