@@ -170,7 +170,7 @@
     <ClInclude Include="FastMutex.h" />
     <ClInclude Include="HelperMacros.h" />
     <ClInclude Include="IrpUtils.h" />
-    <ClInclude Include="List.h" />
+    <ClInclude Include="LinkedList.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Move.h" />
     <ClInclude Include="ObjectNotification.h" />
