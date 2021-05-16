@@ -120,6 +120,7 @@
     <ClCompile Include="PolicyNotifications.cpp" />
     <ClCompile Include="ProcessArtifact.cpp" />
     <ClCompile Include="RegistryArtifact.cpp" />
+    <ClCompile Include="RegistryEventHandler.cpp" />
     <ClCompile Include="RuleController.cpp" />
     <ClCompile Include="RuleEntity.cpp" />
     <ClCompile Include="ServerDetails.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="IPolicySubscriber.h" />
     <ClInclude Include="ProcessArtifact.h" />
     <ClInclude Include="RegistryArtifact.h" />
+    <ClInclude Include="RegistryEventHandler.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RuleController.h" />
     <ClInclude Include="RuleEntity.h" />
