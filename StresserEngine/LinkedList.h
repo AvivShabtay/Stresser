@@ -14,7 +14,7 @@ class LinkedList
 {
 public:
 	LinkedList()
-		: m_head{ nullptr, nullptr }
+		: m_head{ nullptr, nullptr }, m_size(0)
 	{
 		this->init();
 	}
@@ -31,6 +31,7 @@ public:
 	{
 		AutoLock locker(m_lock);
 		InsertTailList(&m_head, &item->Entry);
+		this->increaseSize();
 	}
 
 	/* Insert allocated memory to the head of the linked list. */
@@ -38,6 +39,7 @@ public:
 	{
 		AutoLock locker(m_lock);
 		InsertHeadList(&m_head, &item->Entry);
+		this->increaseSize();
 	}
 
 	/* Remove item from the linked list, without free it's memory. */
@@ -45,6 +47,7 @@ public:
 	{
 		AutoLock locker(m_lock);
 		auto* const entry = RemoveHeadList(&m_head);
+		this->decreaseSize();
 		return CONTAINING_RECORD(entry, T, Entry);
 	}
 
@@ -56,7 +59,24 @@ public:
 		return CONTAINING_RECORD(entry, T, Entry);
 	}
 
+	ULONG size()
+	{
+		AutoLock locker(m_lock);
+		return this->m_size;
+	}
+
 private:
+	void increaseSize()
+	{
+		++this->m_size;
+	}
+
+	void decreaseSize()
+	{
+		this->m_size = (this->m_size > 0 ? --this->m_size : 0);
+	}
+
 	LIST_ENTRY m_head;
 	Lock m_lock;
+	ULONG m_size;
 };
