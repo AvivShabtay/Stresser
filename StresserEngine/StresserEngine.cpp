@@ -4,13 +4,16 @@
 #include "HelperMacros.h"
 #include "IrpUtils.h"
 #include "ObjectNotification.h"
-#include "Vector.h"
 #include "Memory.h"
 #include "ProcessUtils.h"
 
-PKEVENT g_notificationEvent = nullptr;
-PVOID g_registrationHandle = nullptr;
-Vector<FakeProcessId*, DRIVER_TAG>* g_fakeProcessIds = nullptr;
+bool signalFakeProcessEvent(Event* eventToSignal);
+Value<PVOID, StresserString> createNotificationContext(PDEVICE_OBJECT DeviceObject);
+Value<bool, StresserString> releaseNotificationContext(PDEVICE_OBJECT DeviceObject);
+
+//PVOID g_registrationHandle = nullptr;
+//Event* g_onNotificationEvent = nullptr;
+//PNotificationContext g_notificationContext = nullptr;
 
 /*
  * Driver entry point.
@@ -25,6 +28,7 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 
 	NTSTATUS status = STATUS_SUCCESS;
 	PDEVICE_OBJECT DeviceObject = nullptr;
+	PDeviceExtension deviceExtension = nullptr;
 	UNICODE_STRING symLink = RTL_CONSTANT_STRING(SYMBOLIC_LINK_PATH);
 	bool symbolicLinkCreated = false;
 
@@ -32,12 +36,17 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 	{
 		// Create device object for user-mode communication:
 		UNICODE_STRING devName = RTL_CONSTANT_STRING(DEVICE_NAME);
-		status = IoCreateDevice(DriverObject, 0, &devName, FILE_DEVICE_UNKNOWN, 0, TRUE, &DeviceObject);
+		status = IoCreateDevice(DriverObject, DEVICE_EXTENSION_SIZE, &devName, FILE_DEVICE_UNKNOWN, 0, TRUE, &DeviceObject);
 		PRINT_STATUS_SUCCESS_FAILURE(status, "Create device object successfully", "Failed to create device");
 		BREAK_ON_FAILURE(status);
 
 		// Set the IO communication method:
 		DeviceObject->Flags |= DO_DIRECT_IO;
+
+		// Get device extensions:
+		deviceExtension = static_cast<PDeviceExtension>(DeviceObject->DeviceExtension);
+		deviceExtension->notificationContext = nullptr;
+		deviceExtension->objectNotificationRegistrationHandle = nullptr;
 
 		// Create symbolic link to the device object:
 		status = IoCreateSymbolicLink(&symLink, &devName);
@@ -46,13 +55,18 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 
 		symbolicLinkCreated = true;
 
-		// Initialize data structures:
-		g_fakeProcessIds = new (NonPagedPool, DRIVER_TAG) Vector<FakeProcessId*, DRIVER_TAG>();
-		if (nullptr == g_fakeProcessIds)
+		// Initialize synchronization object:
+		/*
+		g_onNotificationEvent = new (NonPagedPool, DRIVER_TAG) Event();
+		if (nullptr == g_onNotificationEvent)
 		{
+			LOG_MESSAGE("could not allocate memory for notification event");
 			status = STATUS_INSUFFICIENT_RESOURCES;
 			BREAK_ON_FAILURE(status);
 		}
+		*/
+
+		LOG_MESSAGE("allocate memory for notification event");
 
 		// Register to object notifications:
 		// TODO: Verify we are on Vista and above, otherwise: "OS version doesn't support Object notifications"
@@ -72,17 +86,31 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 
 		const UNICODE_STRING altitude = RTL_CONSTANT_STRING(DRIVER_ALTITUDE);
 
+		// Create shared memory for notifications:
+		Value<PVOID, StresserString> result = createNotificationContext(DeviceObject);
+		if (result.isError())
+		{
+			LOG_MESSAGE("could not allocate memory for notification context");
+			status = STATUS_INSUFFICIENT_RESOURCES;
+			BREAK_ON_FAILURE(status);
+		}
+
+		// Add shared structure to device extensions:
+		//g_notificationContext = static_cast<PNotificationContext>(result.getValue());
+		deviceExtension->notificationContext = static_cast<PNotificationContext>(result.getValue());
+
 		// Set object notification registration:
 		OB_CALLBACK_REGISTRATION objectCallbackRegistration =
 		{
 			OB_FLT_REGISTRATION_VERSION,	// Version
 			STRESSER_OBJECT_CALLBACK_COUNT,	// OperationRegistrationCount
 			altitude,						// Altitude
-			nullptr,			// RegistrationContext
+			//g_notificationContext,			// RegistrationContext
+			deviceExtension->notificationContext, // RegistrationContext
 			objectOperationsRegistration	// OperationRegistration
 		};
 
-		status = ObRegisterCallbacks(&objectCallbackRegistration, &g_registrationHandle);
+		status = ObRegisterCallbacks(&objectCallbackRegistration, &deviceExtension->objectNotificationRegistrationHandle);
 		PRINT_STATUS_SUCCESS_FAILURE(status, "Register to object notifications successfully", "Failed to register to object notifications");
 		BREAK_ON_FAILURE(status);
 
@@ -95,17 +123,24 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 		{
 			IoDeleteSymbolicLink(&symLink);
 		}
+		if (nullptr != deviceExtension->objectNotificationRegistrationHandle)
+		{
+			ObUnRegisterCallbacks(deviceExtension->objectNotificationRegistrationHandle);
+		}
+		if (nullptr != deviceExtension->notificationContext)
+		{
+			releaseNotificationContext(DeviceObject);
+		}
+		/*
+		if (nullptr != g_onNotificationEvent)
+		{
+			delete g_onNotificationEvent;
+		}
+		*/
+		// MUST be after freeing other resources:
 		if (nullptr != DeviceObject)
 		{
 			IoDeleteDevice(DeviceObject);
-		}
-		if (nullptr != g_registrationHandle)
-		{
-			ObUnRegisterCallbacks(g_registrationHandle);
-		}
-		if (nullptr != g_fakeProcessIds)
-		{
-			delete g_fakeProcessIds;
 		}
 	}
 
@@ -119,51 +154,54 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 	DriverObject->MajorFunction[IRP_MJ_CLOSE] = StresserEngineCreateClose;
 	DriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] = StresserEngineDeviceControl;
 
-	KdPrint((DRIVER_PREFIX "DriverEntry completed successfully\n"));
+	LOG_MESSAGE("DriverEntry completed successfully\n");
 
 	return status;
 }
 
 void StresserEngineUnload(PDRIVER_OBJECT DriverObject)
 {
+	LOG_MESSAGE(STRINGIFY(StresserEngineUnload) " started");
 
-	KdPrint((DRIVER_PREFIX "StresserEngineUnloaded started\n"));
+	auto* deviceExtensions = reinterpret_cast<PDeviceExtension>(DriverObject->DriverExtension);
 
-	// Remove registered callbacks
-	if (nullptr != g_registrationHandle)
+	// Remove registered callbacks:
+	//if (nullptr != g_registrationHandle)
+	if (nullptr != deviceExtensions->objectNotificationRegistrationHandle)
 	{
-		ObUnRegisterCallbacks(g_registrationHandle);
-		KdPrint((DRIVER_PREFIX "Remove object notification callback successfully\n"));
+		//ObUnRegisterCallbacks(g_registrationHandle);
+		ObUnRegisterCallbacks(deviceExtensions->objectNotificationRegistrationHandle);
+		LOG_MESSAGE("remove object notification callback successfully");
 	}
 
-	// Free allocated memory for fake process IDs:
-	for (auto& item : *g_fakeProcessIds)
+	// Release notification context memory:
+	const Value<bool, StresserString> result = releaseNotificationContext(DriverObject->DeviceObject);
+	if (result.isError())
 	{
-		delete item;
+		LOG_MESSAGE("could not release notification context memory");
 	}
 
-	delete g_fakeProcessIds;
-	KdPrint((DRIVER_PREFIX "Release memory for holding fake process IDs\n"));
+	LOG_MESSAGE("release notification context memory");
 
-	// Free notification event reference:
-	if (nullptr != g_notificationEvent)
+	// Release memory of notification event:
+	/*
+	if (nullptr != g_onNotificationEvent)
 	{
-		ObDereferenceObject(g_notificationEvent);
-		//ExFreePoolWithTag(g_notificationEvent, DRIVER_TAG);
-		g_notificationEvent = nullptr;
-		KdPrint((DRIVER_PREFIX "Release reference to notification even successfully\n"));
+		delete g_onNotificationEvent;
+		LOG_MESSAGE("release notification event memory");
 	}
+	*/
 
-	// Remove symbolic link
+	// Remove symbolic link:
 	UNICODE_STRING symLink = RTL_CONSTANT_STRING(SYMBOLIC_LINK_PATH);
 	const NTSTATUS status = IoDeleteSymbolicLink(&symLink);
-	PRINT_STATUS_SUCCESS_FAILURE(status, "Remove symbolic link successfully", "Failed to delete symbolic link");
+	PRINT_STATUS_SUCCESS_FAILURE(status, "remove symbolic link successfully", "failed to delete symbolic link");
 
 	// Remove device object
 	IoDeleteDevice(DriverObject->DeviceObject);
-	KdPrint((DRIVER_PREFIX "Delete device object\n"));
+	LOG_MESSAGE("delete device object");
 
-	KdPrint((DRIVER_PREFIX "StresserEngineUnloaded completed successfully\n"));
+	LOG_MESSAGE(STRINGIFY(StresserEngineUnload) " completed successfully");
 }
 
 NTSTATUS StresserEngineCreateClose(PDEVICE_OBJECT DeviceObject, PIRP Irp)
@@ -184,7 +222,7 @@ NTSTATUS StresserEngineDefaultDispatch(PDEVICE_OBJECT, PIRP Irp)
 	return STATUS_NOT_SUPPORTED;
 }
 
-NTSTATUS CompleteIrp(PIRP Irp, NTSTATUS status, ULONG_PTR info)
+NTSTATUS completeIrp(PIRP Irp, NTSTATUS status, ULONG_PTR info)
 {
 	Irp->IoStatus.Status = status;
 	Irp->IoStatus.Information = info;
@@ -192,7 +230,7 @@ NTSTATUS CompleteIrp(PIRP Irp, NTSTATUS status, ULONG_PTR info)
 	return status;
 }
 
-NTSTATUS StresserEngineDeviceControl(PDEVICE_OBJECT, PIRP Irp)
+NTSTATUS StresserEngineDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 {
 	KdPrint((DRIVER_PREFIX "DeviceControl started\n"));
 
@@ -202,22 +240,31 @@ NTSTATUS StresserEngineDeviceControl(PDEVICE_OBJECT, PIRP Irp)
 
 	if (nullptr == Irp)
 	{
-		return CompleteIrp(Irp, status);
+		return completeIrp(Irp, status);
 	}
 
 	// Run the corresponding handler for the request:
 	switch (controlCode) {
 	case IOCTL_STRESSER_ENGINE_REGISTER_EVENT:
 	{
-		status = RegisterEventHandler(Irp, stack);
+		status = registerEventHandler(DeviceObject, Irp, stack);
 		break;
 	}
 	case IOCTL_STRESSER_ENGINE_ADD_FAKE_PID:
 	{
-		status = AddFakeProcessIdHandler(Irp, stack);
+		status = addFakeProcessIdHandler(DeviceObject, Irp, stack);
 		break;
 	}
-
+	case IOCTL_STRESSER_ENGINE_REMOVE_FAKE_PID:
+	{
+		status = removeFakeProcessIdHandler(DeviceObject, Irp, stack);
+		break;
+	}
+	case IOCTL_STRESSER_ENGINE_GET_EVENTS:
+	{
+		status = getEventsHandler(DeviceObject, Irp, stack);
+		break;
+	}
 	default:
 	{
 		status = STATUS_INVALID_DEVICE_REQUEST;
@@ -225,18 +272,18 @@ NTSTATUS StresserEngineDeviceControl(PDEVICE_OBJECT, PIRP Irp)
 	}
 	}
 
-	KdPrint((DRIVER_PREFIX "DeviceControl completed successfully\n"));
+	LOG_MESSAGE("DeviceControl completed successfully\n");
 
-	return CompleteIrp(Irp, status);
+	return completeIrp(Irp, status, Irp->IoStatus.Information);
 }
 
-NTSTATUS RegisterEventHandler(PIRP Irp, PIO_STACK_LOCATION StackLocation)
+NTSTATUS registerEventHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_STACK_LOCATION StackLocation)
 {
-	KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " started\n"));
+	LOG_MESSAGE(STRINGIFY(RegisterEventHandler) " started");
 
 	if (!IrpUtils::isValidInputBuffer(StackLocation, REGISTER_EVENT_SIZE))
 	{
-		KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " user buffer is invalid\n"));
+		LOG_MESSAGE(STRINGIFY(RegisterEventHandler) " user buffer is invalid");
 
 		return STATUS_BUFFER_TOO_SMALL;
 	}
@@ -244,45 +291,36 @@ NTSTATUS RegisterEventHandler(PIRP Irp, PIO_STACK_LOCATION StackLocation)
 	auto* const registerEvent = static_cast<RegisterEvent*>(Irp->AssociatedIrp.SystemBuffer);
 	if (nullptr == registerEvent)
 	{
-		KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " Invalid memory\n"));
+		LOG_MESSAGE(STRINGIFY(RegisterEventHandler) " Invalid memory");
 		STATUS_INVALID_PARAMETER;
 	}
 
-	if (nullptr == registerEvent->eventHandle)
+	const StresserString eventName(registerEvent->eventName);
+
+	auto* deviceExtensions = static_cast<PDeviceExtension>(DeviceObject->DeviceExtension);
+	auto* notificationContext = deviceExtensions->notificationContext;
+	auto* onFakeProcessEvent = notificationContext->onFakeProcessEvent;
+
+	//Value<bool, NTSTATUS> result = g_onNotificationEvent->open(eventName);
+	Value<bool, NTSTATUS> result = onFakeProcessEvent->open(eventName);
+
+	if (result.isError())
 	{
-		KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " Invalid type for request\n"));
-		return STATUS_INVALID_PARAMETER;
+		RETURN_ON_STATUS_FAILURE(result.getError(), "could not open event by the given event name");
 	}
 
-	// Get the object pointer from the handle.
-	// Note we must be in the context of the process that created the handle
-	const NTSTATUS status = ObReferenceObjectByHandle(
-		registerEvent->eventHandle,
-		SYNCHRONIZE | EVENT_MODIFY_STATE,
-		*ExEventObjectType,
-		Irp->RequestorMode,
-		reinterpret_cast<PVOID*>(g_notificationEvent),
-		nullptr
-	);
-
-	if (!NT_SUCCESS(status))
-	{
-		KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " could not get handle for event object status: (0x%08X)\n", status));
-		return status;
-	}
-
-	KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " completed successfully\n"));
+	LOG_MESSAGE(STRINGIFY(RegisterEventHandler) " completed successfully");
 
 	return STATUS_SUCCESS;
 }
 
-NTSTATUS AddFakeProcessIdHandler(_In_ PIRP Irp, _In_ PIO_STACK_LOCATION StackLocation)
+NTSTATUS addFakeProcessIdHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_STACK_LOCATION StackLocation)
 {
-	KdPrint((DRIVER_PREFIX STRINGIFY(AddFakeProcessIdHandler) " started\n"));
+	LOG_MESSAGE(STRINGIFY(addFakeProcessIdHandler) " started");
 
 	if (!IrpUtils::isValidInputBuffer(StackLocation, FAKE_PROCESS_ID_SIZE))
 	{
-		KdPrint((DRIVER_PREFIX STRINGIFY(AddFakeProcessIdHandler) " user buffer is invalid\n"));
+		LOG_MESSAGE(STRINGIFY(addFakeProcessIdHandler) " user buffer is invalid");
 
 		return STATUS_BUFFER_TOO_SMALL;
 	}
@@ -290,13 +328,13 @@ NTSTATUS AddFakeProcessIdHandler(_In_ PIRP Irp, _In_ PIO_STACK_LOCATION StackLoc
 	auto* const fakeProcessId = static_cast<FakeProcessId*>(Irp->AssociatedIrp.SystemBuffer);
 	if (nullptr == fakeProcessId)
 	{
-		KdPrint((DRIVER_PREFIX STRINGIFY(AddFakeProcessIdHandler) " Invalid type for request\n"));
+		KdPrint((DRIVER_PREFIX STRINGIFY(addFakeProcessIdHandler) " Invalid type for request\n"));
 		return STATUS_INVALID_PARAMETER;
 	}
 
 	if (!ProcessUtils::doesValidProcessId(fakeProcessId->processId))
 	{
-		KdPrint((DRIVER_PREFIX STRINGIFY(RegisterEventHandler) " Invalid process ID\n"));
+		LOG_MESSAGE(STRINGIFY(addFakeProcessIdHandler) " Invalid process ID");
 		return STATUS_INVALID_PARAMETER;
 	}
 
@@ -304,17 +342,27 @@ NTSTATUS AddFakeProcessIdHandler(_In_ PIRP Irp, _In_ PIO_STACK_LOCATION StackLoc
 
 	processId->processId = fakeProcessId->processId;
 
-	g_fakeProcessIds->add(processId);
-	KdPrint((DRIVER_PREFIX STRINGIFY(AddFakeProcessIdHandler)" Add fake process ID=%d\n", processId->processId));
+	auto* deviceExtensions = static_cast<PDeviceExtension>(DeviceObject->DeviceExtension);
+	auto* notificationContext = deviceExtensions->notificationContext;
 
-	KdPrint((DRIVER_PREFIX STRINGIFY(AddFakeProcessIdHandler) " completed successfully\n"));
+	{
+		//AutoLock lock(g_notificationContext->mutex);
+		AutoLock lock(notificationContext->mutex);
+		//auto* fakeProcessIds = g_notificationContext->fakeProcessIds;
+		auto* fakeProcessIds = notificationContext->fakeProcessIds;
+
+		fakeProcessIds->add(processId);
+	}
+
+	KdPrint((DRIVER_PREFIX STRINGIFY(addFakeProcessIdHandler)" Add fake process ID=%d\n", processId->processId));
+	LOG_MESSAGE(STRINGIFY(addFakeProcessIdHandler) " completed successfully");
 
 	return STATUS_SUCCESS;
 }
 
-NTSTATUS RemoveFakeProcessIdHandler(PIRP Irp, PIO_STACK_LOCATION StackLocation)
+NTSTATUS removeFakeProcessIdHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_STACK_LOCATION StackLocation)
 {
-	KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler) " started\n"));
+	KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler) " started\n"));
 
 	if (!IrpUtils::isValidInputBuffer(StackLocation, FAKE_PROCESS_ID_SIZE))
 	{
@@ -326,31 +374,215 @@ NTSTATUS RemoveFakeProcessIdHandler(PIRP Irp, PIO_STACK_LOCATION StackLocation)
 	auto* const fakeProcessId = static_cast<FakeProcessId*>(Irp->AssociatedIrp.SystemBuffer);
 	if (nullptr == fakeProcessId)
 	{
-		KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler) " invalid type for request\n"));
+		KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler) " invalid type for request\n"));
 		return STATUS_INVALID_PARAMETER;
 	}
 
 	if (!ProcessUtils::doesValidProcessId(fakeProcessId->processId))
 	{
-		KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler) " invalid process ID\n"));
+		KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler) " invalid process ID\n"));
 		return STATUS_INVALID_PARAMETER;
 	}
 
-	for (ULONG i = 0; i < g_fakeProcessIds->size(); ++i)
+	auto* deviceExtensions = static_cast<PDeviceExtension>(DeviceObject->DeviceExtension);
+	auto* notificationContext = deviceExtensions->notificationContext;
+
 	{
-		const FakeProcessId* current = g_fakeProcessIds->getAt(i);
-		if (fakeProcessId->processId == current->processId)
+		//AutoLock lock(g_notificationContext->mutex);
+		AutoLock lock(notificationContext->mutex);
+		//auto* fakeProcessIds = g_notificationContext->fakeProcessIds;
+		auto* fakeProcessIds = notificationContext->fakeProcessIds;
+
+		for (ULONG i = 0; i < fakeProcessIds->size(); ++i)
 		{
-			KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler)" remove fake process ID=%d\n", current->processId));
+			const FakeProcessId* current = fakeProcessIds->getAt(i);
+			if (fakeProcessId->processId == current->processId)
+			{
+				KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler)" remove fake process ID=%d\n", current->processId));
 
-			g_fakeProcessIds->removeAt(i);
-			delete current;
+				fakeProcessIds->removeAt(i);
+				delete current;
 
-			KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler) " completed successfully\n"));
-			return STATUS_SUCCESS;
+				KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler) " completed successfully\n"));
+				return STATUS_SUCCESS;
+			}
 		}
 	}
 
-	KdPrint((DRIVER_PREFIX STRINGIFY(RemoveFakeProcessIdHandler) " could not remove process ID=%d\n", fakeProcessId->processId));
+	KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler) " could not remove process ID=%d\n", fakeProcessId->processId));
 	return STATUS_INVALID_PARAMETER;
+}
+
+NTSTATUS getEventsHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_STACK_LOCATION StackLocation)
+{
+	LOG_MESSAGE(STRINGIFY(getEventsHandler) " started");
+
+	// Validates input data:
+	RETURN_STATUS_ON_CONDITION(!IrpUtils::isValidOutputBuffer(StackLocation, EVENTS_HEADER_SIZE),
+		STRINGIFY(getEventsHandler) " events header is too small", STATUS_BUFFER_TOO_SMALL);
+
+	// Get data from the request:
+	auto* eventsHeader = static_cast<EventsHeader*>(MmGetSystemAddressForMdlSafe(Irp->MdlAddress, NormalPagePriority));
+	RETURN_STATUS_ON_CONDITION(nullptr == eventsHeader,
+		STRINGIFY(getEventsHandler) " events buffer is too small", STATUS_INVALID_DEVICE_REQUEST);
+
+	// Validates minimum output buffer size:
+	const ULONG eventsBufferSize = eventsHeader->size;
+	RETURN_STATUS_ON_CONDITION(eventsBufferSize < 1,
+		STRINGIFY(getEventsHandler) " events buffer is too small", STATUS_BUFFER_TOO_SMALL);
+
+	// Validates output buffer:
+	auto* const eventsBuffer = reinterpret_cast<EventInfo*>(eventsHeader->events);
+	RETURN_STATUS_ON_CONDITION(nullptr == eventsBuffer,
+		STRINGIFY(getEventsHandler) " invalid events buffer", STATUS_INVALID_PARAMETER);
+
+	// TODO: Validates output buffer size, not by given user buffer size
+
+	auto* deviceExtensions = static_cast<PDeviceExtension>(DeviceObject->DeviceExtension);
+	auto* notificationContext = deviceExtensions->notificationContext;
+
+	{
+		//AutoLock lock(g_notificationContext->mutex);
+		AutoLock lock(notificationContext->mutex);
+		//auto* fakeProcessEvents = g_notificationContext->fakeProcessEvents;
+		auto* fakeProcessEvents = notificationContext->fakeProcessEvents;
+
+		// Verify if the list contains any events:
+		const ULONG listSize = fakeProcessEvents->size();
+		RETURN_STATUS_ON_CONDITION(0 == listSize,
+			STRINGIFY(getEventsHandler) " empty events list", STATUS_SUCCESS);
+
+		const ULONG maxIterations = min(listSize, eventsBufferSize);
+
+		for (ULONG i = 0; i < maxIterations; ++i)
+		{
+			const auto* eventItem = fakeProcessEvents->removeHead();
+			const EventInfo& eventInfo = eventItem->data;
+
+			memcpy(&eventsBuffer[i], &eventInfo, EVENT_INFO_SIZE);
+
+			delete eventItem;
+		}
+
+		// Pass how much size of buffer have been used:
+		Irp->IoStatus.Information = maxIterations * EVENT_INFO_SIZE;
+	}
+
+	LOG_MESSAGE(STRINGIFY(getEventsHandler) " completed successfully");
+	return STATUS_SUCCESS;
+}
+
+bool signalFakeProcessEvent(Event* eventToSignal)
+{
+	Value<bool, NTSTATUS> result = eventToSignal->set();
+	if (result.isError())
+	{
+		const NTSTATUS status = result.getError();
+		PRINT_ON_STATUS_FAILURE(status, "could not open event by the given event name");
+		return false;
+	}
+
+	LOG_MESSAGE("signal fake process event");
+
+	return true;
+}
+
+Value<PVOID, StresserString> createNotificationContext(PDEVICE_OBJECT DeviceObject)
+{
+	LOG_MESSAGE(STRINGIFY(createNotificationContext) " called");
+
+	auto* notificationContext = new (NonPagedPool, DRIVER_TAG) NotificationContext;
+	if (nullptr == notificationContext)
+	{
+		StresserString errorMessage(L"Could not allocate memory for " STRINGIFY(NotificationContext));
+		return errorMessage;
+	}
+
+	notificationContext->fakeProcessIds = new (NonPagedPool, DRIVER_TAG) Vector<FakeProcessId*, DRIVER_TAG>();
+	if (nullptr == notificationContext->fakeProcessIds)
+	{
+		StresserString errorMessage(L"Could not allocate memory for " STRINGIFY(Vector));
+		return errorMessage;
+	}
+
+	notificationContext->fakeProcessEvents = new (NonPagedPool, DRIVER_TAG) LinkedList<EventItem<EventInfo>, FastMutex>();
+	if (nullptr == notificationContext->fakeProcessEvents)
+	{
+		StresserString errorMessage(L"Could not allocate memory for " STRINGIFY(LinkedList));
+		return errorMessage;
+	}
+
+	notificationContext->onFakeProcessEvent = new (NonPagedPool, DRIVER_TAG) Event();
+	if (nullptr == notificationContext->onFakeProcessEvent)
+	{
+		StresserString errorMessage(L"Could not allocate memory for " STRINGIFY(Event));
+		return errorMessage;
+	}
+
+	// Initialize global lock object:
+	notificationContext->mutex.init();
+
+	LOG_MESSAGE(STRINGIFY(createNotificationContext) " ended");
+
+	auto* deviceExtensions = static_cast<PDeviceExtension>(DeviceObject->DeviceExtension);
+	deviceExtensions->notificationContext = notificationContext;
+
+	return notificationContext;
+}
+
+Value<bool, StresserString> releaseNotificationContext(PDEVICE_OBJECT DeviceObject)
+{
+	LOG_MESSAGE(STRINGIFY(releaseNotificationContext) " called");
+
+	auto* deviceExtensions = static_cast<PDeviceExtension>(DeviceObject->DeviceExtension);
+	auto* notificationContext = deviceExtensions->notificationContext;
+
+	//if (nullptr == g_notificationContext)
+	if (nullptr == notificationContext)
+	{
+		StresserString errorMessage(L"Notification context pointer already null");
+		return errorMessage;
+	}
+
+	{
+		AutoLock(notificationContext->mutex);
+
+		//auto* fakeProcessIds = g_notificationContext->fakeProcessIds;
+		auto* fakeProcessIds = notificationContext->fakeProcessIds;
+		if (nullptr != fakeProcessIds)
+		{
+			for (auto& fakeProcessId : *fakeProcessIds)
+			{
+				delete fakeProcessId;
+			}
+		}
+
+		//auto* events = g_notificationContext->fakeProcessEvents;
+		auto* events = notificationContext->fakeProcessEvents;
+		if (nullptr != events || nullptr != events->getHead())
+		{
+			EventItem<EventInfo>* item = events->getHead();
+			while (nullptr != item)
+			{
+				EventItem<EventInfo>* removedItem = events->removeHead();
+				delete removedItem;
+
+				// Move to next item:
+				item = events->getHead();
+			}
+		}
+
+		//auto* onFakeProcessEvent = g_notificationContext->onFakeProcessEvent;
+		auto* onFakeProcessEvent = notificationContext->onFakeProcessEvent;
+		if (nullptr != onFakeProcessEvent)
+		{
+			delete onFakeProcessEvent;
+		}
+	}
+
+	delete notificationContext;
+
+	LOG_MESSAGE(STRINGIFY(releaseNotificationContext) " ended");
+
+	return true;
 }
