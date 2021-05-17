@@ -61,7 +61,7 @@ do {																\
   /*
 
    */
-#define RETURN_ON_CONDITION(condition, message, status)			\
+#define RETURN_STATUS_ON_CONDITION(condition, message, status)			\
 do {															\
 	if(condition)												\
 	{															\
@@ -71,25 +71,48 @@ do {															\
 } while (false);
 
    /*
-	*
+
 	*/
-#define CURRENT_FILE __FILE__
+#define RETURN_ON_CONDITION(condition)	\
+do {									\
+	if(condition)						\
+	{									\
+		return;							\
+	}									\
+} while (false);
 
 	/*
-		Return the token himself.
-		https://stackoverflow.com/q/55636670
-	*/
-#define STRINGIFY(x) #x
 
-	/*
-	 *
 	 */
-#define LOG_MESSAGE(msg)							\
-do {												\
-	KdPrint((DRIVER_PREFIX CURRENT_FILE ": " msg "\n"));	\
+#define PRINT_MESSAGE_AND_RETURN_ON_CONDITION(condition, message)	\
+do {									\
+	if(condition)						\
+	{									\
+		KdPrint((DRIVER_PREFIX CURRENT_FILE message "\n"));	\
+		return;							\
+	}									\
 } while (false);
 
 	 /*
 	  *
 	  */
+#define CURRENT_FILE __FILE__
+
+	  /*
+		  Return the token himself.
+		  https://stackoverflow.com/q/55636670
+	  */
+#define STRINGIFY(x) #x
+
+	  /*
+	   *
+	   */
+#define LOG_MESSAGE(msg)							\
+do {												\
+	KdPrint((DRIVER_PREFIX CURRENT_FILE ": " msg "\n"));	\
+} while (false);
+
+	   /*
+		*
+		*/
 #define MIN(a,b) (((a) < (b)) ? (a) : (b))
