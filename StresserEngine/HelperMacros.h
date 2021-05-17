@@ -12,11 +12,11 @@
 do {																	\
 	if(NT_SUCCESS(status))												\
 	{																	\
-		KdPrint((DRIVER_PREFIX successMsg "\n"));						\
+		KdPrint((DRIVER_PREFIX CURRENT_FILE ": " successMsg "\n"));						\
 	}																	\
 	else																\
 	{																	\
-		KdPrint((DRIVER_PREFIX failureMsg " (0x%08X)\n", status));		\
+		KdPrint((DRIVER_PREFIX CURRENT_FILE failureMsg " (0x%08X)\n", status));		\
 	}																	\
 } while (false);
 
@@ -24,7 +24,7 @@ do {																	\
 do {												\
 	if(!NT_SUCCESS(status))							\
 	{												\
-		KdPrint((DRIVER_PREFIX failureMsg "\n"));	\
+		KdPrint((DRIVER_PREFIX CURRENT_FILE failureMsg "\n"));	\
 	}												\
 } while (false);
 
@@ -36,11 +36,11 @@ do {												\
 do {																	\
 	if(condition)														\
 	{																	\
-		KdPrint((DRIVER_PREFIX successMsg "\n"));						\
+		KdPrint((DRIVER_PREFIX CURRENT_FILE successMsg "\n"));						\
 	}																	\
 	else																\
 	{																	\
-		KdPrint((DRIVER_PREFIX failureMsg " (0x%08X)\n", status));		\
+		KdPrint((DRIVER_PREFIX CURRENT_FILE failureMsg " (0x%08X)\n", status));		\
 	}																	\
 } while (false);
 
@@ -53,7 +53,7 @@ do {																	\
 do {																\
 	if(!NT_SUCCESS(status))											\
 	{																\
-		KdPrint((DRIVER_PREFIX failureMsg " (0x%08X)\n", status));	\
+		KdPrint((DRIVER_PREFIX CURRENT_FILE failureMsg " (0x%08X)\n", status));	\
 		return status;												\
 	}																\
 } while (false);
@@ -65,13 +65,31 @@ do {																\
 do {															\
 	if(condition)												\
 	{															\
-		KdPrint((DRIVER_PREFIX message " (0x%08X)\n", status));	\
+		KdPrint((DRIVER_PREFIX CURRENT_FILE message " (0x%08X)\n", status));	\
 		return status;											\
 	}															\
 } while (false);
 
    /*
-	   Return the token himself.
-	   https://stackoverflow.com/q/55636670
-   */
+	*
+	*/
+#define CURRENT_FILE __FILE__
+
+	/*
+		Return the token himself.
+		https://stackoverflow.com/q/55636670
+	*/
 #define STRINGIFY(x) #x
+
+	/*
+	 *
+	 */
+#define LOG_MESSAGE(msg)							\
+do {												\
+	KdPrint((DRIVER_PREFIX CURRENT_FILE ": " msg "\n"));	\
+} while (false);
+
+	 /*
+	  *
+	  */
+#define MIN(a,b) (((a) < (b)) ? (a) : (b))
