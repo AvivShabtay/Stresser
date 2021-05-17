@@ -59,7 +59,7 @@ Event& Event::operator=(Event&& other) noexcept
 Value<bool, NTSTATUS> Event::open(StresserString eventName)
 {
 	this->m_eventName = move(eventName);
-	RETURN_ON_CONDITION(this->m_eventName.empty(), "got empty event name", STATUS_INVALID_PARAMETER);
+	RETURN_STATUS_ON_CONDITION(this->m_eventName.empty(), "got empty event name", STATUS_INVALID_PARAMETER);
 
 	const StresserBuffer eventNameBuffer(sizeof(UNICODE_STRING));
 
