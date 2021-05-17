@@ -14,30 +14,18 @@ OB_PREOP_CALLBACK_STATUS StresserEngineObPreOpCallback(PVOID RegistrationContext
 
 void StresserEngineObPostOpCallback(PVOID RegistrationContext, POB_POST_OPERATION_INFORMATION OperationInformation)
 {
-	UNREFERENCED_PARAMETER(RegistrationContext);
-
 	// Doesn't interfere System operations:
-	if (OperationInformation->KernelHandle)
-	{
-		return;
-	}
+	RETURN_ON_CONDITION(OperationInformation->KernelHandle);
 
 	// Get driver's specific context:
 	auto* notificationContext = static_cast<PNotificationContext>(RegistrationContext);
-	if (nullptr == notificationContext)
-	{
-		return;
-	}
+	RETURN_ON_CONDITION(nullptr == notificationContext);
 
 	// Get data corresponding to the requested process:
 	auto* const requestedProcess = static_cast<PEPROCESS>(OperationInformation->Object);
 	auto requestedProcessPid = ProcessUtils::getPidFromProcess(requestedProcess);
 
-	if (requestedProcessPid.isError())
-	{
-		KdPrint((DRIVER_PREFIX "ObjectNotification invalid PID\n"));
-		return;
-	}
+	PRINT_MESSAGE_AND_RETURN_ON_CONDITION(requestedProcessPid.isError(), STRINGIFY(StresserEngineObPostOpCallback) " invalid PID");
 
 	bool doesFakeProcess = false;
 
@@ -45,10 +33,7 @@ void StresserEngineObPostOpCallback(PVOID RegistrationContext, POB_POST_OPERATIO
 		AutoLock lock(notificationContext->mutex);
 
 		auto* fakeProcessIds = notificationContext->fakeProcessIds;
-		if (nullptr == fakeProcessIds)
-		{
-			return;
-		}
+		RETURN_ON_CONDITION(nullptr == fakeProcessIds);
 
 		for (ULONG i = 0; i < fakeProcessIds->size(); ++i)
 		{
@@ -61,18 +46,11 @@ void StresserEngineObPostOpCallback(PVOID RegistrationContext, POB_POST_OPERATIO
 	}
 
 	// Current process doesn't fake process:
-	if (!doesFakeProcess)
-	{
-		return;
-	}
+	RETURN_ON_CONDITION(false == doesFakeProcess);
 
 	// Create event item memory:
 	auto* eventItem = new (PagedPool, DRIVER_TAG) EventItem<EventInfo>;
-	if (nullptr == eventItem)
-	{
-		LOG_MESSAGE("Could not allocate memory for " STRINGIFY(EventItem));
-		return;
-	}
+	PRINT_MESSAGE_AND_RETURN_ON_CONDITION(nullptr == eventItem, "Could not allocate memory for " STRINGIFY(EventItem));
 
 	// Set event info:
 	auto* eventInfo = &eventItem->data;
@@ -93,14 +71,12 @@ void StresserEngineObPostOpCallback(PVOID RegistrationContext, POB_POST_OPERATIO
 
 	KdPrint((DRIVER_PREFIX "PID=0x%08X open handle to fake process PID=0x%08X\n", eventInfo->processId, eventInfo->fakeProcessId));
 
+	// Add new event:
 	{
 		AutoLock lock(notificationContext->mutex);
 
 		auto* fakeProcessEvents = notificationContext->fakeProcessEvents;
-		if (nullptr == fakeProcessEvents)
-		{
-			return;
-		}
+		RETURN_ON_CONDITION(nullptr == fakeProcessEvents);
 
 		fakeProcessEvents->insertTail(eventItem);
 	}
