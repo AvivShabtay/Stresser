@@ -16,12 +16,12 @@ std::string TimeUtils::GetCurrentDateTime() {
 	return std::string(buffer);
 }
 
-std::wstring TimeUtils::systemTimeToTimestamp(LARGE_INTEGER systemTimeValue)
+std::wstring TimeUtils::systemTimeToTimestamp(LARGE_INTEGER systemTimeValue, std::wstring format)
 {
 	// QuadPart representing the LARGE_INTEGER data:
 	auto* const systemTime = reinterpret_cast<FILETIME*>(&systemTimeValue.QuadPart);
 
 	// Converting the
 	const CTime time(*systemTime);
-	return std::wstring(time.Format(L"%c"));
+	return std::wstring(time.Format(format.c_str()));
 }
