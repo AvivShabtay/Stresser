@@ -47,6 +47,8 @@ public:
 	/* Fetch the events from the Driver. */
 	EventsResult receiveEvents(ULONG numberOfEvents = 10) const;
 
+	void unregisterEvent() const;
+
 private:
 	AutoHandle stresserDevice;
 };

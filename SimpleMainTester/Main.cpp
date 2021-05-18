@@ -21,13 +21,17 @@ const std::wstring EVENT_NAME(L"OnFakeProcess");
 const std::wstring UM_GLOBAL_FAKE_PROCESS_EVENT(L"Global\\" + EVENT_NAME);
 const std::wstring KM_FAKE_PROCESS_EVENT(L"\\BaseNamedObjects\\" + EVENT_NAME);
 const ULONG FAKE_PROCESS_ID_FOR_TESTING = 15;
+const std::wstring TIME_FORMAT(L"%d/%m/%Y - %H:%M:%S");
+constexpr int NUMBER_OF_EVENTS_TO_CONSUME = 10;
 
 void printUsage();
 std::string convertSystemTimeToString(const LARGE_INTEGER& time);
 void addFakeProcessId(ULONG processId);
 void removeFakeProcessId(ULONG processId);
 void registerNotificationEventAndWait();
+void unregisterNotificationEvent();
 void consumeEvents();
+void printEvents(const EventsResult& eventsResult);
 
 int main(int argc, PWCHAR argv[])
 {
@@ -85,6 +89,13 @@ int main(int argc, PWCHAR argv[])
 		}
 		case 4:
 		{
+			// Unregister notification event
+
+			unregisterNotificationEvent();
+			break;
+		}
+		case 5:
+		{
 			// Get collected events
 
 			consumeEvents();
@@ -111,7 +122,8 @@ void printUsage()
 	std::cout << "\t1 [pid] - add fake process ID" << std::endl;
 	std::cout << "\t2 [pid] - remove fake process ID" << std::endl;
 	std::cout << "\t3 - register notification event and wait for signal" << std::endl;
-	std::cout << "\t4 - consume events" << std::endl;
+	std::cout << "\t4 - unregister any existing notification event" << std::endl;
+	std::cout << "\t5 - consume events" << std::endl;
 }
 
 void addFakeProcessId(ULONG processId)
@@ -141,6 +153,11 @@ void registerNotificationEventAndWait()
 	std::cout << "Event handle: " << std::hex << objectNotificationEvent.get() << std::endl;
 
 	const KernelDetector kernelDetector;
+
+	// Close any existing event:
+	kernelDetector.unregisterEvent();
+
+	// Register new event:
 	kernelDetector.registerEvent(KM_FAKE_PROCESS_EVENT);
 
 	if (WAIT_OBJECT_0 != WaitForSingleObject(objectNotificationEvent.get(), INFINITE))
@@ -148,17 +165,33 @@ void registerNotificationEventAndWait()
 		throw Win32ErrorCodeException("Wait for signal from Driver failed");
 	}
 
-	consumeEvents();
+	// Consume and print events:
+	const EventsResult eventsResult = kernelDetector.receiveEvents(NUMBER_OF_EVENTS_TO_CONSUME);
+	printEvents(eventsResult);
+
+	// Close the newly shared event:
+	kernelDetector.unregisterEvent();
+}
+
+void unregisterNotificationEvent()
+{
+	const KernelDetector kernelDetector;
+
+	// Close any existing event:
+	kernelDetector.unregisterEvent();
 }
 
 void consumeEvents()
 {
 	const KernelDetector kernelDetector;
 
-	constexpr int NUMBER_OF_EVENTS_TO_CONSUME = 10;
-	const std::wstring TIME_FORMAT(L"%d/%m/%Y - %H:%M:%S");
-
 	const EventsResult eventsResult = kernelDetector.receiveEvents(NUMBER_OF_EVENTS_TO_CONSUME);
+
+	printEvents(eventsResult);
+}
+
+void printEvents(const EventsResult& eventsResult)
+{
 	if (0 == eventsResult.size)
 	{
 		std::cout << "There are no available events" << std::endl;

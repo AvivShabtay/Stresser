@@ -112,3 +112,13 @@ EventsResult KernelDetector::receiveEvents(ULONG numberOfEvents) const
 
 	return result;
 }
+
+void KernelDetector::unregisterEvent() const
+{
+	DWORD returnedBytes;
+	if (!DeviceIoControl(this->stresserDevice.get(), IOCTL_STRESSER_ENGINE_UNREGISTER_EVENT, nullptr,
+		0, nullptr, 0, &returnedBytes, nullptr))
+	{
+		throw Win32ErrorCodeException("Could not commit device control request");
+	}
+}
