@@ -223,6 +223,11 @@ NTSTATUS StresserEngineDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 		status = registerEventHandler(DeviceObject, Irp, stack);
 		break;
 	}
+	case IOCTL_STRESSER_ENGINE_UNREGISTER_EVENT:
+	{
+		status = unregisterEventHandler(DeviceObject);
+		break;
+	}
 	case IOCTL_STRESSER_ENGINE_ADD_FAKE_PID:
 	{
 		status = addFakeProcessIdHandler(DeviceObject, Irp, stack);
@@ -282,6 +287,37 @@ NTSTATUS registerEventHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_STACK_L
 	}
 
 	LOG_MESSAGE(STRINGIFY(RegisterEventHandler) " completed successfully");
+
+	return STATUS_SUCCESS;
+}
+
+NTSTATUS unregisterEventHandler(_In_ PDEVICE_OBJECT DeviceObject)
+{
+	LOG_MESSAGE(STRINGIFY(unregisterEventHandler) " started");
+
+	auto* deviceExtensions = static_cast<PDeviceExtension>(DeviceObject->DeviceExtension);
+	RETURN_STATUS_ON_CONDITION(nullptr == deviceExtensions,
+		STRINGIFY(unregisterEventHandler) " invalid device extension", STATUS_INVALID_DEVICE_OBJECT_PARAMETER);
+
+	auto* notificationContext = deviceExtensions->notificationContext;
+	RETURN_STATUS_ON_CONDITION(nullptr == notificationContext,
+		STRINGIFY(unregisterEventHandler) " invalid notification context", STATUS_INVALID_DEVICE_OBJECT_PARAMETER);
+
+	auto* onFakeProcessEvent = notificationContext->onFakeProcessEvent;
+	RETURN_STATUS_ON_CONDITION(nullptr == onFakeProcessEvent,
+		STRINGIFY(unregisterEventHandler) " invalid vector of events", STATUS_INVALID_DEVICE_OBJECT_PARAMETER);
+
+	Value<bool, NTSTATUS> result = onFakeProcessEvent->close();
+
+	if (result.isError())
+	{
+		KdPrint((DRIVER_PREFIX STRINGIFY(unregisterEventHandler) " could not close shared event, status: 0x%08X\n",
+			result.getError()));
+
+		return result.getError();
+	}
+
+	LOG_MESSAGE(STRINGIFY(unregisterEventHandler) " completed successfully");
 
 	return STATUS_SUCCESS;
 }

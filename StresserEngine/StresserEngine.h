@@ -62,6 +62,9 @@ NTSTATUS completeIrp(PIRP Irp, NTSTATUS status = STATUS_SUCCESS, ULONG_PTR info 
 /* Handler function for registering event  from user mode. */
 NTSTATUS registerEventHandler(_In_ PDEVICE_OBJECT DeviceObject, _In_ PIRP Irp, _In_ PIO_STACK_LOCATION StackLocation);
 
+/* Handler function for unregistering the event if exists. */
+NTSTATUS unregisterEventHandler(_In_ PDEVICE_OBJECT DeviceObject);
+
 /* Handler function for adding fake process ID to be monitored. */
 NTSTATUS addFakeProcessIdHandler(_In_ PDEVICE_OBJECT DeviceObject, _In_ PIRP Irp, _In_ PIO_STACK_LOCATION StackLocation);
 
