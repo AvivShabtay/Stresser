@@ -506,7 +506,6 @@ Value<bool, StresserString> releaseNotificationContext(PDEVICE_OBJECT DeviceObje
 	auto* deviceExtensions = static_cast<PDeviceExtension>(DeviceObject->DeviceExtension);
 	auto* notificationContext = deviceExtensions->notificationContext;
 
-	//if (nullptr == g_notificationContext)
 	if (nullptr == notificationContext)
 	{
 		StresserString errorMessage(L"Notification context pointer already null");
@@ -516,7 +515,6 @@ Value<bool, StresserString> releaseNotificationContext(PDEVICE_OBJECT DeviceObje
 	{
 		AutoLock(notificationContext->mutex);
 
-		//auto* fakeProcessIds = g_notificationContext->fakeProcessIds;
 		auto* fakeProcessIds = notificationContext->fakeProcessIds;
 		if (nullptr != fakeProcessIds)
 		{
@@ -526,22 +524,18 @@ Value<bool, StresserString> releaseNotificationContext(PDEVICE_OBJECT DeviceObje
 			}
 		}
 
-		//auto* events = g_notificationContext->fakeProcessEvents;
 		auto* events = notificationContext->fakeProcessEvents;
 		if (nullptr != events || nullptr != events->getHead())
 		{
-			EventItem<EventInfo>* item = events->getHead();
-			while (nullptr != item)
+			const ULONG numberOfEvents = events->size();
+
+			for (ULONG i = 0; i < numberOfEvents; ++i)
 			{
 				EventItem<EventInfo>* removedItem = events->removeHead();
 				delete removedItem;
-
-				// Move to next item:
-				item = events->getHead();
 			}
 		}
 
-		//auto* onFakeProcessEvent = g_notificationContext->onFakeProcessEvent;
 		auto* onFakeProcessEvent = notificationContext->onFakeProcessEvent;
 		if (nullptr != onFakeProcessEvent)
 		{
