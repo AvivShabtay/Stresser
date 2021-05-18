@@ -70,3 +70,12 @@ NTSTATUS removeFakeProcessIdHandler(_In_ PDEVICE_OBJECT DeviceObject, _In_ PIRP 
 
 /* Handler function for passing event to user mode. */
 NTSTATUS getEventsHandler(_In_ PDEVICE_OBJECT DeviceObject, _In_ PIRP Irp, _In_ PIO_STACK_LOCATION StackLocation);
+
+/* Allocate shared memory used for object notification callbacks. */
+Value<PVOID, StresserString> createNotificationContext(PDEVICE_OBJECT DeviceObject);
+
+/* Free shared memory used in object notification callbacks. */
+Value<bool, StresserString> releaseNotificationContext(PDEVICE_OBJECT DeviceObject);
+
+/* Signal shared event object. */
+bool signalFakeProcessEvent(Event* eventToSignal);

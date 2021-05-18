@@ -7,17 +7,10 @@
 #include "Memory.h"
 #include "ProcessUtils.h"
 
-bool signalFakeProcessEvent(Event* eventToSignal);
-Value<PVOID, StresserString> createNotificationContext(PDEVICE_OBJECT DeviceObject);
-Value<bool, StresserString> releaseNotificationContext(PDEVICE_OBJECT DeviceObject);
-
-//PVOID g_registrationHandle = nullptr;
-//Event* g_onNotificationEvent = nullptr;
-//PNotificationContext g_notificationContext = nullptr;
-
 /*
  * Driver entry point.
- * Responsible for register dispatch function, register detection callbacks, etc.
+ * Responsible for creating driver's device object, allocate driver's shared memory,
+ * initialize data structures, register to dispatch function, etc.
  */
 extern "C"
 NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)
@@ -27,7 +20,7 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 	KdPrint((DRIVER_PREFIX "DriverEntry started\n"));
 
 	NTSTATUS status = STATUS_SUCCESS;
-	PDEVICE_OBJECT DeviceObject = nullptr;
+	PDEVICE_OBJECT deviceObject = nullptr;
 	PDeviceExtension deviceExtension = nullptr;
 	UNICODE_STRING symLink = RTL_CONSTANT_STRING(SYMBOLIC_LINK_PATH);
 	bool symbolicLinkCreated = false;
@@ -36,15 +29,15 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 	{
 		// Create device object for user-mode communication:
 		UNICODE_STRING devName = RTL_CONSTANT_STRING(DEVICE_NAME);
-		status = IoCreateDevice(DriverObject, DEVICE_EXTENSION_SIZE, &devName, FILE_DEVICE_UNKNOWN, 0, TRUE, &DeviceObject);
+		status = IoCreateDevice(DriverObject, DEVICE_EXTENSION_SIZE, &devName, FILE_DEVICE_UNKNOWN, 0, TRUE, &deviceObject);
 		PRINT_STATUS_SUCCESS_FAILURE(status, "Create device object successfully", "Failed to create device");
 		BREAK_ON_FAILURE(status);
 
 		// Set the IO communication method:
-		DeviceObject->Flags |= DO_DIRECT_IO;
+		deviceObject->Flags |= DO_DIRECT_IO;
 
 		// Get device extensions:
-		deviceExtension = static_cast<PDeviceExtension>(DeviceObject->DeviceExtension);
+		deviceExtension = static_cast<PDeviceExtension>(deviceObject->DeviceExtension);
 		deviceExtension->notificationContext = nullptr;
 		deviceExtension->objectNotificationRegistrationHandle = nullptr;
 
@@ -54,17 +47,6 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 		BREAK_ON_FAILURE(status);
 
 		symbolicLinkCreated = true;
-
-		// Initialize synchronization object:
-		/*
-		g_onNotificationEvent = new (NonPagedPool, DRIVER_TAG) Event();
-		if (nullptr == g_onNotificationEvent)
-		{
-			LOG_MESSAGE("could not allocate memory for notification event");
-			status = STATUS_INSUFFICIENT_RESOURCES;
-			BREAK_ON_FAILURE(status);
-		}
-		*/
 
 		LOG_MESSAGE("allocate memory for notification event");
 
@@ -87,7 +69,7 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 		const UNICODE_STRING altitude = RTL_CONSTANT_STRING(DRIVER_ALTITUDE);
 
 		// Create shared memory for notifications:
-		Value<PVOID, StresserString> result = createNotificationContext(DeviceObject);
+		Value<PVOID, StresserString> result = createNotificationContext(deviceObject);
 		if (result.isError())
 		{
 			LOG_MESSAGE("could not allocate memory for notification context");
@@ -96,20 +78,19 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 		}
 
 		// Add shared structure to device extensions:
-		//g_notificationContext = static_cast<PNotificationContext>(result.getValue());
 		deviceExtension->notificationContext = static_cast<PNotificationContext>(result.getValue());
 
 		// Set object notification registration:
 		OB_CALLBACK_REGISTRATION objectCallbackRegistration =
 		{
-			OB_FLT_REGISTRATION_VERSION,	// Version
-			STRESSER_OBJECT_CALLBACK_COUNT,	// OperationRegistrationCount
-			altitude,						// Altitude
-			//g_notificationContext,			// RegistrationContext
+			OB_FLT_REGISTRATION_VERSION,		// Version
+			STRESSER_OBJECT_CALLBACK_COUNT,		// OperationRegistrationCount
+			altitude,							// Altitude
 			deviceExtension->notificationContext, // RegistrationContext
-			objectOperationsRegistration	// OperationRegistration
+			objectOperationsRegistration		// OperationRegistration
 		};
 
+		// Register to object notifications:
 		status = ObRegisterCallbacks(&objectCallbackRegistration, &deviceExtension->objectNotificationRegistrationHandle);
 		PRINT_STATUS_SUCCESS_FAILURE(status, "Register to object notifications successfully", "Failed to register to object notifications");
 		BREAK_ON_FAILURE(status);
@@ -123,24 +104,18 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 		{
 			IoDeleteSymbolicLink(&symLink);
 		}
-		if (nullptr != deviceExtension->objectNotificationRegistrationHandle)
+		if (nullptr != deviceExtension && nullptr != deviceExtension->objectNotificationRegistrationHandle)
 		{
 			ObUnRegisterCallbacks(deviceExtension->objectNotificationRegistrationHandle);
 		}
-		if (nullptr != deviceExtension->notificationContext)
+		if (nullptr != deviceExtension && nullptr != deviceExtension->notificationContext)
 		{
-			releaseNotificationContext(DeviceObject);
+			releaseNotificationContext(deviceObject);
 		}
-		/*
-		if (nullptr != g_onNotificationEvent)
-		{
-			delete g_onNotificationEvent;
-		}
-		*/
 		// MUST be after freeing other resources:
-		if (nullptr != DeviceObject)
+		if (nullptr != deviceObject)
 		{
-			IoDeleteDevice(DeviceObject);
+			IoDeleteDevice(deviceObject);
 		}
 	}
 
@@ -163,19 +138,18 @@ void StresserEngineUnload(PDRIVER_OBJECT DriverObject)
 {
 	LOG_MESSAGE(STRINGIFY(StresserEngineUnload) " started");
 
-	auto* deviceExtensions = reinterpret_cast<PDeviceExtension>(DriverObject->DriverExtension);
+	// Remove symbolic link:
+	UNICODE_STRING symLink = RTL_CONSTANT_STRING(SYMBOLIC_LINK_PATH);
+	const NTSTATUS status = IoDeleteSymbolicLink(&symLink);
+	PRINT_STATUS_SUCCESS_FAILURE(status, "remove symbolic link successfully", "failed to delete symbolic link");
 
-	// Remove registered callbacks:
-	//if (nullptr != g_registrationHandle)
-	if (nullptr != deviceExtensions->objectNotificationRegistrationHandle)
-	{
-		//ObUnRegisterCallbacks(g_registrationHandle);
-		ObUnRegisterCallbacks(deviceExtensions->objectNotificationRegistrationHandle);
-		LOG_MESSAGE("remove object notification callback successfully");
-	}
+	// Get driver's device object:
+	const PDEVICE_OBJECT deviceObject = DriverObject->DeviceObject;
+	PRINT_MESSAGE_AND_RETURN_ON_CONDITION(nullptr == deviceObject,
+		STRINGIFY(StresserEngineUnload) " device object is null, cannot continue cleanup, returning...");
 
 	// Release notification context memory:
-	const Value<bool, StresserString> result = releaseNotificationContext(DriverObject->DeviceObject);
+	const Value<bool, StresserString> result = releaseNotificationContext(deviceObject);
 	if (result.isError())
 	{
 		LOG_MESSAGE("could not release notification context memory");
@@ -183,22 +157,21 @@ void StresserEngineUnload(PDRIVER_OBJECT DriverObject)
 
 	LOG_MESSAGE("release notification context memory");
 
-	// Release memory of notification event:
-	/*
-	if (nullptr != g_onNotificationEvent)
-	{
-		delete g_onNotificationEvent;
-		LOG_MESSAGE("release notification event memory");
-	}
-	*/
+	// Get device extensions:
+	auto* deviceExtensions = static_cast<PDeviceExtension>(deviceObject->DeviceExtension);
+	PRINT_MESSAGE_AND_RETURN_ON_CONDITION(nullptr == deviceExtensions,
+		STRINGIFY(StresserEngineUnload) " device extensions is null, cannot continue cleanup, returning...");
 
-	// Remove symbolic link:
-	UNICODE_STRING symLink = RTL_CONSTANT_STRING(SYMBOLIC_LINK_PATH);
-	const NTSTATUS status = IoDeleteSymbolicLink(&symLink);
-	PRINT_STATUS_SUCCESS_FAILURE(status, "remove symbolic link successfully", "failed to delete symbolic link");
+	// Remove registered callbacks:
+	if (nullptr != deviceExtensions->objectNotificationRegistrationHandle)
+	{
+		//ObUnRegisterCallbacks(g_registrationHandle);
+		ObUnRegisterCallbacks(deviceExtensions->objectNotificationRegistrationHandle);
+		LOG_MESSAGE("remove object notification callback successfully");
+	}
 
 	// Remove device object
-	IoDeleteDevice(DriverObject->DeviceObject);
+	IoDeleteDevice(deviceObject);
 	LOG_MESSAGE("delete device object");
 
 	LOG_MESSAGE(STRINGIFY(StresserEngineUnload) " completed successfully");
@@ -301,7 +274,6 @@ NTSTATUS registerEventHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_STACK_L
 	auto* notificationContext = deviceExtensions->notificationContext;
 	auto* onFakeProcessEvent = notificationContext->onFakeProcessEvent;
 
-	//Value<bool, NTSTATUS> result = g_onNotificationEvent->open(eventName);
 	Value<bool, NTSTATUS> result = onFakeProcessEvent->open(eventName);
 
 	if (result.isError())
@@ -346,11 +318,10 @@ NTSTATUS addFakeProcessIdHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_STAC
 	auto* notificationContext = deviceExtensions->notificationContext;
 
 	{
-		//AutoLock lock(g_notificationContext->mutex);
-		AutoLock lock(notificationContext->mutex);
-		//auto* fakeProcessIds = g_notificationContext->fakeProcessIds;
-		auto* fakeProcessIds = notificationContext->fakeProcessIds;
 
+		AutoLock lock(notificationContext->mutex);
+
+		auto* fakeProcessIds = notificationContext->fakeProcessIds;
 		fakeProcessIds->add(processId);
 	}
 
@@ -388,9 +359,8 @@ NTSTATUS removeFakeProcessIdHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_S
 	auto* notificationContext = deviceExtensions->notificationContext;
 
 	{
-		//AutoLock lock(g_notificationContext->mutex);
 		AutoLock lock(notificationContext->mutex);
-		//auto* fakeProcessIds = g_notificationContext->fakeProcessIds;
+
 		auto* fakeProcessIds = notificationContext->fakeProcessIds;
 
 		for (ULONG i = 0; i < fakeProcessIds->size(); ++i)
@@ -442,9 +412,8 @@ NTSTATUS getEventsHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_STACK_LOCAT
 	auto* notificationContext = deviceExtensions->notificationContext;
 
 	{
-		//AutoLock lock(g_notificationContext->mutex);
 		AutoLock lock(notificationContext->mutex);
-		//auto* fakeProcessEvents = g_notificationContext->fakeProcessEvents;
+
 		auto* fakeProcessEvents = notificationContext->fakeProcessEvents;
 
 		// Verify if the list contains any events:
