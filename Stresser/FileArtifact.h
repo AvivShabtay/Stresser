@@ -6,8 +6,10 @@
 class FileArtifact : public IArtifact
 {
 public:
-	explicit FileArtifact(const std::string& name, const std::string& data, const std::string type);
+	explicit FileArtifact(const std::string& name, const std::string& data);
 	virtual ~FileArtifact();
+
+	ArtifactTypes getType() const override;
 
 	void install() override;
 	void uninstall() override;

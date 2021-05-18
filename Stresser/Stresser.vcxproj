@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="ArtifactFactory.h" />
     <ClInclude Include="ArtifactManager.h" />
+    <ClInclude Include="ArtifactTypes.h" />
     <ClInclude Include="AuthorizedHttpRequest.h" />
     <ClInclude Include="AutoEtwTraceSession.h" />
     <ClInclude Include="CollectorManager.h" />
@@ -136,7 +137,6 @@
     <ClInclude Include="EndpointController.h" />
     <ClInclude Include="EndpointEntity.h" />
     <ClInclude Include="Entities.h" />
-    <ClInclude Include="EtwEventsGuid.h" />
     <ClInclude Include="EtwUtils.h" />
     <ClInclude Include="EventEntity.h" />
     <ClInclude Include="EventParser.h" />

@@ -1,6 +1,6 @@
 #include "FileArtifact.h"
 
-FileArtifact::FileArtifact(const std::string& name, const  std::string& data, const std::string type) : IArtifact(name, data, type)
+FileArtifact::FileArtifact(const std::string& name, const  std::string& data) : IArtifact(name, data)
 {
 	// https://stackoverflow.com/a/962148
 	this->FileArtifact::install();
@@ -10,6 +10,11 @@ FileArtifact::~FileArtifact()
 {
 	// https://stackoverflow.com/a/962148
 	this->FileArtifact::uninstall();
+}
+
+ArtifactTypes FileArtifact::getType() const
+{
+	return ArtifactTypes::File;
 }
 
 void FileArtifact::install()

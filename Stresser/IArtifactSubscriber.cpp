@@ -2,7 +2,8 @@
 
 #include <utility>
 
-IArtifactSubscriber::IArtifactSubscriber(std::string type) : m_type(std::move(type))
+IArtifactSubscriber::IArtifactSubscriber(ArtifactTypes type) :
+	m_type(std::move(type))
 {
 }
 
@@ -16,7 +17,7 @@ void IArtifactSubscriber::setNewArtifacts(const std::vector<IArtifact*>& artifac
 	this->m_artifactsToReport = artifacts;
 }
 
-std::string IArtifactSubscriber::getType() const
+ArtifactTypes IArtifactSubscriber::getType() const
 {
 	return this->m_type;
 }

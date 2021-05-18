@@ -66,9 +66,13 @@ void AutoEtwTraceSession::startTrace()
 
 	// If exists stop the trace session with the same name
 	EVENT_TRACE_PROPERTIES prop = { sizeof(EVENT_TRACE_PROPERTIES) };
-	ControlTrace(NULL, this->m_sessionName.c_str(), &prop, EVENT_TRACE_CONTROL_STOP);
+	ULONG error = ControlTrace(NULL, this->m_sessionName.c_str(), &prop, EVENT_TRACE_CONTROL_STOP);
+	if (error != ERROR_SUCCESS && error != ERROR_MORE_DATA && error != ERROR_WMI_INSTANCE_NOT_FOUND)
+	{
+		throw Win32ErrorCodeException("Could not close running ETW trace");
+	}
 
-	ULONG error = ::StartTrace(&this->m_traceSessionHandle, this->m_sessionName.c_str(), properties);
+	error = ::StartTrace(&this->m_traceSessionHandle, this->m_sessionName.c_str(), properties);
 	if (ERROR_SUCCESS != error)
 	{
 		// ERROR_ALREADY_EXISTS indicates the trace session is already running:

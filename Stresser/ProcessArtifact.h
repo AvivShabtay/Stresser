@@ -11,8 +11,10 @@ constexpr size_t INVALID_PID = 0;
 class ProcessArtifact : public IArtifact
 {
 public:
-	explicit ProcessArtifact(const std::string& name, const std::string& data, const std::string& type);
+	explicit ProcessArtifact(const std::string& name, const std::string& data);
 	virtual ~ProcessArtifact();
+
+	ArtifactTypes getType() const override;
 
 	void install() override;
 	void uninstall() override;

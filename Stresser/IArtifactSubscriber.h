@@ -1,12 +1,12 @@
 #pragma once
-#include <vector>
-
+#include "ArtifactTypes.h"
 #include "IArtifact.h"
+#include <vector>
 
 class IArtifactSubscriber
 {
 public:
-	explicit IArtifactSubscriber(std::string type);
+	explicit IArtifactSubscriber(ArtifactTypes type);
 
 	virtual ~IArtifactSubscriber() = default;
 
@@ -14,9 +14,9 @@ public:
 
 	void setNewArtifacts(const std::vector<IArtifact*>& artifacts);
 
-	std::string getType() const;
+	ArtifactTypes getType() const;
 
 protected:
 	std::vector<IArtifact*> m_artifactsToReport;
-	std::string m_type;
+	ArtifactTypes m_type;
 };

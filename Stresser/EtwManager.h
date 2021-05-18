@@ -27,6 +27,8 @@ const std::wstring LOGGER_NAME(KERNEL_LOGGER_NAME);
 class EtwManager : public IEventCollector
 {
 public:
+	EtwManager() = default;
+
 	virtual ~EtwManager();
 
 	/* Start the start the trace session. */

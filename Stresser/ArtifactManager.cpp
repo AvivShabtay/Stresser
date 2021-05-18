@@ -24,7 +24,7 @@ void ArtifactManager::policyChanged(const std::vector<RuleEntity>& rules)
 	}
 }
 
-std::vector<IArtifact*> ArtifactManager::getArtifactsByType(const std::string& type)
+std::vector<IArtifact*> ArtifactManager::getArtifactsByType(ArtifactTypes type)
 {
 	std::vector<IArtifact*> result;
 

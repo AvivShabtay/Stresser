@@ -9,6 +9,8 @@
 class ArtifactManager : public IPolicySubscriber
 {
 public:
+	ArtifactManager() = default;
+
 	~ArtifactManager() = default;
 
 	void policyChanged(const std::vector<RuleEntity>& rules) override;
@@ -16,7 +18,7 @@ public:
 	void subscribe(IArtifactSubscriber* subscriber);
 
 private:
-	std::vector<IArtifact*> getArtifactsByType(const std::string& type);
+	std::vector<IArtifact*> getArtifactsByType(ArtifactTypes type);
 
 	std::vector<std::unique_ptr<IArtifact>> m_artifactsVector;
 	std::vector<IArtifactSubscriber*> m_subscribers;

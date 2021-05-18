@@ -166,10 +166,10 @@
     <ClInclude Include="EventProvidersGuid.h">
       <Filter>ETW\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EtwEventsGuid.h">
-      <Filter>ETW\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IArtifactSubscriber.h">
+      <Filter>Artifacts\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArtifactTypes.h">
       <Filter>Artifacts\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

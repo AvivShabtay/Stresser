@@ -1,6 +1,5 @@
 #include "EtwManager.h"
 
-#include "EtwEventsGuid.h"
 #include "../Utils/DebugPrint.h"
 
 EtwManager::~EtwManager()
@@ -31,7 +30,7 @@ void EtwManager::onEventRecord(PEVENT_RECORD record)
 {
 	for (const auto& eventHandler : this->m_eventsHandlers)
 	{
-		if (EtwEventsGuid.at(eventHandler->eventType) == record->EventHeader.ProviderId)
+		if (EtwEventsGuid.at(eventHandler->getType()) == record->EventHeader.ProviderId)
 		{
 			eventHandler->onEventRecord(record);
 		}
@@ -87,7 +86,7 @@ ULONG EtwManager::getEventTypes() const
 	ULONG eventTypes = 0;
 	for (const auto& eventHandler : this->m_eventsHandlers)
 	{
-		eventTypes |= static_cast<ULONG>(eventHandler->eventType);
+		eventTypes |= static_cast<ULONG>(eventHandler->getType());
 	}
 
 	return eventTypes;

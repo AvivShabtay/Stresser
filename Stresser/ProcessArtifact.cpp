@@ -1,6 +1,6 @@
 #include "ProcessArtifact.h"
 
-ProcessArtifact::ProcessArtifact(const std::string& name, const std::string& data, const std::string& type) : IArtifact(name, data, type)
+ProcessArtifact::ProcessArtifact(const std::string& name, const std::string& data) : IArtifact(name, data)
 {
 	const std::wstring tempPath = LocalPcUtils::getTempPath();
     const std::wstring wideFileName = StringUtils::stringToWString(data);
@@ -16,6 +16,11 @@ ProcessArtifact::~ProcessArtifact()
 {
 	// https://stackoverflow.com/a/962148
 	this->ProcessArtifact::uninstall();
+}
+
+ArtifactTypes ProcessArtifact::getType() const
+{
+    return ArtifactTypes::Process;
 }
 
 void ProcessArtifact::install()

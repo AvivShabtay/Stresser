@@ -4,8 +4,9 @@
 #include "../Utils/TimeUtils.h"
 #include "../Utils/StringUtils.h"
 #include "../Utils/RegistryArtifactUtils.h"
+#include "EventEntity.h"
 
-RegistryEventHandler::RegistryEventHandler() : IEtwEventHandler(EtwEventTypes::Registry), IArtifactSubscriber("Registry")
+RegistryEventHandler::RegistryEventHandler() : IEtwEventHandler(EtwEventTypes::Registry), IArtifactSubscriber(ArtifactTypes::Registry)
 {
 }
 
@@ -19,22 +20,27 @@ void RegistryEventHandler::onEventRecord(PEVENT_RECORD record)
 
 	const UCHAR eventOpcode = parser.getEventHeader().EventDescriptor.Opcode;
 
-	if (EVENT_TRACE_TYPE_REGOPEN == eventOpcode)
+	if (EVENT_TRACE_TYPE_REGOPEN != eventOpcode)
 	{
-		const std::wstring eventType = L"Open key event";
-		const EventProperty* keyNameProperty = parser.getProperty(L"KeyName");
-		if (nullptr != keyNameProperty)
+		return;
+	}
+
+	const std::wstring eventType = L"Open key event";
+	const EventProperty* keyNameProperty = parser.getProperty(L"KeyName");
+	if (nullptr == keyNameProperty)
+	{
+		return;
+	}
+
+	const std::wstring keyName(keyNameProperty->getUnicodeString());
+	for (const auto& artifact : this->m_artifactsToReport)
+	{
+		std::string registrySubKey = RegistryArtifactUtils::getRegistrySubKey(artifact->getData());
+		std::wstring artifactKey = StringUtils::stringToWString(registrySubKey);
+		std::wstring trimmedArtifactKey = StringUtils::trimBackslash(artifactKey);
+		if (keyName == artifactKey || keyName == trimmedArtifactKey)
 		{
-			const std::wstring keyName(keyNameProperty->getUnicodeString());
-			for (const auto& artifact : this->m_artifactsToReport)
-			{
-				std::wstring artifactKey = StringUtils::stringToWString(RegistryArtifactUtils::getRegistrySubKey(artifact->getData()));
-				std::wstring trimmedArtifactKey = StringUtils::TrimBackslash(artifactKey);
-				if (keyName == artifactKey || keyName == trimmedArtifactKey)
-				{
-					std::wcout << eventData << ", " << eventType << ", Open path= " << keyName << std::endl;
-				}
-			}
+			std::wcout << eventData << ", " << eventType << ", Open path= " << keyName << std::endl;
 		}
 	}
 }

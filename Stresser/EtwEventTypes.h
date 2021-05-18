@@ -1,4 +1,7 @@
 #pragma once
+#include "EventProvidersGuid.h"
+#include <map>
+
 #include <Windows.h>
 
 // must be after Windows.h:
@@ -13,4 +16,15 @@ enum class EtwEventTypes : ULONG
 	Registry = EVENT_TRACE_FLAG_REGISTRY,
 	Process = EVENT_TRACE_FLAG_PROCESS,
 	ProcessCounters = EVENT_TRACE_FLAG_PROCESS_COUNTERS
+};
+
+const std::map<EtwEventTypes, GUID> EtwEventsGuid =
+{
+	{EtwEventTypes::DiskIo, DiskIoGuid},
+	{EtwEventTypes::DiskFileIo, FileIoGuid},
+	{EtwEventTypes::FileIo, FileIoGuid},
+	{EtwEventTypes::FileIoInit, FileIoGuid},
+	{EtwEventTypes::Registry, RegistryGuid},
+	{EtwEventTypes::Process, ProcessGuid},
+	{EtwEventTypes::ProcessCounters, ProcessGuid}
 };

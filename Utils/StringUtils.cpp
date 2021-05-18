@@ -111,7 +111,7 @@ std::string StringUtils::wstringToString(const std::wstring& data)
 	return std::string(ATL::CW2A(data.c_str()));
 }
 
-std::wstring StringUtils::TrimBackslash(const std::wstring& data)
+std::wstring StringUtils::trimBackslash(const std::wstring& data)
 {
 	return std::regex_replace(data, std::wregex(L"(\\\\)+"), L"\\");
 }

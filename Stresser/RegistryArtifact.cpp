@@ -1,6 +1,6 @@
 #include "RegistryArtifact.h"
 
-RegistryArtifact::RegistryArtifact(const std::string& name, const std::string& data, const std::string type) : IArtifact(name, data, type)
+RegistryArtifact::RegistryArtifact(const std::string& name, const std::string& data) : IArtifact(name, data)
 {
 	this->m_registryPrefix = RegistryArtifactUtils::getRegistryPrefix(this->m_data);
 	this->m_registrySubKey = RegistryArtifactUtils::getRegistrySubKey(this->m_data);
@@ -13,6 +13,11 @@ RegistryArtifact::~RegistryArtifact()
 {
 	// https://stackoverflow.com/a/962148
 	this->RegistryArtifact::uninstall();
+}
+
+ArtifactTypes RegistryArtifact::getType() const
+{
+	return ArtifactTypes::Registry;
 }
 
 void RegistryArtifact::install()

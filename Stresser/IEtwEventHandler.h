@@ -9,9 +9,12 @@ class IEtwEventHandler
 public:
 	IEtwEventHandler(EtwEventTypes eventType);
 
+	EtwEventTypes getType() const;
+
 	virtual ~IEtwEventHandler() = default;
 
 	virtual void onEventRecord(PEVENT_RECORD record) = 0;
 
-	EtwEventTypes eventType;
+private:
+	EtwEventTypes m_eventType;
 };
