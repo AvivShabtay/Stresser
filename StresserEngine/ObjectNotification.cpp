@@ -80,4 +80,28 @@ void StresserEngineObPostOpCallback(PVOID RegistrationContext, POB_POST_OPERATIO
 
 		fakeProcessEvents->insertTail(eventItem);
 	}
+
+	auto* sharedEvent = notificationContext->onFakeProcessEvent;
+	if (nullptr != sharedEvent->get())
+	{
+		Value<bool, NTSTATUS> result = sharedEvent->set();
+		if (result.isError())
+		{
+			KdPrint((DRIVER_PREFIX STRINGIFY(StresserEngineObPostOpCallback) " could not signal UM, status: 0x%08X\n",
+				result.getError()));
+		}
+	}
+}
+
+void signalNotificationEvent(const Event& notificationEvent)
+{
+	if (nullptr != notificationEvent.get())
+	{
+		Value<bool, NTSTATUS> result = notificationEvent.set();
+		if (result.isError())
+		{
+			KdPrint((DRIVER_PREFIX STRINGIFY(StresserEngineObPostOpCallback) " could not signal UM, status: 0x%08X\n",
+				result.getError()));
+		}
+	}
 }
