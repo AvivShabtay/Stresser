@@ -7,24 +7,27 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-	  <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-	  <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-	  <ConformanceMode>true</ConformanceMode>
-	  <ExceptionHandling>Async</ExceptionHandling>
-	  <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ConformanceMode>true</ConformanceMode>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-	<Link>
+    <Link>
       <SubSystem>Console</SubSystem>
-	  <GenerateDebugInformation>true</GenerateDebugInformation>
-	  <LinkIncremental>true</LinkIncremental>
-	  <!-- Needs to move to Release version -->
-	  <LinkIncremental>false</LinkIncremental>
-	  <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkIncremental>true</LinkIncremental>
+      <!-- Needs to move to Release version -->
+      <LinkIncremental>false</LinkIncremental>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-	  <!--LinkIncremental>false</LinkIncremental-->
-	</Link>
+      <!--LinkIncremental>false</LinkIncremental-->
+    </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>FAKE_PROCESS_RELATIVE_PATH=$(OutDir)FakeProcess.exe;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>
