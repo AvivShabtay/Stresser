@@ -21,5 +21,7 @@ public:
 	static std::wstring stringToWString(const std::string& data);
 
 	static std::string wstringToString(const std::wstring& data);
+
+	static std::wstring trimBackslash(const std::wstring& data);
 };
 

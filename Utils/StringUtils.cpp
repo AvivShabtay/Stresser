@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "StringUtils.h"
+#include <regex>
 
 std::wstring StringUtils::RemoveQuotationMarks(std::wstring data) {
 	static const std::wstring QUOTATION_MARKS(L"\"");
@@ -108,4 +109,9 @@ std::wstring StringUtils::stringToWString(const std::string& data)
 std::string StringUtils::wstringToString(const std::wstring& data)
 {
 	return std::string(ATL::CW2A(data.c_str()));
+}
+
+std::wstring StringUtils::trimBackslash(const std::wstring& data)
+{
+	return std::regex_replace(data, std::wregex(L"(\\\\)+"), L"\\");
 }

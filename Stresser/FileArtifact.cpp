@@ -12,6 +12,11 @@ FileArtifact::~FileArtifact()
 	this->FileArtifact::uninstall();
 }
 
+ArtifactTypes FileArtifact::getType() const
+{
+	return ArtifactTypes::File;
+}
+
 void FileArtifact::install()
 {
 	const std::string fileName = this->m_data;
