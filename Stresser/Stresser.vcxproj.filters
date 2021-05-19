@@ -53,7 +53,6 @@
     <ClCompile Include="CollectorManager.cpp">
       <Filter>Collectors\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EtwUtils.cpp" />
     <ClCompile Include="RegistryArtifact.cpp">
       <Filter>Artifacts\Source Files</Filter>
     </ClCompile>
@@ -83,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="IArtifactSubscriber.cpp">
       <Filter>Artifacts\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EtwUtils.cpp">
+      <Filter>ETW\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,7 +136,6 @@
     <ClInclude Include="Entities.h">
       <Filter>Entities\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EtwUtils.h" />
     <ClInclude Include="RegistryArtifact.h">
       <Filter>Artifacts\Header Files</Filter>
     </ClInclude>
@@ -171,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="ArtifactTypes.h">
       <Filter>Artifacts\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EtwUtils.h">
+      <Filter>ETW\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
