@@ -24,7 +24,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // BIN
 //
 
-FAKE_PROCESS            BIN                     "C:\\Users\\EladShriki\\Desktop\\Agent\\Aviv Repo\\Stresser\\x64\\Release\\FakeProcess.exe"
+FAKE_PROCESS            BIN                     FAKE_PROCESS_RELATIVE_PATH
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
@@ -43,21 +43,21 @@ LANGUAGE LANG_HEBREW, SUBLANG_DEFAULT
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
-    "resource.h\0"
+"resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
-    "#include ""winres.h""\r\n"
-    "\0"
+"#include ""winres.h""\r\n"
+"\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
-    "\r\n"
-    "\0"
+"\r\n"
+"\0"
 END
 
 #endif    // APSTUDIO_INVOKED

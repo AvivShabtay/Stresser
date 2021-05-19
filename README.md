@@ -62,4 +62,12 @@ Stresser is a complete Endpoint Security Solution contains Central management an
 - The solution is to only include `ntifs.h`.
 - More information about this issue can be found here: https://community.osr.com/discussion/170511
 
+### Convert resource path to relative path
+- Use pre-processor symbols and create kind of "compile time-constant"
+- Under your property settings to go: Resource -> General -> Preprocessor Definitions -> Edit
+- Add your compile time symbol and use VS macros to get relative path, for example: `SOLUTION=$(SolutionDir)`
+- Right click on your `.rc` file and choose `view code`
+- Use the symbol instead of using relative paths
+- For more info check my `props` folder -> `.props` file and `.rc` file
+
 ---
