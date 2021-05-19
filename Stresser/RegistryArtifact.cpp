@@ -15,6 +15,11 @@ RegistryArtifact::~RegistryArtifact()
 	this->RegistryArtifact::uninstall();
 }
 
+ArtifactTypes RegistryArtifact::getType() const
+{
+	return ArtifactTypes::Registry;
+}
+
 void RegistryArtifact::install()
 {
 	HKEY hKey;

@@ -75,6 +75,15 @@
     <ClCompile Include="PolicyNotifications.cpp">
       <Filter>PolicyNotifications</Filter>
     </ClCompile>
+    <ClCompile Include="IEtwEventHandler.cpp">
+      <Filter>ETW\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RegistryEventHandler.cpp">
+      <Filter>ETW\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IArtifactSubscriber.cpp">
+      <Filter>Artifacts\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h">
@@ -150,6 +159,18 @@
     </ClInclude>
     <ClInclude Include="IPolicySubscriber.h">
       <Filter>PolicyNotifications</Filter>
+    </ClInclude>
+    <ClInclude Include="RegistryEventHandler.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventProvidersGuid.h">
+      <Filter>ETW\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IArtifactSubscriber.h">
+      <Filter>Artifacts\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArtifactTypes.h">
+      <Filter>Artifacts\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,6 @@
 #include "IEventCollector.h"
 #include "IEtwEventHandler.h"
 #include "AutoEtwTraceSession.h"
-#include "EtwEventTypes.h"
 
 #include <functional>
 #include <vector>
@@ -25,10 +24,10 @@ const std::wstring LOGGER_NAME(KERNEL_LOGGER_NAME);
  * Define the default properties and the default logfile for the ETW session
  * and start the trace session, stop it, etc.
  */
-class EtwManager : public IEtwEventHandler, IEventCollector
+class EtwManager : public IEventCollector
 {
 public:
-	explicit EtwManager(std::vector<EtwEventTypes> eventTypes, std::function<void(PEVENT_RECORD)> callback);
+	EtwManager() = default;
 
 	virtual ~EtwManager();
 
@@ -39,7 +38,9 @@ public:
 	void stop() override;
 
 	/* Called whenever new event accepted by the trace session. */
-	void onEventRecord(PEVENT_RECORD record) override;
+	void onEventRecord(PEVENT_RECORD record);
+
+	void registerEventHandle(IEtwEventHandler &eventHandler);
 
 private:
 	/* Create default properties structure for the trace session. */
@@ -53,6 +54,6 @@ private:
 
 private:
 	std::function<void(PEVENT_RECORD)> m_callback;
-	std::vector<EtwEventTypes> m_eventTypes;
+	std::vector<IEtwEventHandler*> m_eventsHandlers;
 	AutoEtwTraceSession m_autoTraceSession;
 };

@@ -14,6 +14,8 @@ public:
 	explicit ProcessArtifact(const std::string& name, const std::string& data);
 	virtual ~ProcessArtifact();
 
+	ArtifactTypes getType() const override;
+
 	void install() override;
 	void uninstall() override;
 

@@ -37,7 +37,7 @@ void AutoRegistryKeyHandle::registryKeyHandleDeleter() const
 {
 	if (nullptr != this->m_handle)
 	{
-		if (!RegCloseKey(this->m_handle))
+		if (ERROR_SUCCESS != RegCloseKey(this->m_handle))
 		{
 			throw Win32ErrorCodeException("Could not close the registry key handle");
 		}

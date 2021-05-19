@@ -1,14 +1,6 @@
 #include "EtwManager.h"
-#include "../Utils/DebugPrint.h"
 
-EtwManager::EtwManager(std::vector<EtwEventTypes> eventTypes, std::function<void(PEVENT_RECORD)> callback)
-	: m_callback(callback), m_eventTypes(eventTypes)
-{
-	if (this->m_eventTypes.empty())
-	{
-		throw std::runtime_error("Cannot start trace session without event types");
-	}
-}
+#include "../Utils/DebugPrint.h"
 
 EtwManager::~EtwManager()
 {
@@ -36,10 +28,18 @@ void EtwManager::stop() {
 
 void EtwManager::onEventRecord(PEVENT_RECORD record)
 {
-	if (nullptr != m_callback)
+	for (const auto& eventHandler : this->m_eventsHandlers)
 	{
-		m_callback(record);
+		if (EtwEventsGuid.at(eventHandler->getType()) == record->EventHeader.ProviderId)
+		{
+			eventHandler->onEventRecord(record);
+		}
 	}
+}
+
+void EtwManager::registerEventHandle(IEtwEventHandler& eventHandler)
+{
+	this->m_eventsHandlers.push_back(&eventHandler);
 }
 
 EVENT_TRACE_PROPERTIES EtwManager::getProperties() const
@@ -74,8 +74,8 @@ EVENT_TRACE_LOGFILE EtwManager::getTraceLogFile()
 	traceLogfile.LoggerName = const_cast<LPWSTR>(LOGGER_NAME.c_str());
 	traceLogfile.ProcessTraceMode = PROCESS_TRACE_MODE_EVENT_RECORD | PROCESS_TRACE_MODE_REAL_TIME;
 	traceLogfile.EventRecordCallback = [](const PEVENT_RECORD record) {
-		auto* const eventHandler = static_cast<IEtwEventHandler*>(record->UserContext);
-		eventHandler->onEventRecord(record);
+		auto* const etwManager = static_cast<EtwManager*>(record->UserContext);
+		etwManager->onEventRecord(record);
 	};
 
 	return traceLogfile;
@@ -84,9 +84,9 @@ EVENT_TRACE_LOGFILE EtwManager::getTraceLogFile()
 ULONG EtwManager::getEventTypes() const
 {
 	ULONG eventTypes = 0;
-	for (const auto& type : this->m_eventTypes)
+	for (const auto& eventHandler : this->m_eventsHandlers)
 	{
-		eventTypes |= static_cast<ULONG>(type);
+		eventTypes |= static_cast<ULONG>(eventHandler->getType());
 	}
 
 	return eventTypes;

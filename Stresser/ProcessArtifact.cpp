@@ -18,6 +18,11 @@ ProcessArtifact::~ProcessArtifact()
 	this->ProcessArtifact::uninstall();
 }
 
+ArtifactTypes ProcessArtifact::getType() const
+{
+    return ArtifactTypes::Process;
+}
+
 void ProcessArtifact::install()
 {
     const PeResource fakeProcess(FAKE_PROCESS, L"BIN");
