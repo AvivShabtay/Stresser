@@ -151,7 +151,6 @@
     <ClInclude Include="ArtifactFactory.h">
       <Filter>Artifacts\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
     <ClInclude Include="ArtifactManager.h">
       <Filter>Artifacts\Header Files</Filter>
     </ClInclude>
@@ -175,6 +174,9 @@
     </ClInclude>
     <ClInclude Include="EtwUtils.h">
       <Filter>ETW\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -244,12 +246,19 @@
     <Filter Include="PolicyNotifications">
       <UniqueIdentifier>{c5ce2fbe-7a94-47e4-ae25-9f8864b7faab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{c64bfbd0-a812-4de3-a88f-36780b2d940d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="..\x64\Release\FakeProcess.exe" />
+    <None Include="..\x64\Release\FakeProcess.exe">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Stresser.rc" />
+    <ResourceCompile Include="Stresser.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
