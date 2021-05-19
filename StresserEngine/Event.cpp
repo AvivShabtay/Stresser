@@ -86,15 +86,17 @@ Value<bool, NTSTATUS> Event::open(StresserString eventName)
 	return true;
 }
 
-Value<bool, NTSTATUS> Event::close() const
+Value<bool, NTSTATUS> Event::close()
 {
-	if (nullptr != this->m_event)
+	if (nullptr == this->m_event)
 	{
 		return false;
 	}
 
 	const NTSTATUS status = ZwClose(this->m_event);
 	RETURN_ON_STATUS_FAILURE(status, "could not close event handle");
+
+	this->m_event = nullptr;
 
 	return true;
 }
@@ -107,6 +109,7 @@ Value<bool, NTSTATUS> Event::set() const
 	}
 
 	LONG previousStatus = 0;
+
 	const NTSTATUS status = ZwSetEvent(this->m_event, &previousStatus);
 	RETURN_ON_STATUS_FAILURE(status, "could not set the event");
 

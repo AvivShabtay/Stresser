@@ -18,7 +18,7 @@ public:
 
 	Value<bool, NTSTATUS> open(StresserString eventName);
 
-	Value<bool, NTSTATUS> close() const;
+	Value<bool, NTSTATUS> close();
 
 	Value<bool, NTSTATUS> set() const;
 
