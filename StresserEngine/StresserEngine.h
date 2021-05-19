@@ -79,6 +79,3 @@ Value<PVOID, StresserString> createNotificationContext(PDEVICE_OBJECT DeviceObje
 
 /* Free shared memory used in object notification callbacks. */
 Value<bool, StresserString> releaseNotificationContext(PDEVICE_OBJECT DeviceObject);
-
-/* Signal shared event object. */
-bool signalFakeProcessEvent(Event* eventToSignal);

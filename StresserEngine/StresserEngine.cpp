@@ -477,21 +477,6 @@ NTSTATUS getEventsHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_STACK_LOCAT
 	return STATUS_SUCCESS;
 }
 
-bool signalFakeProcessEvent(Event* eventToSignal)
-{
-	Value<bool, NTSTATUS> result = eventToSignal->set();
-	if (result.isError())
-	{
-		const NTSTATUS status = result.getError();
-		PRINT_ON_STATUS_FAILURE(status, "could not open event by the given event name");
-		return false;
-	}
-
-	LOG_MESSAGE("signal fake process event");
-
-	return true;
-}
-
 Value<PVOID, StresserString> createNotificationContext(PDEVICE_OBJECT DeviceObject)
 {
 	LOG_MESSAGE(STRINGIFY(createNotificationContext) " called");
