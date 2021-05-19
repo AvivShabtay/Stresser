@@ -144,7 +144,12 @@ void removeFakeProcessId(ULONG processId)
 
 void registerNotificationEventAndWait()
 {
-	const AutoHandle objectNotificationEvent(CreateEvent(nullptr, TRUE, FALSE, UM_GLOBAL_FAKE_PROCESS_EVENT.c_str()));
+	const AutoHandle objectNotificationEvent(CreateEvent(
+		nullptr,							// lpEventAttributes
+		FALSE,								// auto-reset event
+		FALSE,								// non-signaled event
+		UM_GLOBAL_FAKE_PROCESS_EVENT.c_str()// event name
+	));
 	if (!objectNotificationEvent.get())
 	{
 		throw Win32ErrorCodeException("Could not create global event");
