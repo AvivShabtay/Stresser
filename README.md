@@ -42,6 +42,7 @@ Stresser is a complete Endpoint Security Solution contains Central management an
 
 - Microsoft example for demonstrating the difference between various types of IO communication: https://github.com/microsoft/Windows-driver-samples/tree/master/general/ioctl/wdm
 - OSR example of using kernel notifications (Object notification and more) can be found here: https://github.com/OSRDrivers/kmexts
+- Microsoft example for demonstrating usage of Object callback: https://github.com/microsoft/Windows-driver-samples/tree/master/general/obcallback
 - Microsoft example for shared event between UM application and KM driver: https://github.com/microsoft/Windows-driver-samples/tree/master/general/event
 
 ---
