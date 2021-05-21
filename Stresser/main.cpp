@@ -51,6 +51,7 @@ int wmain(int argc, PWCHAR argv[])
 		EndpointController& endpointController = EndpointController::getInstance(authorizedHttpRequest);
 		PolicyController& policyController = PolicyController::getInstance(authorizedHttpRequest);
 		RuleController& ruleController = RuleController::getInstance(authorizedHttpRequest);
+		EventController& eventController = EventController::getInstance(authorizedHttpRequest);
 
 		// Register new endpoint in the server:
 		// TODO: Move from here !
