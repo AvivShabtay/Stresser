@@ -92,6 +92,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\x64\Debug\StresserEngine.sys" />
     <None Include="..\x64\Release\FakeProcess.exe" />
     <None Include="packages.config" />
   </ItemGroup>

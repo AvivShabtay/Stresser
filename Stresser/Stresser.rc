@@ -25,6 +25,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 FAKE_PROCESS            BIN                     FAKE_PROCESS_RELATIVE_PATH
+STRESSER_ENGINE         BIN                     KERNEL_DRIVER_RELATIVE_PATH
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////

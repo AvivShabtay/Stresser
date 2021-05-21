@@ -288,6 +288,9 @@
     <None Include="..\x64\Release\FakeProcess.exe">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\x64\Debug\StresserEngine.sys">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Stresser.rc">

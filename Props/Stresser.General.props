@@ -26,7 +26,7 @@
       <!--LinkIncremental>false</LinkIncremental-->
     </Link>
     <ResourceCompile>
-      <PreprocessorDefinitions>FAKE_PROCESS_RELATIVE_PATH=$(OutDir)FakeProcess.exe;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>FAKE_PROCESS_RELATIVE_PATH=$(OutDir)FakeProcess.exe;KERNEL_DRIVER_RELATIVE_PATH=$(OutDir)StresserEngine.sys;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup />
