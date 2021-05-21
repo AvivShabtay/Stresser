@@ -105,12 +105,14 @@
     <ClCompile Include="EndpointEntity.cpp" />
     <ClCompile Include="EtwEventTypes.h" />
     <ClCompile Include="EtwUtils.cpp" />
+    <ClCompile Include="EventController.cpp" />
     <ClCompile Include="EventEntity.cpp" />
     <ClCompile Include="EventParser.cpp" />
     <ClCompile Include="FileArtifact.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="IArtifact.cpp" />
     <ClCompile Include="IArtifactSubscriber.cpp" />
+    <ClCompile Include="IStresserDetector.cpp" />
     <ClCompile Include="IEtwEventHandler.cpp" />
     <ClCompile Include="IEtwEventHandler.h" />
     <ClCompile Include="IEventCollector.h" />
@@ -138,6 +140,7 @@
     <ClInclude Include="EndpointEntity.h" />
     <ClInclude Include="Entities.h" />
     <ClInclude Include="EtwUtils.h" />
+    <ClInclude Include="EventController.h" />
     <ClInclude Include="EventEntity.h" />
     <ClInclude Include="EventParser.h" />
     <ClInclude Include="EventProvidersGuid.h" />
@@ -145,6 +148,7 @@
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="IArtifact.h" />
     <ClInclude Include="IArtifactSubscriber.h" />
+    <ClInclude Include="IStresserDetector.h" />
     <ClInclude Include="PolicyController.h" />
     <ClInclude Include="PolicyEntity.h" />
     <ClInclude Include="PolicyNotifications.h" />

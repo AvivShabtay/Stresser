@@ -86,6 +86,12 @@
     <ClCompile Include="EtwUtils.cpp">
       <Filter>ETW\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EventController.cpp">
+      <Filter>Controllers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IStresserDetector.cpp">
+      <Filter>Detectors\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h">
@@ -178,6 +184,12 @@
     <ClInclude Include="resource.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+    <ClInclude Include="IStresserDetector.h">
+      <Filter>Detectors\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventController.h">
+      <Filter>Controllers\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Configurations">
@@ -248,6 +260,15 @@
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{c64bfbd0-a812-4de3-a88f-36780b2d940d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detectors">
+      <UniqueIdentifier>{3ca5a362-60f1-44d5-b065-1f019f80e138}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detectors\Header Files">
+      <UniqueIdentifier>{b8dee090-8b07-4b76-8330-e8b12854cee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detectors\Source Files">
+      <UniqueIdentifier>{b2b56f25-3945-42bc-8579-b3d9b9d20b36}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
