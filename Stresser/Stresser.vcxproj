@@ -101,7 +101,6 @@
     <ClCompile Include="AuthorizedHttpRequest.cpp" />
     <ClCompile Include="AutoEtwTraceSession.cpp" />
     <ClCompile Include="CollectorManager.cpp" />
-    <ClCompile Include="DetectorFactory.cpp" />
     <ClCompile Include="EndpointController.cpp" />
     <ClCompile Include="EndpointEntity.cpp" />
     <ClCompile Include="EtwEventTypes.h" />
@@ -137,7 +136,6 @@
     <ClInclude Include="AutoEtwTraceSession.h" />
     <ClInclude Include="CollectorManager.h" />
     <ClInclude Include="Controllers.h" />
-    <ClInclude Include="DetectorFactory.h" />
     <ClInclude Include="EndpointController.h" />
     <ClInclude Include="EndpointEntity.h" />
     <ClInclude Include="Entities.h" />

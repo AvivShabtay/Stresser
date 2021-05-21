@@ -92,7 +92,6 @@
     <ClCompile Include="IStresserDetector.cpp">
       <Filter>Detectors\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DetectorFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h">
@@ -191,7 +190,6 @@
     <ClInclude Include="EventController.h">
       <Filter>Controllers\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DetectorFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Configurations">
