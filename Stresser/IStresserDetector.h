@@ -13,6 +13,13 @@ public:
 
 	virtual ~IStresserDetector() = default;
 
+	/* Start the detector */
+	virtual void start() = 0;
+
+	/* Stop the detector */
+	virtual void stop() = 0;
+
+protected:
 	/*
 		send event to the server.
 		@param eventEntity - Event to send.
