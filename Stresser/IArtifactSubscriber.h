@@ -5,6 +5,8 @@
 class IArtifactSubscriber
 {
 public:
+	IArtifactSubscriber() = default;
+
 	virtual ~IArtifactSubscriber() = default;
 
 	void reset();
