@@ -9,7 +9,7 @@ public:
 
 	void reset();
 
-	void setNewArtifacts(const std::vector<IArtifact*>& artifacts);
+	virtual void setNewArtifacts(const std::vector<IArtifact*>& artifacts);
 
 protected:
 	std::vector<IArtifact*> m_artifactsToReport;
