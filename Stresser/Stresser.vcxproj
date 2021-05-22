@@ -118,6 +118,7 @@
     <ClCompile Include="IEtwEventHandler.cpp" />
     <ClCompile Include="IEtwEventHandler.h" />
     <ClCompile Include="IEventCollector.h" />
+    <ClCompile Include="KernelDetector.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PolicyController.cpp" />
     <ClCompile Include="PolicyEntity.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="IArtifact.h" />
     <ClInclude Include="IArtifactSubscriber.h" />
     <ClInclude Include="IStresserDetector.h" />
+    <ClInclude Include="KernelDetector.h" />
     <ClInclude Include="PolicyController.h" />
     <ClInclude Include="PolicyEntity.h" />
     <ClInclude Include="PolicyNotifications.h" />
