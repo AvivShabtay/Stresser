@@ -6,7 +6,7 @@
 #include "../Utils/RegistryArtifactUtils.h"
 #include "EventEntity.h"
 
-RegistryEventHandler::RegistryEventHandler() : IEtwEventHandler(EtwEventTypes::Registry), IArtifactSubscriber(ArtifactTypes::Registry)
+RegistryEventHandler::RegistryEventHandler() : IEtwEventHandler(EtwEventTypes::Registry)
 {
 }
 

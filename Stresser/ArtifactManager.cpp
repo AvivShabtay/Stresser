@@ -10,33 +10,21 @@ void ArtifactManager::policyChanged(const std::vector<RuleEntity>& rules)
 	}
 	this->m_artifactsVector.clear();
 
+	std::vector<IArtifact*> subscribersArtifacts;
+
 	// Getting the new artifacts
 	for (const RuleEntity& ruleEntity : rules)
 	{
 		auto artifact = ArtifactFactory::BuildArtifact(ruleEntity.getType(), ruleEntity.getName(), ruleEntity.getData());
 		this->m_artifactsVector.push_back(std::move(artifact));
+		subscribersArtifacts.push_back(artifact.get());
 	}
 
 	// Update the subscribers artifacts
 	for (const auto subscriber : this->m_subscribers)
 	{
-		subscriber->setNewArtifacts(this->getArtifactsByType(subscriber->getType()));
+		subscriber->setNewArtifacts(subscribersArtifacts);
 	}
-}
-
-std::vector<IArtifact*> ArtifactManager::getArtifactsByType(ArtifactTypes type)
-{
-	std::vector<IArtifact*> result;
-
-	for (const auto& artifact :  this->m_artifactsVector)
-	{
-		if (artifact->getType() == type)
-		{
-			result.push_back(artifact.get());
-		}
-	}
-
-	return result;
 }
 
 void ArtifactManager::subscribe(IArtifactSubscriber* subscriber)
