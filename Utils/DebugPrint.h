@@ -11,3 +11,9 @@ do {									\
 #else
 #define DEBUG_PRINT(message)	// <-- Empty on purpose to prevent printing message in release mode
 #endif
+
+ /*
+	 Return the token himself.
+	 https://stackoverflow.com/q/55636670
+ */
+#define STRINGIFY(x) #x L" "
