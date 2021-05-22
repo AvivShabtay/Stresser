@@ -19,18 +19,18 @@ struct EventsResult
 /*
 	Interface for communication with Stresser Driver through I\O calls.
  */
-class KernelDetector
+class StresserEngine
 {
 public:
-	KernelDetector();
+	StresserEngine();
 
-	virtual ~KernelDetector() = default;
+	virtual ~StresserEngine() = default;
 
 	// Delete copyable, movable:
-	KernelDetector(const KernelDetector&) = delete;
-	KernelDetector& operator=(const KernelDetector&) = delete;
-	KernelDetector(KernelDetector&&) = delete;
-	KernelDetector& operator=(KernelDetector&&) = delete;
+	StresserEngine(const StresserEngine&) = delete;
+	StresserEngine& operator=(const StresserEngine&) = delete;
+	StresserEngine(StresserEngine&&) = delete;
+	StresserEngine& operator=(StresserEngine&&) = delete;
 
 	/* Add process ID to be monitored. */
 	void addFakeProcessId(ULONG processId) const;

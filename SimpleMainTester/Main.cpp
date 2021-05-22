@@ -1,4 +1,4 @@
-#include "KernelDetector.h"
+#include "StresserEngine.h"
 
 #include "../Utils/AutoHandle.h"
 #include "../Utils/DebugPrint.h"
@@ -128,7 +128,7 @@ void printUsage()
 
 void addFakeProcessId(ULONG processId)
 {
-	const KernelDetector kernelDetector;
+	const StresserEngine kernelDetector;
 	kernelDetector.addFakeProcessId(processId);
 
 	std::cout << "Add fake process ID: " << FAKE_PROCESS_ID_FOR_TESTING << std::endl;
@@ -136,7 +136,7 @@ void addFakeProcessId(ULONG processId)
 
 void removeFakeProcessId(ULONG processId)
 {
-	const KernelDetector kernelDetector;
+	const StresserEngine kernelDetector;
 	kernelDetector.removeFakeProcessId(processId);
 
 	std::cout << "Remove fake process ID: " << FAKE_PROCESS_ID_FOR_TESTING << std::endl;
@@ -157,7 +157,7 @@ void registerNotificationEventAndWait()
 
 	std::cout << "Event handle: " << std::hex << objectNotificationEvent.get() << std::endl;
 
-	const KernelDetector kernelDetector;
+	const StresserEngine kernelDetector;
 
 	// Close any existing event:
 	kernelDetector.unregisterEvent();
@@ -180,7 +180,7 @@ void registerNotificationEventAndWait()
 
 void unregisterNotificationEvent()
 {
-	const KernelDetector kernelDetector;
+	const StresserEngine kernelDetector;
 
 	// Close any existing event:
 	kernelDetector.unregisterEvent();
@@ -188,7 +188,7 @@ void unregisterNotificationEvent()
 
 void consumeEvents()
 {
-	const KernelDetector kernelDetector;
+	const StresserEngine kernelDetector;
 
 	const EventsResult eventsResult = kernelDetector.receiveEvents(NUMBER_OF_EVENTS_TO_CONSUME);
 

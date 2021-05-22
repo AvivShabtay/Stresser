@@ -1,10 +1,10 @@
-#include "KernelDetector.h"
+#include "StresserEngine.h"
 
 #include "../Utils/Win32ErrorCodeException.h"
 
 #include "../StresserEngine/StresserEngineCommon.h"
 
-KernelDetector::KernelDetector()
+StresserEngine::StresserEngine()
 {
 	this->stresserDevice.reset(CreateFile(DEVICE_NAME.c_str(), GENERIC_READ | GENERIC_WRITE, 0,
 		nullptr, OPEN_EXISTING, 0, nullptr));
@@ -15,7 +15,7 @@ KernelDetector::KernelDetector()
 	}
 }
 
-void KernelDetector::addFakeProcessId(ULONG processId) const
+void StresserEngine::addFakeProcessId(ULONG processId) const
 {
 	FakeProcessId fakeProcessId{ processId };
 
@@ -27,7 +27,7 @@ void KernelDetector::addFakeProcessId(ULONG processId) const
 	}
 }
 
-void KernelDetector::removeFakeProcessId(ULONG processId) const
+void StresserEngine::removeFakeProcessId(ULONG processId) const
 {
 	FakeProcessId fakeProcessId{ processId };
 
@@ -39,7 +39,7 @@ void KernelDetector::removeFakeProcessId(ULONG processId) const
 	}
 }
 
-void KernelDetector::registerEvent(std::wstring eventName) const
+void StresserEngine::registerEvent(std::wstring eventName) const
 {
 	if (MAX_EVENT_NAME_LENGTH < eventName.length())
 	{
@@ -66,7 +66,7 @@ void KernelDetector::registerEvent(std::wstring eventName) const
 	}
 }
 
-EventsResult KernelDetector::receiveEvents(ULONG numberOfEvents) const
+EventsResult StresserEngine::receiveEvents(ULONG numberOfEvents) const
 {
 	if (numberOfEvents < 1)
 	{
@@ -113,7 +113,7 @@ EventsResult KernelDetector::receiveEvents(ULONG numberOfEvents) const
 	return result;
 }
 
-void KernelDetector::unregisterEvent() const
+void StresserEngine::unregisterEvent() const
 {
 	DWORD returnedBytes;
 	if (!DeviceIoControl(this->stresserDevice.get(), IOCTL_STRESSER_ENGINE_UNREGISTER_EVENT, nullptr,
