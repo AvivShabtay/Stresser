@@ -92,6 +92,9 @@
     <ClCompile Include="IStresserDetector.cpp">
       <Filter>Detectors\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UserModeDetector.cpp">
+      <Filter>Detectors\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="FileEventHandler.cpp">
       <Filter>ETW\Source Files</Filter>
     </ClCompile>
@@ -192,6 +195,9 @@
     </ClInclude>
     <ClInclude Include="EventController.h">
       <Filter>Controllers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserModeDetector.h">
+      <Filter>Detectors\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FileEventHandler.h">
       <Filter>ETW\Header Files</Filter>

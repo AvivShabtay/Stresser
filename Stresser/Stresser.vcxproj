@@ -128,6 +128,7 @@
     <ClCompile Include="RuleEntity.cpp" />
     <ClCompile Include="ServerDetails.cpp" />
     <ClCompile Include="EtwManager.cpp" />
+    <ClCompile Include="UserModeDetector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArtifactFactory.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="RuleEntity.h" />
     <ClInclude Include="ServerDetails.h" />
     <ClInclude Include="EtwManager.h" />
+    <ClInclude Include="UserModeDetector.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.vcxproj">
