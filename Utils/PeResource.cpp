@@ -44,7 +44,8 @@ void PeResource::saveResourceToFileSystem(const std::wstring& path) const
 		throw std::runtime_error("Invalid resource data");
 	}
 
-	const AutoHandle file(CreateFile(path.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr));
+	const AutoHandle file(CreateFile(path.c_str(), GENERIC_WRITE, 0, nullptr,
+		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr));
 	if (INVALID_HANDLE_VALUE == file.get())
 	{
 		throw Win32ErrorCodeException("Could not create target file");
