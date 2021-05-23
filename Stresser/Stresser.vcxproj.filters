@@ -101,6 +101,9 @@
     <ClCompile Include="KernelDetector.cpp">
       <Filter>Detectors\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ProcessDetector.cpp">
+      <Filter>Detectors\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h">
@@ -206,6 +209,9 @@
       <Filter>ETW\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KernelDetector.h">
+      <Filter>Detectors\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessDetector.h">
       <Filter>Detectors\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
