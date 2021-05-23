@@ -19,6 +19,8 @@ public:
 	void install() override;
 	void uninstall() override;
 
+	DWORD getFakeProcessId() const;
+
 private:
 	std::wstring m_filePath;
 	DWORD m_pid;
