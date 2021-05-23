@@ -32,3 +32,42 @@ std::wstring LocalPcUtils::getTempPath()
 
 	return std::wstring(reinterpret_cast<LPWSTR>(&tempPath[0]));
 }
+
+std::wstring LocalPcUtils::getDosNameFromNtName(const std::wstring& ntPath)
+{
+	static std::vector<std::pair<std::wstring, std::wstring>> deviceNames;
+	static bool first = true;
+	if (first)
+	{
+		auto drives = GetLogicalDrives();
+		size_t drive = 0;
+		while (drives)
+		{
+			if (drives & 1)
+			{
+				// drive exists
+				WCHAR driveName[] = L"X:";
+				driveName[0] = (WCHAR)(drive + 'A');
+				WCHAR path[MAX_PATH];
+				if (QueryDosDevice(driveName, path, MAX_PATH))
+				{
+					deviceNames.emplace_back(path, driveName);
+				}
+			}
+			drive++;
+			drives >>= 1;
+		}
+		first = false;
+	}
+
+	for (auto& deviceName : deviceNames)
+	{
+		if (ntPath.find(deviceName.first) != std::wstring::npos)
+		{
+			return deviceName.second + (ntPath.c_str() + deviceName.first.size());
+		}
+	}
+
+	return L"";
+}
+

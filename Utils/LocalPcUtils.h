@@ -14,5 +14,7 @@ public:
 	static bool doesFileExists(const std::wstring& path);
 
 	static std::wstring getTempPath();
+
+	static std::wstring getDosNameFromNtName(const std::wstring& ntPath);
 };
 

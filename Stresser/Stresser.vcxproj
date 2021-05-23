@@ -109,6 +109,7 @@
     <ClCompile Include="EventEntity.cpp" />
     <ClCompile Include="EventParser.cpp" />
     <ClCompile Include="FileArtifact.cpp" />
+    <ClCompile Include="FileEventHandler.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="IArtifact.cpp" />
     <ClCompile Include="IArtifactSubscriber.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="EventParser.h" />
     <ClInclude Include="EventProvidersGuid.h" />
     <ClInclude Include="FileArtifact.h" />
+    <ClInclude Include="FileEventHandler.h" />
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="IArtifact.h" />
     <ClInclude Include="IArtifactSubscriber.h" />
