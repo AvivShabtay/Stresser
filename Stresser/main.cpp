@@ -6,9 +6,7 @@
 #include "ArtifactManager.h"
 #include "PolicyNotifications.h"
 
-#include "EtwManager.h"
-
-#include "RegistryEventHandler.h"
+#include "UserModeDetector.h"
 
 #include "../Utils/AutoCriticalSection.h"
 #include "../Utils/DebugPrint.h"
@@ -65,19 +63,13 @@ int wmain(int argc, PWCHAR argv[])
 
 		ArtifactManager artifactManager;
 
-		RegistryEventHandler registryEventHandler;
-
-		artifactManager.subscribe(&registryEventHandler);
+		UserModeDetector userModeDetector(eventController);
 
 		policyNotifications.subscribe(&artifactManager);
 
-		//Create ETW collector:
-		// TODO: Move from here !
-		EtwManager mgr;
+		artifactManager.subscribe(&userModeDetector);
 
-		mgr.registerEventHandle(registryEventHandler);
-
-		mgr.start();
+		userModeDetector.start();
 
 		// Keep the main thread running until user CTRL + C:
 		WaitForSingleObject(g_shutdownEvent.get(), INFINITE);
