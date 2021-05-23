@@ -1,13 +1,19 @@
 #pragma once
+#include "IArtifact.h"
 #include "IEtwEventHandler.h"
-#include "IArtifactSubscriber.h"
 
-class RegistryEventHandler : public IEtwEventHandler, public IArtifactSubscriber
+#include <vector>
+
+
+class RegistryEventHandler : public IEtwEventHandler
 {
 public:
-	RegistryEventHandler();
+	explicit RegistryEventHandler(std::vector<IArtifact*>& artifacts);
 
 	~RegistryEventHandler() override = default;
 
 	void onEventRecord(PEVENT_RECORD record) override;
+
+private:
+	std::vector<IArtifact*>& m_artifacts;
 };

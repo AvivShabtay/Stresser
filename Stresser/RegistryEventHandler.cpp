@@ -6,12 +6,18 @@
 #include "../Utils/RegistryArtifactUtils.h"
 #include "EventEntity.h"
 
-RegistryEventHandler::RegistryEventHandler() : IEtwEventHandler(EtwEventTypes::Registry)
+RegistryEventHandler::RegistryEventHandler(std::vector<IArtifact*>& artifacts) :
+IEtwEventHandler(EtwEventTypes::Registry), m_artifacts(artifacts)
 {
 }
 
 void RegistryEventHandler::onEventRecord(PEVENT_RECORD record)
 {
+	if(m_artifacts.empty())
+	{
+		return;
+	}
+
 	const EventParser parser(record);
 
 	const std::wstring timestamp = TimeUtils::systemTimeToTimestamp(parser.getEventHeader().TimeStamp);
@@ -33,7 +39,7 @@ void RegistryEventHandler::onEventRecord(PEVENT_RECORD record)
 	}
 
 	const std::wstring keyName(keyNameProperty->getUnicodeString());
-	for (const auto& artifact : this->m_artifactsToReport)
+	for (const auto& artifact : this->m_artifacts)
 	{
 		std::string registrySubKey = RegistryArtifactUtils::getRegistrySubKey(artifact->getData());
 		std::wstring artifactKey = StringUtils::stringToWString(registrySubKey);
