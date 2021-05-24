@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+
 #include "IArtifact.h"
 #include <vector>
 
@@ -11,8 +13,8 @@ public:
 
 	void reset();
 
-	virtual void setNewArtifacts(const std::vector<IArtifact*>& artifacts);
+	virtual void setNewArtifacts(const std::vector<std::shared_ptr<IArtifact>>& artifacts);
 
 protected:
-	std::vector<IArtifact*> m_artifactsToReport;
+	std::vector<std::shared_ptr<IArtifact>> m_artifactsToReport;
 };

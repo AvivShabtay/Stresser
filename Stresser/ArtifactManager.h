@@ -18,6 +18,6 @@ public:
 	void subscribe(IArtifactSubscriber* subscriber);
 
 private:
-	std::vector<std::unique_ptr<IArtifact>> m_artifactsVector;
+	std::vector<std::shared_ptr<IArtifact>> m_artifactsVector;
 	std::vector<IArtifactSubscriber*> m_subscribers;
 };

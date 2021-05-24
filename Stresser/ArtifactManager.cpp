@@ -1,29 +1,34 @@
 #include "ArtifactManager.h"
 #include "ArtifactFactory.h"
+#include "../Utils/AutoCriticalSection.h"
 
 void ArtifactManager::policyChanged(const std::vector<RuleEntity>& rules)
 {
-	// Uninstall the old artifacts
-	for (auto subscriber : this->m_subscribers)
 	{
-		subscriber->reset();
-	}
-	this->m_artifactsVector.clear();
+		AutoCriticalSection autoCriticalSection;
 
-	std::vector<IArtifact*> subscribersArtifacts;
+		// Uninstall the old artifacts
+		for (auto* subscriber : this->m_subscribers)
+		{
+			subscriber->reset();
+		}
+
+		this->m_artifactsVector.clear();
+	}
 
 	// Getting the new artifacts
 	for (const RuleEntity& ruleEntity : rules)
 	{
-		auto artifact = ArtifactFactory::BuildArtifact(ruleEntity.getType(), ruleEntity.getName(), ruleEntity.getData());
-		this->m_artifactsVector.push_back(std::move(artifact));
-		subscribersArtifacts.push_back(artifact.get());
+		std::shared_ptr<IArtifact> artifact = ArtifactFactory::BuildArtifact(ruleEntity.getType(),
+			ruleEntity.getName(), ruleEntity.getData());
+
+		this->m_artifactsVector.push_back(artifact);
 	}
 
 	// Update the subscribers artifacts
-	for (const auto subscriber : this->m_subscribers)
+	for (auto* subscriber : this->m_subscribers)
 	{
-		subscriber->setNewArtifacts(subscribersArtifacts);
+		subscriber->setNewArtifacts(this->m_artifactsVector);
 	}
 }
 
