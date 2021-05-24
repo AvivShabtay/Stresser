@@ -82,37 +82,35 @@ void KernelDetector::stop()
 	}
 }
 
-void KernelDetector::setNewArtifacts(const std::vector<IArtifact*>& artifacts)
+void KernelDetector::setNewArtifacts(const std::vector<std::shared_ptr<IArtifact>>& artifacts)
 {
+	if (!this->m_doesTestSigning)
 	{
-		AutoCriticalSection autoCriticalSection;
+		return;
+	}
 
-		// Set new artifacts:
-		this->m_artifactsToReport = artifacts;
+	AutoCriticalSection autoCriticalSection;
 
+	// Set new artifacts:
+	this->m_artifactsToReport = artifacts;
 
-		if (!this->m_doesTestSigning)
-		{
-			return;
-		}
+	try
+	{
+		// TODO: Stop detection thread
 
-		try
-		{
-			// TODO: Stop detection thread
+		// TODO: Send I\O to stop detection of all the processes
+		this->removeAllRegisteredFakeProcessIds();
 
-			// TODO: Send I\O to stop detection of all the processes
+		// TODO: Consume all available events
 
-			// TODO: Consume all available events
+		// TODO: Send I\O with all the new process IDs
+		this->registerFakeProcessIds();
 
-			// TODO: Send I\O with all the new process IDs
-			this->registerFakeProcessIds();
-
-			// TODO: start detection thread
-		}
-		catch (const std::exception& exception)
-		{
-			DEBUG_PRINT(exception.what());
-		}
+		// TODO: start detection thread
+	}
+	catch (const std::exception& exception)
+	{
+		DEBUG_PRINT(exception.what());
 	}
 }
 
@@ -163,7 +161,7 @@ void KernelDetector::registerFakeProcessIds()
 				return;
 			}
 
-			const auto* processArtifact = dynamic_cast<ProcessArtifact*>(artifact);
+			const auto* processArtifact = dynamic_cast<ProcessArtifact*>(artifact.get());
 
 			const ULONG processId = processArtifact->getFakeProcessId();
 
@@ -173,6 +171,12 @@ void KernelDetector::registerFakeProcessIds()
 			DEBUG_WPRINT(STRINGIFY(startDetection) "Register fake process ID for detection: " + processId);
 		}
 	}
+}
+
+void KernelDetector::removeAllRegisteredFakeProcessIds()
+{
+	const ProcessDetector processDetector;
+	processDetector.removeAllFakeProcessIds();
 }
 
 std::wstring KernelDetector::createTemporaryPath(const std::wstring& exeNameWithExtension)

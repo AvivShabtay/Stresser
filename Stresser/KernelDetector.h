@@ -36,7 +36,7 @@ public:
 		Used to stop flush the kernel detector fake process IDs and start
 		detection on new ones.
 	 */
-	void setNewArtifacts(const std::vector<IArtifact*>& artifacts) override;
+	void setNewArtifacts(const std::vector<std::shared_ptr<IArtifact>>& artifacts) override;
 
 private:
 	/* Extract driver from PE resources and dump it to disk, create Win32 service and start it. */
@@ -47,6 +47,8 @@ private:
 
 	/* Register available process ID for detection. */
 	void registerFakeProcessIds();
+
+	void removeAllRegisteredFakeProcessIds();
 
 	static std::wstring createTemporaryPath(const std::wstring& exeNameWithExtension);
 
