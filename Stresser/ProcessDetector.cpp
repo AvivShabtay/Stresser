@@ -119,3 +119,13 @@ void ProcessDetector::unregisterEvent() const
 		throw Win32ErrorCodeException("Could not commit device control request");
 	}
 }
+
+void ProcessDetector::removeAllFakeProcessIds() const
+{
+	DWORD returnedBytes;
+	if (!DeviceIoControl(this->detectorDevice.get(), IOCTL_STRESSER_ENGINE_REMOVE_ALL_FAKE_PROCESS_IDS, nullptr,
+		0, nullptr, 0, &returnedBytes, nullptr))
+	{
+		throw Win32ErrorCodeException("Could not commit device control request");
+	}
+}

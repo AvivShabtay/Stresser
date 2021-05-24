@@ -44,7 +44,11 @@ public:
 	/* Fetch the events from the Driver. */
 	EventsResult receiveEvents(ULONG numberOfEvents = 10) const;
 
+	/* Send request to remove any registered event. */
 	void unregisterEvent() const;
+
+	/* Send request to remove all the registered fake process IDs. */
+	void removeAllFakeProcessIds() const;
 
 private:
 	AutoHandle detectorDevice;
