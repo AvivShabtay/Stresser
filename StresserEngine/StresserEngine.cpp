@@ -407,15 +407,18 @@ NTSTATUS removeFakeProcessIdHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_S
 		for (ULONG i = 0; i < fakeProcessIds->size(); ++i)
 		{
 			const FakeProcessId* current = fakeProcessIds->getAt(i);
-			if (fakeProcessId->processId == current->processId)
+			if (nullptr != current)
 			{
-				KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler)" remove fake process ID=%d\n", current->processId));
+				if (fakeProcessId->processId == current->processId)
+				{
+					KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler)" remove fake process ID=%d\n", current->processId));
 
-				fakeProcessIds->removeAt(i);
-				delete current;
+					fakeProcessIds->removeAt(i);
+					delete current;
 
-				KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler) " completed successfully\n"));
-				return STATUS_SUCCESS;
+					KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler) " completed successfully\n"));
+					return STATUS_SUCCESS;
+				}
 			}
 		}
 	}
@@ -501,17 +504,20 @@ NTSTATUS removeAllFakeProcessIds(_In_ PDEVICE_OBJECT DeviceObject)
 	{
 		AutoLock lock(notificationContext->mutex);
 
-		for (ULONG i = 0; i < fakeProcessIds->size(); ++i)
+		const ULONG numberOfIds = fakeProcessIds->size();
+
+		for (ULONG i = 0; i < numberOfIds; ++i)
 		{
 			const FakeProcessId* current = fakeProcessIds->getAt(i);
-			fakeProcessIds->removeAt(i);
+			if (nullptr != current)
+			{
+				KdPrint((DRIVER_PREFIX STRINGIFY(removeAllFakeProcessIds) " stop watching fake process PID=%d\n", current->processId));
 
-			KdPrint((DRIVER_PREFIX STRINGIFY(removeAllFakeProcessIds) " stop watching fake process PID=%d\n", current->processId));
-
-			delete current;
+				delete current;
+			}
 		}
 
-		fakeProcessIds->resize(0);
+		fakeProcessIds->clear();
 	}
 
 	LOG_MESSAGE(STRINGIFY(removeAllFakeProcessIds) " completed successfully");
