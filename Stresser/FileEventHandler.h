@@ -5,13 +5,14 @@
 #include <memory>
 #include <vector>
 
+constexpr size_t FILE_CREATE_OPCODE = 64;
 
-class RegistryEventHandler : public IEtwEventHandler
+class FileEventHandler : public IEtwEventHandler
 {
 public:
-	explicit RegistryEventHandler(std::vector<std::shared_ptr<IArtifact>>& artifacts);
+	explicit FileEventHandler(std::vector<std::shared_ptr<IArtifact>>& artifacts);
 
-	~RegistryEventHandler() override = default;
+	~FileEventHandler() override = default;
 
 	void onEventRecord(PEVENT_RECORD record) override;
 

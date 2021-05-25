@@ -109,6 +109,7 @@
     <ClCompile Include="EventEntity.cpp" />
     <ClCompile Include="EventParser.cpp" />
     <ClCompile Include="FileArtifact.cpp" />
+    <ClCompile Include="FileEventHandler.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="IArtifact.cpp" />
     <ClCompile Include="IArtifactSubscriber.cpp" />
@@ -127,6 +128,7 @@
     <ClCompile Include="RuleEntity.cpp" />
     <ClCompile Include="ServerDetails.cpp" />
     <ClCompile Include="EtwManager.cpp" />
+    <ClCompile Include="UserModeDetector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArtifactFactory.h" />
@@ -145,6 +147,7 @@
     <ClInclude Include="EventParser.h" />
     <ClInclude Include="EventProvidersGuid.h" />
     <ClInclude Include="FileArtifact.h" />
+    <ClInclude Include="FileEventHandler.h" />
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="IArtifact.h" />
     <ClInclude Include="IArtifactSubscriber.h" />
@@ -161,6 +164,7 @@
     <ClInclude Include="RuleEntity.h" />
     <ClInclude Include="ServerDetails.h" />
     <ClInclude Include="EtwManager.h" />
+    <ClInclude Include="UserModeDetector.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.vcxproj">

@@ -37,9 +37,9 @@ void EtwManager::onEventRecord(PEVENT_RECORD record)
 	}
 }
 
-void EtwManager::registerEventHandle(IEtwEventHandler& eventHandler)
+void EtwManager::registerEventHandle(std::shared_ptr<IEtwEventHandler> eventHandler)
 {
-	this->m_eventsHandlers.push_back(&eventHandler);
+	this->m_eventsHandlers.push_back(eventHandler);
 }
 
 EVENT_TRACE_PROPERTIES EtwManager::getProperties() const

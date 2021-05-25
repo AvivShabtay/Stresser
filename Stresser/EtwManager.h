@@ -40,7 +40,7 @@ public:
 	/* Called whenever new event accepted by the trace session. */
 	void onEventRecord(PEVENT_RECORD record);
 
-	void registerEventHandle(IEtwEventHandler &eventHandler);
+	void registerEventHandle(std::shared_ptr<IEtwEventHandler> eventHandler);
 
 private:
 	/* Create default properties structure for the trace session. */
@@ -54,6 +54,6 @@ private:
 
 private:
 	std::function<void(PEVENT_RECORD)> m_callback;
-	std::vector<IEtwEventHandler*> m_eventsHandlers;
+	std::vector<std::shared_ptr<IEtwEventHandler>> m_eventsHandlers;
 	AutoEtwTraceSession m_autoTraceSession;
 };
