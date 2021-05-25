@@ -34,7 +34,8 @@ void FileEventHandler::onEventRecord(PEVENT_RECORD record)
 		return;
 	}
 
-	std::wstring eventType = StringUtils::stringToWString(ArtifactNames[static_cast<size_t>(ArtifactTypes::File)]);
+	std::string eventType = ArtifactNames[static_cast<size_t>(ArtifactTypes::File)];
+	std::wstring wideEventType = StringUtils::stringToWString(eventType);
 	const EventProperty* openPathProperty = parser.getProperty(L"OpenPath");
 	if (nullptr == openPathProperty)
 	{
@@ -65,7 +66,7 @@ void FileEventHandler::onEventRecord(PEVENT_RECORD record)
 				const std::wstring trimmedArtifactFilePath = StringUtils::trimBackslash(artifactFilePath);
 				if (boost::iequals(filePath, artifactFilePath) || boost::iequals(filePath, trimmedArtifactFilePath))
 				{
-					std::wcout << eventData << ", " << eventType << ", Open path= " << openPath << std::endl;
+					std::wcout << eventData << ", " << wideEventType << ", Open path= " << openPath << std::endl;
 				}
 			}
 		}
