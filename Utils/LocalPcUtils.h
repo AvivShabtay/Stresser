@@ -23,5 +23,7 @@ public:
 			detecting-testsigning-onoff-via-api?forum=windowsgeneraldevelopmentissues
 	*/
 	static bool doesTestSigningEnabled();
+
+	static std::wstring getLocalComputerIp();
 };
 

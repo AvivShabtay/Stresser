@@ -95,3 +95,9 @@ bool LocalPcUtils::doesTestSigningEnabled()
 
 	return false;
 }
+std::wstring LocalPcUtils::getLocalComputerIp()
+{
+	// TODO implement!
+	return L"0.0.0.0";
+}
+

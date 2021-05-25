@@ -24,7 +24,7 @@ protected:
 		send event to the server.
 		@param eventEntity - Event to send.
 	 */
-	void sendEvent(const EventEntity& eventEntity) const;
+	void sendEvent(EventEntity& eventEntity) const;
 
 private:
 	const EventController& m_eventController;
