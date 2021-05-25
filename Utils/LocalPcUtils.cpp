@@ -36,8 +36,7 @@ std::wstring LocalPcUtils::getTempPath()
 std::wstring LocalPcUtils::getDosNameFromNtName(const std::wstring& ntPath)
 {
 	static std::vector<std::pair<std::wstring, std::wstring>> deviceNames;
-	static bool first = true;
-	if (first)
+	if (deviceNames.empty())
 	{
 		auto drives = GetLogicalDrives();
 		size_t drive = 0;
@@ -57,7 +56,6 @@ std::wstring LocalPcUtils::getDosNameFromNtName(const std::wstring& ntPath)
 			drive++;
 			drives >>= 1;
 		}
-		first = false;
 	}
 
 	for (auto& deviceName : deviceNames)
@@ -68,6 +66,6 @@ std::wstring LocalPcUtils::getDosNameFromNtName(const std::wstring& ntPath)
 		}
 	}
 
-	return L"";
+	throw std::runtime_error("could not find relevant DOS path");
 }
 

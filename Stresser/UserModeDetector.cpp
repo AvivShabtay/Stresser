@@ -1,9 +1,9 @@
 #include "UserModeDetector.h"
-
 #include "FileEventHandler.h"
 #include "RegistryEventHandler.h"
 
-UserModeDetector::UserModeDetector(const EventController &eventController) : IStresserDetector(eventController)
+UserModeDetector::UserModeDetector(const EventController &eventController)
+	: IStresserDetector(eventController)
 {
 	this->m_etwManager.reset(new EtwManager());
 

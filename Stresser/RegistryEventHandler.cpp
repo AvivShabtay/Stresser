@@ -1,13 +1,14 @@
 #include "RegistryEventHandler.h"
 
 #include "EventParser.h"
+#include "ArtifactTypes.h"
 #include "../Utils/TimeUtils.h"
 #include "../Utils/StringUtils.h"
 #include "../Utils/RegistryArtifactUtils.h"
-#include "EventEntity.h"
+#include "../Utils/AutoCriticalSection.h"
 
-RegistryEventHandler::RegistryEventHandler(std::vector<IArtifact*>& artifacts) :
-IEtwEventHandler(EtwEventTypes::Registry), m_artifacts(artifacts)
+RegistryEventHandler::RegistryEventHandler(std::vector<std::shared_ptr<IArtifact>>& artifacts)
+	:IEtwEventHandler(EtwEventTypes::Registry), m_artifacts(artifacts)
 {
 }
 
@@ -31,7 +32,7 @@ void RegistryEventHandler::onEventRecord(PEVENT_RECORD record)
 		return;
 	}
 
-	const std::wstring eventType = L"Open key event";
+	const std::wstring eventType = StringUtils::stringToWString(ArtifactNames[static_cast<size_t>(ArtifactTypes::Registry)]);
 	const EventProperty* keyNameProperty = parser.getProperty(L"KeyName");
 	if (nullptr == keyNameProperty)
 	{
@@ -39,14 +40,22 @@ void RegistryEventHandler::onEventRecord(PEVENT_RECORD record)
 	}
 
 	const std::wstring keyName(keyNameProperty->getUnicodeString());
-	for (const auto& artifact : this->m_artifacts)
+
 	{
-		std::string registrySubKey = RegistryArtifactUtils::getRegistrySubKey(artifact->getData());
-		std::wstring artifactKey = StringUtils::stringToWString(registrySubKey);
-		std::wstring trimmedArtifactKey = StringUtils::trimBackslash(artifactKey);
-		if (keyName == artifactKey || keyName == trimmedArtifactKey)
+		AutoCriticalSection autoCriticalSection;
+
+		for (const auto& artifact : this->m_artifacts)
 		{
-			std::wcout << eventData << ", " << eventType << ", Open path= " << keyName << std::endl;
+			if (artifact->getType() == ArtifactTypes::Registry)
+			{
+				std::string registrySubKey = RegistryArtifactUtils::getRegistrySubKey(artifact->getData());
+				std::wstring artifactKey = StringUtils::stringToWString(registrySubKey);
+				std::wstring trimmedArtifactKey = StringUtils::trimBackslash(artifactKey);
+				if (keyName == artifactKey || keyName == trimmedArtifactKey)
+				{
+					std::wcout << eventData << ", " << eventType << ", Open path= " << keyName << std::endl;
+				}
+			}
 		}
 	}
 }

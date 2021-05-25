@@ -1,15 +1,16 @@
 #include "FileEventHandler.h"
 
-#include <iostream>
-#include <regex>
-
 #include "EtwUtils.h"
 #include "EventParser.h"
+#include "ArtifactTypes.h"
 #include "../Utils/TimeUtils.h"
 #include "../Utils/StringUtils.h"
 #include "../Utils/LocalPcUtils.h"
+#include "../Utils/AutoCriticalSection.h"
+#include "boost/algorithm/string.hpp"
 
-FileEventHandler::FileEventHandler(std::vector<IArtifact*>& artifacts) : IEtwEventHandler(EtwEventTypes::FileIoInit), m_artifacts(artifacts)
+FileEventHandler::FileEventHandler(std::vector<std::shared_ptr<IArtifact>>& artifacts)
+	: IEtwEventHandler(EtwEventTypes::FileIoInit), m_artifacts(artifacts)
 {
 }
 
@@ -28,12 +29,12 @@ void FileEventHandler::onEventRecord(PEVENT_RECORD record)
 
 	const UCHAR eventOpcode = parser.getEventHeader().EventDescriptor.Opcode;
 
-	if (64 != eventOpcode)
+	if (FILE_CREATE_OPCODE != eventOpcode)
 	{
 		return;
 	}
 
-	std::wstring eventType = L"FileIo_Create";
+	std::wstring eventType = StringUtils::stringToWString(ArtifactNames[static_cast<size_t>(ArtifactTypes::File)]);
 	const EventProperty* openPathProperty = parser.getProperty(L"OpenPath");
 	if (nullptr == openPathProperty)
 	{
@@ -41,15 +42,32 @@ void FileEventHandler::onEventRecord(PEVENT_RECORD record)
 	}
 
 	const std::wstring openPath(openPathProperty->getUnicodeString());
-	const std::wstring filePath = LocalPcUtils::getDosNameFromNtName(openPath);
-	for (const auto& artifact : this->m_artifacts)
-	{
-		const std::wstring artifactFilePath = StringUtils::stringToWString(artifact->getData());
-		const std::wstring trimmedArtifactFilePath = StringUtils::trimBackslash(artifactFilePath);
+	std::wstring filePath;
 
-		if (filePath == artifactFilePath || filePath == trimmedArtifactFilePath)
+	try
+	{
+		filePath = LocalPcUtils::getDosNameFromNtName(openPath);
+	}
+	catch (...)
+	{
+		std::wcout << "Cannot convert the ntPath to dosPath, ntPath: " << openPath << std::endl;
+		return;
+	}
+
+	{
+		AutoCriticalSection autoCriticalSection;
+
+		for (const auto& artifact : this->m_artifacts)
 		{
-			std::wcout << eventData << ", " << eventType << ", Open path= " << openPath << std::endl;
+			if (artifact->getType() == ArtifactTypes::File)
+			{
+				const std::wstring artifactFilePath = StringUtils::stringToWString(artifact->getData());
+				const std::wstring trimmedArtifactFilePath = StringUtils::trimBackslash(artifactFilePath);
+				if (boost::iequals(filePath, artifactFilePath) || boost::iequals(filePath, trimmedArtifactFilePath))
+				{
+					std::wcout << eventData << ", " << eventType << ", Open path= " << openPath << std::endl;
+				}
+			}
 		}
 	}
 }
