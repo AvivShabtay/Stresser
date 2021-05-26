@@ -1,5 +1,4 @@
 #include "KernelDetector.h"
-#include "ProcessDetector.h"
 
 #include "../Utils/LocalPcUtils.h"
 #include "../Utils/DebugPrint.h"
@@ -14,11 +13,13 @@
 
 #include "ProcessArtifact.h"
 #include "../Utils/StringUtils.h"
+#include "../Utils/TimeUtils.h"
 
 KernelDetector::KernelDetector(const EventController& eventController)
-	: IStresserDetector(eventController), m_doesTestSigning(false)
+	: IStresserDetector(eventController), m_doesTestSigning(false),
+	m_onProcessEvent(UM_ON_FAKE_PROCESS_EVENT_NAME, FALSE, FALSE),
+	m_stopDetectionThreadEvent(STOP_FETCH_THREAD_EVENT_NAME)
 {
-
 }
 
 KernelDetector::~KernelDetector()
@@ -74,6 +75,8 @@ void KernelDetector::stop()
 
 	try
 	{
+		this->stopDetectionThread();
+
 		KernelDetector::uninstallStresserDriver();
 	}
 	catch (const std::exception& exception)
@@ -93,20 +96,20 @@ void KernelDetector::setNewArtifacts(const std::vector<std::shared_ptr<IArtifact
 
 	// Set new artifacts:
 	this->m_artifactsToReport = artifacts;
+	if (this->m_artifactsToReport.empty())
+	{
+		return;
+	}
 
 	try
 	{
-		// TODO: Stop detection thread
+		this->stopDetectionThread();
 
-		// TODO: Send I\O to stop detection of all the processes
-		this->removeAllRegisteredFakeProcessIds();
+		KernelDetector::removeAllRegisteredFakeProcessIds();
 
-		// TODO: Consume all available events
-
-		// TODO: Send I\O with all the new process IDs
 		this->registerFakeProcessIds();
 
-		// TODO: start detection thread
+		this->startDetectionThread();
 	}
 	catch (const std::exception& exception)
 	{
@@ -151,25 +154,23 @@ void KernelDetector::registerFakeProcessIds()
 		return;
 	}
 
+	AutoCriticalSection autoCriticalSection;
+
+	for (const auto& artifact : this->m_artifactsToReport)
 	{
-		AutoCriticalSection autoCriticalSection;
-
-		for (const auto& artifact : this->m_artifactsToReport)
+		if (ArtifactTypes::Process != artifact->getType())
 		{
-			if (ArtifactTypes::Process != artifact->getType())
-			{
-				return;
-			}
-
-			const auto* processArtifact = dynamic_cast<ProcessArtifact*>(artifact.get());
-
-			const ULONG processId = processArtifact->getFakeProcessId();
-
-			const ProcessDetector processDetector;
-			processDetector.addFakeProcessId(processId);
-
-			DEBUG_WPRINT(STRINGIFY(startDetection) "Register fake process ID for detection: " + processId);
+			return;
 		}
+
+		const auto* processArtifact = dynamic_cast<ProcessArtifact*>(artifact.get());
+
+		const ULONG processId = processArtifact->getFakeProcessId();
+
+		const ProcessDetector processDetector;
+		processDetector.addFakeProcessId(processId);
+
+		DEBUG_WPRINT(STRINGIFY(startDetection) "Register fake process ID for detection: " + processId);
 	}
 }
 
@@ -187,4 +188,70 @@ std::wstring KernelDetector::createTemporaryPath(const std::wstring& exeNameWith
 	binPathStream << exeNameWithExtension;
 
 	return binPathStream.str();
+}
+
+void KernelDetector::fetchAndSendEvents(LPVOID params)
+{
+	auto* kernelDetector = static_cast<KernelDetector*>(params);
+
+	// Check if requested to stop the thread functionality:
+	while (!kernelDetector->m_stopDetectionThreadEvent.isSignaled())
+	{
+		const ProcessDetector processDetector;
+
+		// Check if there are already events:
+		const EventsResult eventsResult = processDetector.receiveEvents();
+		if (0 < eventsResult.size)
+		{
+			KernelDetector::onProcessDetectionEvent(eventsResult);
+		}
+		else
+		{
+			// Register synchronization event:
+			processDetector.registerEvent(KM_ON_FAKE_PROCESS_EVENT_NAME);
+
+			// Wait for event
+			if (WAIT_OBJECT_0 == kernelDetector->m_onProcessEvent.wait(WAIT_BETWEEN_FETCH_EVENT_MS))
+			{
+				const EventsResult eventsResult = processDetector.receiveEvents();
+				KernelDetector::onProcessDetectionEvent(eventsResult);
+			}
+		}
+	}
+}
+
+void KernelDetector::onProcessDetectionEvent(const EventsResult& eventsResult)
+{
+	if (0 >= eventsResult.size)
+	{
+		return;
+	}
+
+	const std::unique_ptr<EventInfo[]>& eventInfo = eventsResult.events;
+
+	for (int i = 0; i < eventsResult.size; ++i)
+	{
+		std::wcout
+			<< "~~~~Event~~~~\n"
+			<< "Called PID=" << eventInfo[i].processId << "\n"
+			<< "Called Filename: " << eventInfo[i].processName << "\n"
+			<< "Fake process ID=" << eventInfo[i].fakeProcessId << "\n"
+			<< "Event time: " << TimeUtils::systemTimeToTimestamp(eventInfo[i].time, TIME_FORMAT) << "\n"
+			<< std::endl;
+	}
+}
+
+void KernelDetector::startDetectionThread()
+{
+	this->m_stopDetectionThreadEvent.resetEvent();
+	this->m_fetchEventThread.reset([this](auto params)
+		{
+			KernelDetector::fetchAndSendEvents(params);
+		}, this);
+}
+
+void KernelDetector::stopDetectionThread()
+{
+	this->m_stopDetectionThreadEvent.setEvent();
+	this->m_fetchEventThread.release();
 }
