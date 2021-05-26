@@ -2,7 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -13,7 +15,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Async</ExceptionHandling>
-      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN_DEBUG;_CONSOLE;_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -23,7 +25,6 @@
       <LinkIncremental>false</LinkIncremental>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <!--LinkIncremental>false</LinkIncremental-->
     </Link>
     <ResourceCompile>
       <PreprocessorDefinitions>FAKE_PROCESS_RELATIVE_PATH=$(OutDir)FakeProcess.exe;KERNEL_DRIVER_RELATIVE_PATH=$(OutDir)StresserEngine.sys;%(PreprocessorDefinitions)</PreprocessorDefinitions>
