@@ -98,6 +98,11 @@ void WindowsEvent::reset(const std::wstring& eventName, BOOL initialState, BOOL 
 	this->createEvent(eventName, initialState, manualReset, eventAttributes);
 }
 
+DWORD WindowsEvent::wait(DWORD timeout) const
+{
+	return WaitForSingleObject(this->m_event, timeout);
+}
+
 void WindowsEvent::createEvent(const std::wstring& eventName, BOOL initialState, BOOL manualReset,
 	LPSECURITY_ATTRIBUTES eventAttributes)
 {
