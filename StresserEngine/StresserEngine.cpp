@@ -205,7 +205,7 @@ NTSTATUS completeIrp(PIRP Irp, NTSTATUS status, ULONG_PTR info)
 
 NTSTATUS StresserEngineDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 {
-	KdPrint((DRIVER_PREFIX "DeviceControl started\n"));
+	LOG_MESSAGE(STRINGIFY(StresserEngineDeviceControl) " DeviceControl started");
 
 	const PIO_STACK_LOCATION stack = IoGetCurrentIrpStackLocation(Irp);
 	const ULONG controlCode = stack->Parameters.DeviceIoControl.IoControlCode;
@@ -243,6 +243,11 @@ NTSTATUS StresserEngineDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 		status = getEventsHandler(DeviceObject, Irp, stack);
 		break;
 	}
+	case IOCTL_STRESSER_ENGINE_REMOVE_ALL_FAKE_PROCESS_IDS:
+	{
+		status = removeAllFakeProcessIds(DeviceObject);
+		break;
+	}
 	default:
 	{
 		status = STATUS_INVALID_DEVICE_REQUEST;
@@ -250,7 +255,7 @@ NTSTATUS StresserEngineDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 	}
 	}
 
-	LOG_MESSAGE("DeviceControl completed successfully\n");
+	LOG_MESSAGE(STRINGIFY(StresserEngineDeviceControl) " DeviceControl completed successfully");
 
 	return completeIrp(Irp, status, Irp->IoStatus.Information);
 }
@@ -402,15 +407,18 @@ NTSTATUS removeFakeProcessIdHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_S
 		for (ULONG i = 0; i < fakeProcessIds->size(); ++i)
 		{
 			const FakeProcessId* current = fakeProcessIds->getAt(i);
-			if (fakeProcessId->processId == current->processId)
+			if (nullptr != current)
 			{
-				KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler)" remove fake process ID=%d\n", current->processId));
+				if (fakeProcessId->processId == current->processId)
+				{
+					KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler)" remove fake process ID=%d\n", current->processId));
 
-				fakeProcessIds->removeAt(i);
-				delete current;
+					fakeProcessIds->removeAt(i);
+					delete current;
 
-				KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler) " completed successfully\n"));
-				return STATUS_SUCCESS;
+					KdPrint((DRIVER_PREFIX STRINGIFY(removeFakeProcessIdHandler) " completed successfully\n"));
+					return STATUS_SUCCESS;
+				}
 			}
 		}
 	}
@@ -474,6 +482,46 @@ NTSTATUS getEventsHandler(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_STACK_LOCAT
 	}
 
 	LOG_MESSAGE(STRINGIFY(getEventsHandler) " completed successfully");
+	return STATUS_SUCCESS;
+}
+
+NTSTATUS removeAllFakeProcessIds(_In_ PDEVICE_OBJECT DeviceObject)
+{
+	LOG_MESSAGE(STRINGIFY(removeAllFakeProcessIds) " started");
+
+	auto* deviceExtensions = static_cast<PDeviceExtension>(DeviceObject->DeviceExtension);
+	RETURN_STATUS_ON_CONDITION(nullptr == deviceExtensions,
+		STRINGIFY(removeAllFakeProcessIds) " invalid device extension", STATUS_INVALID_DEVICE_OBJECT_PARAMETER);
+
+	auto* notificationContext = deviceExtensions->notificationContext;
+	RETURN_STATUS_ON_CONDITION(nullptr == notificationContext,
+		STRINGIFY(removeAllFakeProcessIds) " invalid notification context", STATUS_INVALID_DEVICE_OBJECT_PARAMETER);
+
+	auto* fakeProcessIds = notificationContext->fakeProcessIds;
+	RETURN_STATUS_ON_CONDITION(nullptr == fakeProcessIds,
+		STRINGIFY(removeAllFakeProcessIds) " invalid vector of process IDs", STATUS_INVALID_DEVICE_OBJECT_PARAMETER);
+
+	{
+		AutoLock lock(notificationContext->mutex);
+
+		const ULONG numberOfIds = fakeProcessIds->size();
+
+		for (ULONG i = 0; i < numberOfIds; ++i)
+		{
+			const FakeProcessId* current = fakeProcessIds->getAt(i);
+			if (nullptr != current)
+			{
+				KdPrint((DRIVER_PREFIX STRINGIFY(removeAllFakeProcessIds) " stop watching fake process PID=%d\n", current->processId));
+
+				delete current;
+			}
+		}
+
+		fakeProcessIds->clear();
+	}
+
+	LOG_MESSAGE(STRINGIFY(removeAllFakeProcessIds) " completed successfully");
+
 	return STATUS_SUCCESS;
 }
 

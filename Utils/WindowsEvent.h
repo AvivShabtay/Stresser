@@ -43,6 +43,15 @@ public:
 	void reset(const std::wstring& eventName = L"", BOOL initialState = FALSE, BOOL manualReset = TRUE,
 		LPSECURITY_ATTRIBUTES eventAttributes = nullptr);
 
+	/* Wait on the event object and return the result. */
+	DWORD wait(DWORD timeout = INFINITE) const;
+
+	/* Return if the event object signaled. */
+	bool isSignaled() const
+	{
+		return (WAIT_OBJECT_0 == this->wait(0));
+	}
+
 private:
 	/* Create event object from by given values. */
 	void createEvent(const std::wstring& eventName, BOOL initialState, BOOL manualReset, LPSECURITY_ATTRIBUTES eventAttributes);

@@ -18,12 +18,12 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="KernelDetector.cpp">
+    <ClCompile Include="StresserEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KernelDetector.h">
+    <ClInclude Include="StresserEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

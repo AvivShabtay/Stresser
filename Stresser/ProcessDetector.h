@@ -3,7 +3,7 @@
 #include "../Utils/AutoHandle.h"
 #include "../StresserEngine/StresserEngineCommon.h"
 
-#include <Windows.h>
+#include <string>
 
 const std::wstring DEVICE_NAME = L"\\\\.\\StresserEngine";
 
@@ -16,21 +16,18 @@ struct EventsResult
 	std::unique_ptr < EventInfo[]> events;	// Buffer with the received events
 };
 
-/*
-	Interface for communication with Stresser Driver through I\O calls.
- */
-class KernelDetector
+class ProcessDetector
 {
 public:
-	KernelDetector();
+	ProcessDetector();
 
-	virtual ~KernelDetector() = default;
+	// Disable copyable, assignable, movable:
+	ProcessDetector(ProcessDetector&) = delete;
+	ProcessDetector& operator=(ProcessDetector&) = delete;
+	ProcessDetector(ProcessDetector&&) = delete;
+	ProcessDetector& operator=(ProcessDetector&&) = delete;
 
-	// Delete copyable, movable:
-	KernelDetector(const KernelDetector&) = delete;
-	KernelDetector& operator=(const KernelDetector&) = delete;
-	KernelDetector(KernelDetector&&) = delete;
-	KernelDetector& operator=(KernelDetector&&) = delete;
+	virtual ~ProcessDetector() = default;
 
 	/* Add process ID to be monitored. */
 	void addFakeProcessId(ULONG processId) const;
@@ -47,9 +44,13 @@ public:
 	/* Fetch the events from the Driver. */
 	EventsResult receiveEvents(ULONG numberOfEvents = 10) const;
 
+	/* Send request to remove any registered event. */
 	void unregisterEvent() const;
 
+	/* Send request to remove all the registered fake process IDs. */
+	void removeAllFakeProcessIds() const;
+
 private:
-	AutoHandle stresserDevice;
+	AutoHandle detectorDevice;
 };
 

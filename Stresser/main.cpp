@@ -20,6 +20,8 @@
 
 #include <Windows.h>
 
+#include "KernelDetector.h"
+
 using Json = nlohmann::json;
 
 // Used to signal events in the main thread:
@@ -70,6 +72,12 @@ int wmain(int argc, PWCHAR argv[])
 		artifactManager.subscribe(&userModeDetector);
 
 		userModeDetector.start();
+
+		KernelDetector kernelDetector(eventController);
+
+		artifactManager.subscribe(&kernelDetector);
+
+		kernelDetector.start();
 
 		// Keep the main thread running until user CTRL + C:
 		WaitForSingleObject(g_shutdownEvent.get(), INFINITE);

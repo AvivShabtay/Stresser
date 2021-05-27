@@ -98,6 +98,12 @@
     <ClCompile Include="FileEventHandler.cpp">
       <Filter>ETW\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KernelDetector.cpp">
+      <Filter>Detectors\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessDetector.cpp">
+      <Filter>Detectors\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthorizedHttpRequest.h">
@@ -202,6 +208,12 @@
     <ClInclude Include="FileEventHandler.h">
       <Filter>ETW\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="KernelDetector.h">
+      <Filter>Detectors\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessDetector.h">
+      <Filter>Detectors\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Configurations">
@@ -286,6 +298,9 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="..\x64\Release\FakeProcess.exe">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\x64\Debug\StresserEngine.sys">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

@@ -3,6 +3,9 @@
 
 #include "Win32ErrorCodeException.h"
 
+#include <winternl.h>
+#pragma comment(lib, "ntdll.lib")
+
 std::wstring LocalPcUtils::getLocalComputerName()
 {
 	std::vector<WCHAR> buffer(MAX_COMPUTERNAME_LENGTH + 1);
@@ -69,3 +72,26 @@ std::wstring LocalPcUtils::getDosNameFromNtName(const std::wstring& ntPath)
 	throw std::runtime_error("could not find relevant DOS path");
 }
 
+bool LocalPcUtils::doesTestSigningEnabled()
+{
+	SYSTEM_CODEINTEGRITY_INFORMATION systemCodeIntegrityInformation = { 0 };
+	systemCodeIntegrityInformation.Length = sizeof(systemCodeIntegrityInformation);
+
+	ULONG returnLength = 0;
+	const NTSTATUS status = NtQuerySystemInformation(
+		SystemCodeIntegrityInformation,
+		&systemCodeIntegrityInformation,
+		sizeof(systemCodeIntegrityInformation),
+		&returnLength
+	);
+
+	if (NT_SUCCESS(status) && returnLength == sizeof(systemCodeIntegrityInformation))
+	{
+		// Note that testsigning will play no role if bit CODEINTEGRITY_OPTION_ENABLED (or 0x1)
+		// is not set in sci.CodeIntegrityOptions
+		const bool doesTestSignEnabled = (systemCodeIntegrityInformation.CodeIntegrityOptions & CODEINTEGRITY_OPTION_TESTSIGN);
+		return doesTestSignEnabled;
+	}
+
+	return false;
+}

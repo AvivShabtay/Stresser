@@ -72,3 +72,8 @@ void ProcessArtifact::uninstall()
 	    throw Win32ErrorCodeException("Failed to delete the fake process file!");
     }
 }
+
+DWORD ProcessArtifact::getFakeProcessId() const
+{
+	return this->m_pid;
+}
