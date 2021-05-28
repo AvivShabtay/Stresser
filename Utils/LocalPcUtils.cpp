@@ -1,10 +1,18 @@
 #include "pch.h"
 #include "LocalPcUtils.h"
 
+#include "StringUtils.h"
 #include "Win32ErrorCodeException.h"
+
+#include <boost/asio/ip/udp.hpp>
+#include <boost/asio/io_service.hpp>
+
 
 #include <winternl.h>
 #pragma comment(lib, "ntdll.lib")
+
+namespace net = boost::asio;        // from <boost/asio.hpp>
+using udp = net::ip::udp;
 
 std::wstring LocalPcUtils::getLocalComputerName()
 {
@@ -97,7 +105,19 @@ bool LocalPcUtils::doesTestSigningEnabled()
 }
 std::wstring LocalPcUtils::getLocalComputerIp()
 {
-	// TODO implement!
-	return L"0.0.0.0";
+	try {
+		boost::asio::io_service netService;
+		udp::endpoint ep(net::ip::address::from_string("8.8.8.8"), 53);
+		udp::socket socket(netService);
+		socket.connect(ep);
+		boost::asio::ip::address addr = socket.local_endpoint().address();
+		return StringUtils::stringToWString(addr.to_string());
+	}
+	catch (std::exception& e) {
+		std::cerr << "Could not deal with socket. Exception: " << e.what() << std::endl;
+
+	}
+
+	throw std::exception("Cant get local computer ip");
 }
 

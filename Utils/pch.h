@@ -6,6 +6,7 @@
 
 #ifndef __PCH_UTILS_H
 #define __PCH_UTILS_H
+#define WIN32_LEAN_AND_MEAN
 
 // add headers that you want to pre-compile here
 #include <iostream>
