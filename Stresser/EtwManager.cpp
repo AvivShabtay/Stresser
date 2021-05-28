@@ -32,7 +32,11 @@ void EtwManager::onEventRecord(PEVENT_RECORD record)
 	{
 		if (EtwEventsGuid.at(eventHandler->getType()) == record->EventHeader.ProviderId)
 		{
-			eventHandler->onEventRecord(record);
+			std::optional<EventEntity> eventEntity = eventHandler->onEventRecord(record);
+			if (eventEntity)
+			{
+				this->m_callback(eventEntity.value());
+			}
 		}
 	}
 }

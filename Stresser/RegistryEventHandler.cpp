@@ -13,11 +13,11 @@ RegistryEventHandler::RegistryEventHandler(std::vector<std::shared_ptr<IArtifact
 {
 }
 
-void RegistryEventHandler::onEventRecord(PEVENT_RECORD record)
+std::optional<EventEntity> RegistryEventHandler::onEventRecord(PEVENT_RECORD record)
 {
 	if(m_artifacts.empty())
 	{
-		return;
+		return std::nullopt;
 	}
 
 	const EventParser parser(record);
@@ -30,7 +30,7 @@ void RegistryEventHandler::onEventRecord(PEVENT_RECORD record)
 
 	if (EVENT_TRACE_TYPE_REGOPEN != eventOpcode)
 	{
-		return;
+		return std::nullopt;
 	}
 
 	const std::string eventType = ArtifactNames[static_cast<size_t>(ArtifactTypes::Registry)];
@@ -38,7 +38,7 @@ void RegistryEventHandler::onEventRecord(PEVENT_RECORD record)
 	const EventProperty* keyNameProperty = parser.getProperty(L"KeyName");
 	if (nullptr == keyNameProperty)
 	{
-		return;
+		return std::nullopt;
 	}
 
 	const std::wstring keyName(keyNameProperty->getUnicodeString());
@@ -55,9 +55,22 @@ void RegistryEventHandler::onEventRecord(PEVENT_RECORD record)
 				std::wstring trimmedArtifactKey = StringUtils::trimBackslash(artifactKey);
 				if (boost::iequals(keyName, artifactKey) || boost::iequals(keyName, trimmedArtifactKey))
 				{
-					std::wcout << eventData << ", " << wideEventType << ", Open path= " << keyName << std::endl;
+					const std::wstring wideTimestamp = TimeUtils::systemTimeToTimestamp(parser.getEventHeader().TimeStamp);
+					const std::string timestamp = StringUtils::wstringToString(wideTimestamp);
+
+					const std::string eventType = ArtifactNames[static_cast<size_t>(ArtifactTypes::Registry)];
+					const std::uint32_t processPid = parser.getProcessId();
+
+					const std::wstring eventData = L"PID= " + std::to_wstring(processPid) + L" Key= " + keyName;
+					const std::string narrowEventData = StringUtils::wstringToString(eventData);
+
+					std::cout << "Event Found!" << std::endl;
+
+					return EventEntity("Registry Artifact touched", eventType, narrowEventData, timestamp);
 				}
 			}
 		}
 	}
+
+	return std::nullopt;
 }

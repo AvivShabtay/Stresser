@@ -13,7 +13,7 @@ public:
 
 	~RegistryEventHandler() override = default;
 
-	void onEventRecord(PEVENT_RECORD record) override;
+	std::optional<EventEntity> onEventRecord(PEVENT_RECORD record) override;
 
 private:
 	std::vector<std::shared_ptr<IArtifact>>& m_artifacts;

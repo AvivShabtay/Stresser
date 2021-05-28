@@ -1,5 +1,8 @@
 #pragma once
 #include "EtwEventTypes.h"
+#include "EventEntity.h"
+
+#include <optional>
 
 /*
  * Represent class that have implemented ETW event callback for incoming events.
@@ -13,7 +16,7 @@ public:
 
 	virtual ~IEtwEventHandler() = default;
 
-	virtual void onEventRecord(PEVENT_RECORD record) = 0;
+	virtual std::optional<EventEntity> onEventRecord(PEVENT_RECORD record) = 0;
 
 private:
 	EtwEventTypes m_eventType;
