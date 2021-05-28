@@ -41,6 +41,11 @@ void EtwManager::onEventRecord(PEVENT_RECORD record)
 	}
 }
 
+void EtwManager::setCallback(const std::function<void(EventEntity&)>& mCallback)
+{
+	m_callback = mCallback;
+}
+
 void EtwManager::registerEventHandle(std::shared_ptr<IEtwEventHandler> eventHandler)
 {
 	this->m_eventsHandlers.push_back(eventHandler);
