@@ -7,7 +7,7 @@ class ServerDetails final
 public:
 	ServerDetails() = delete;
 
-	explicit ServerDetails(const std::string userAgent, int httpVersion, const std::string contentType, const std::string hostname, const std::string port);
+	explicit ServerDetails(const std::string userAgent, int httpVersion, const std::string contentType, const std::string hostname, const std::string port, const std::string apiPrefix);
 
 	~ServerDetails() = default;
 
@@ -16,6 +16,7 @@ public:
 	std::string getContentType() const;
 	std::string getHostname() const;
 	std::string getPort() const;
+	std::string getApiPrefix() const;
 
 	friend std::ostream& operator << (std::ostream& out, const ServerDetails& serverDetails);
 
@@ -25,5 +26,6 @@ private:
 	const std::string m_contentType;
 	const std::string m_hostname;
 	const std::string m_port;
+	const std::string m_apiPrefix;
 };
 

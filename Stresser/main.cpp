@@ -42,7 +42,7 @@ int wmain(int argc, PWCHAR argv[])
 		}
 
 		// Define application globals:
-		ServerDetails serverDetails("Stresser Client / 1.0", 11, "application/json", "stresser-project.herokuapp.com", "80");
+		ServerDetails serverDetails("Stresser Client / 1.0", 11, "application/json", "stresser-project.herokuapp.com", "80", "/api");
 
 		// Define communication object:
 		AuthorizedHttpRequest& authorizedHttpRequest = AuthorizedHttpRequest::getInstance(serverDetails, g_shutdownEvent.get());
