@@ -1,8 +1,11 @@
 #include "EventEntity.h"
 
-EventEntity::EventEntity(std::string id, std::string name, std::string type, std::string data,
-	std::string hostname, std::string ipAddress, std::string timestamp)
-	: m_id(id), m_name(name), m_type(type), m_data(data), m_hostname(hostname), m_ipAddress(ipAddress), m_timestamp(timestamp) { }
+#include <utility>
+
+EventEntity::EventEntity(std::string name, std::string type, std::string data, std::string timestamp)
+	: m_name(std::move(name)), m_type(std::move(type)), m_data(std::move(data)), m_timestamp(std::move(timestamp))
+{
+}
 
 const std::string& EventEntity::getId() const
 {
@@ -37,6 +40,56 @@ const std::string& EventEntity::getIpAddress() const
 const std::string& EventEntity::getTimestamp() const
 {
 	return this->m_timestamp;
+}
+
+void EventEntity::setId(const std::string& mId)
+{
+	m_id = mId;
+}
+
+void EventEntity::setName(const std::string& mName)
+{
+	m_name = mName;
+}
+
+void EventEntity::setType(const std::string& mType)
+{
+	m_type = mType;
+}
+
+void EventEntity::setData(const std::string& mData)
+{
+	m_data = mData;
+}
+
+void EventEntity::setHostname(const std::string& mHostname)
+{
+	m_hostname = mHostname;
+}
+
+void EventEntity::setIpAddress(const std::string& mIpAddress)
+{
+	m_ipAddress = mIpAddress;
+}
+
+void EventEntity::setTimestamp(const std::string& mTimestamp)
+{
+	m_timestamp = mTimestamp;
+}
+
+Json EventEntity::ConvertFromEntity(const EventEntity& entity)
+{
+	Json jsEvent;
+
+	jsEvent["id"] = entity.m_id;
+	jsEvent["eventName"] = entity.m_name;
+	jsEvent["eventType"] = entity.m_type;
+	jsEvent["eventData"] = entity.m_data;
+	jsEvent["hostname"] = entity.m_hostname;
+	jsEvent["IPAddress"] = entity.m_ipAddress;
+	jsEvent["timeStamp"] = entity.m_timestamp;
+
+	return jsEvent;
 }
 
 std::ostream& operator<<(std::ostream& out, const EventEntity& eventEntity)

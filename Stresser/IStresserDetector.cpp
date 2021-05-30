@@ -5,7 +5,7 @@ IStresserDetector::IStresserDetector(const EventController& eventController)
 {
 }
 
-void IStresserDetector::sendEvent(const EventEntity& eventEntity) const
+void IStresserDetector::sendEvent(EventEntity& eventEntity) const
 {
 	this->m_eventController.sendEvent(eventEntity);
 }

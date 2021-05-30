@@ -6,6 +6,10 @@ UserModeDetector::UserModeDetector(const EventController &eventController)
 	: IStresserDetector(eventController)
 {
 	this->m_etwManager.reset(new EtwManager());
+	this->m_etwManager->setCallback([this](EventEntity& eventEntity)
+		{
+			this->sendEvent(eventEntity);
+		});
 
 	const std::shared_ptr<RegistryEventHandler> registryEventHandler(new RegistryEventHandler(this->m_artifactsToReport));
 	const std::shared_ptr<FileEventHandler> fileEventHandler(new FileEventHandler(this->m_artifactsToReport));

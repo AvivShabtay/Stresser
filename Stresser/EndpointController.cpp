@@ -35,8 +35,11 @@ EndpointController& EndpointController::getInstance(AuthorizedHttpRequest& autho
 
 EndpointEntity EndpointController::createEndpoint() const
 {
+	std::wstring wideIp = LocalPcUtils::getLocalComputerIp();
+	std::string ip = StringUtils::wstringToString(wideIp);
+
 	EndpointEntity endpointEntity;
-	endpointEntity.SetIPAddress("10.10.10.10"); // TODO: Get the machine ip!
+	endpointEntity.SetIPAddress(ip);
 	endpointEntity.SetHostname(StringUtils::wstringToString(this->m_computerName));
 
 	const Json jsEndpoint = EndpointEntity::ConvertFromEntity(endpointEntity);

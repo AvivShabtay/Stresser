@@ -14,11 +14,11 @@ FileEventHandler::FileEventHandler(std::vector<std::shared_ptr<IArtifact>>& arti
 {
 }
 
-void FileEventHandler::onEventRecord(PEVENT_RECORD record)
+std::optional<EventEntity> FileEventHandler::onEventRecord(PEVENT_RECORD record)
 {
 	if (m_artifacts.empty())
 	{
-		return;
+		return std::nullopt;
 	}
 
 	const EventParser parser(record);
@@ -31,7 +31,7 @@ void FileEventHandler::onEventRecord(PEVENT_RECORD record)
 
 	if (FILE_CREATE_OPCODE != eventOpcode)
 	{
-		return;
+		return std::nullopt;
 	}
 
 	std::string eventType = ArtifactNames[static_cast<size_t>(ArtifactTypes::File)];
@@ -39,7 +39,7 @@ void FileEventHandler::onEventRecord(PEVENT_RECORD record)
 	const EventProperty* openPathProperty = parser.getProperty(L"OpenPath");
 	if (nullptr == openPathProperty)
 	{
-		return;
+		return std::nullopt;
 	}
 
 	const std::wstring openPath(openPathProperty->getUnicodeString());
@@ -51,8 +51,8 @@ void FileEventHandler::onEventRecord(PEVENT_RECORD record)
 	}
 	catch (...)
 	{
-		std::wcout << "Cannot convert the ntPath to dosPath, ntPath: " << openPath << std::endl;
-		return;
+		// Cannot convert the ntPath to dosPath
+		return std::nullopt;
 	}
 
 	{
@@ -66,9 +66,20 @@ void FileEventHandler::onEventRecord(PEVENT_RECORD record)
 				const std::wstring trimmedArtifactFilePath = StringUtils::trimBackslash(artifactFilePath);
 				if (boost::iequals(filePath, artifactFilePath) || boost::iequals(filePath, trimmedArtifactFilePath))
 				{
-					std::wcout << eventData << ", " << wideEventType << ", Open path= " << openPath << std::endl;
+					const std::wstring wideTimestamp = TimeUtils::systemTimeToTimestamp(parser.getEventHeader().TimeStamp);
+					const std::string timestamp = StringUtils::wstringToString(wideTimestamp);
+
+					const std::string eventType = ArtifactNames[static_cast<size_t>(ArtifactTypes::File)];
+					const std::uint32_t processPid = parser.getProcessId();
+
+					const std::wstring eventData = L"PID= " + std::to_wstring(processPid) + L" FilePath= " + filePath;
+					std::string narrowEventData = StringUtils::wstringToString(eventData);
+
+					return EventEntity("File Artifact touched", eventType, narrowEventData, timestamp);
 				}
 			}
 		}
 	}
+
+	return std::nullopt;
 }

@@ -40,6 +40,9 @@ public:
 	/* Called whenever new event accepted by the trace session. */
 	void onEventRecord(PEVENT_RECORD record);
 
+	/* Set the callback which called when event is returned from events handlers */
+	void setCallback(const std::function<void(EventEntity&)>& callback);
+
 	void registerEventHandle(std::shared_ptr<IEtwEventHandler> eventHandler);
 
 private:
@@ -53,7 +56,7 @@ private:
 	ULONG getEventTypes() const;
 
 private:
-	std::function<void(PEVENT_RECORD)> m_callback;
+	std::function<void(EventEntity&)> m_callback;
 	std::vector<std::shared_ptr<IEtwEventHandler>> m_eventsHandlers;
 	AutoEtwTraceSession m_autoTraceSession;
 };

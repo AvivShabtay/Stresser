@@ -32,11 +32,13 @@ public:
 	 * Send event to the server.
 	 * @param eventEntity - Represent the event.
 	 */
-	void sendEvent(const EventEntity& eventEntity) const;
+	void sendEvent(EventEntity& eventEntity) const;
 
 private:
 	explicit EventController(AuthorizedHttpRequest& authorizedHttpRequest);
 
 	AuthorizedHttpRequest& m_authorizedHttpRequest;
+	std::string m_ipAddress;
+	std::string m_hostname;
 };
 

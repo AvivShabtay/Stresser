@@ -1,11 +1,15 @@
 #pragma once
-#include <iostream>
+#include <string>
+#include "nlohmann/json.hpp"
+
+using Json = nlohmann::json;
 
 class EventEntity
 {
 public:
-	explicit EventEntity(std::string id, std::string name, std::string type, std::string data, std::string hostname,
-		std::string ipAddress, std::string timestamp);
+	EventEntity() = default;
+
+	explicit EventEntity(std::string name, std::string type, std::string data, std::string timestamp);
 
 	virtual ~EventEntity() = default;
 
@@ -16,6 +20,16 @@ public:
 	const std::string& getHostname() const;
 	const std::string& getIpAddress() const;
 	const std::string& getTimestamp() const;
+
+	void setId(const std::string& mId);
+	void setName(const std::string& mName);
+	void setType(const std::string& mType);
+	void setData(const std::string& mData);
+	void setHostname(const std::string& mHostname);
+	void setIpAddress(const std::string& mIpAddress);
+	void setTimestamp(const std::string& mTimestamp);
+
+	static Json ConvertFromEntity(const EventEntity& entity);
 
 	friend std::ostream& operator << (std::ostream& out, const EventEntity& eventEntity);
 
