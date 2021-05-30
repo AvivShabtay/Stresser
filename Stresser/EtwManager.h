@@ -40,7 +40,8 @@ public:
 	/* Called whenever new event accepted by the trace session. */
 	void onEventRecord(PEVENT_RECORD record);
 
-	void setCallback(const std::function<void(EventEntity&)>& mCallback);
+	/* Set the callback which called when event is returned from events handlers */
+	void setCallback(const std::function<void(EventEntity&)>& callback);
 
 	void registerEventHandle(std::shared_ptr<IEtwEventHandler> eventHandler);
 
