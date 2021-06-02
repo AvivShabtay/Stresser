@@ -84,7 +84,7 @@ std::ostream& operator<<(std::ostream& out, const PolicyEntity& policyEntity)
 
 	for (const auto& rule : policyEntity.m_rules)
 	{
-		out << rule;
+		out << rule << std::endl;
 	}
 
 	return out;
