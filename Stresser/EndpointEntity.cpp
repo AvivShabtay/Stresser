@@ -83,7 +83,7 @@ Json EndpointEntity::ConvertFromEntity(EndpointEntity entity)
 std::ostream& operator<<(std::ostream& out, const EndpointEntity& endpointEntity)
 {
 	return out
-		<< "[Entity] ID: " << endpointEntity.m_id
+		<< "ID: " << endpointEntity.m_id
 		<< ", Hostname: " << endpointEntity.m_hostname
 		<< ", IP Address: " << endpointEntity.m_ipAddress
 		<< ", API Key: " << endpointEntity.m_apiKey

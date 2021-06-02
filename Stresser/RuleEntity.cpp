@@ -49,7 +49,7 @@ Json RuleEntity::convertFromEntity(const RuleEntity& ruleEntity)
 std::ostream& operator<<(std::ostream& out, const RuleEntity& ruleEntity)
 {
 	return out
-		<< "[Rule] ID: " << ruleEntity.m_id
+		<< "ID: " << ruleEntity.m_id
 		<< ", Name: " << ruleEntity.m_name
 		<< ", Type: " << ruleEntity.m_type
 		<< ", Data: " << ruleEntity.m_data;

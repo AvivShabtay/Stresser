@@ -95,7 +95,7 @@ Json EventEntity::ConvertFromEntity(const EventEntity& entity)
 std::ostream& operator<<(std::ostream& out, const EventEntity& eventEntity)
 {
 	return out
-		<< "[Event] ID: " << eventEntity.m_id
+		<< "ID: " << eventEntity.m_id
 		<< ", Name: " << eventEntity.m_name
 		<< ", Type: " << eventEntity.m_type
 		<< ", Hostname: " << eventEntity.m_hostname
