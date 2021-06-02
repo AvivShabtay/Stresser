@@ -87,6 +87,5 @@ std::ostream& operator<<(std::ostream& out, const EndpointEntity& endpointEntity
 		<< ", Hostname: " << endpointEntity.m_hostname
 		<< ", IP Address: " << endpointEntity.m_ipAddress
 		<< ", API Key: " << endpointEntity.m_apiKey
-		<< ", Status: " << endpointEntity.m_status
-		<< std::endl;
+		<< ", Status: " << endpointEntity.m_status;
 }

@@ -100,6 +100,5 @@ std::ostream& operator<<(std::ostream& out, const EventEntity& eventEntity)
 		<< ", Type: " << eventEntity.m_type
 		<< ", Hostname: " << eventEntity.m_hostname
 		<< ", IP Address: " << eventEntity.m_ipAddress
-		<< ", Timestamp: " << eventEntity.m_timestamp
-		<< std::endl;
+		<< ", Timestamp: " << eventEntity.m_timestamp;
 }
