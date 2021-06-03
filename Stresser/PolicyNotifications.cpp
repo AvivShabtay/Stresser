@@ -4,7 +4,7 @@
 
 PolicyNotifications::PolicyNotifications(const std::string& endpointId, const HANDLE& shutdownEvent,
 	const EndpointController& endpointController, const PolicyController& policyController, const RuleController& ruleController) :
-m_endpointId(endpointId), m_changePolicyEvent(CHANGE_POLICY), m_shutdownEvent(shutdownEvent)
+	m_endpointId(endpointId), m_changePolicyEvent(CHANGE_POLICY), m_shutdownEvent(shutdownEvent)
 {
 	this->m_changePolicyThread = StandardThread([this, &endpointController, &policyController, &ruleController]()
 		{
@@ -23,13 +23,15 @@ void PolicyNotifications::subscribe(IPolicySubscriber* subscriber)
 }
 
 void PolicyNotifications::changePolicyThreadFunction(const EndpointController& endpointController,
-                                                     const PolicyController& policyController, const RuleController& ruleController)
+	const PolicyController& policyController, const RuleController& ruleController)
 {
+	DEBUG_WTRACE(PolicyNotifications, "Start fetching policy updates");
+
 	// Check if there is CTRL + C signal:
-	while (WAIT_TIMEOUT == WaitForSingleObject(m_shutdownEvent, 10000))
+	while (WAIT_TIMEOUT == WaitForSingleObject(m_shutdownEvent, 30 * 1000))
 	{
 		EndpointEntity endpointEntity = endpointController.getEndpoint(this->m_endpointId);
-		DEBUG_PRINT(endpointEntity);
+		DEBUG_TRACE(changePolicyThreadFunction, "Fetch policy data for endpoint ID=", endpointEntity.GetID());
 
 		PolicyEntity policyEntity = policyController.getPolicy(endpointEntity.GetPolicyID());
 		if (this->m_currentPolicy == policyEntity)
@@ -39,7 +41,9 @@ void PolicyNotifications::changePolicyThreadFunction(const EndpointController& e
 
 		this->m_currentRules.clear();
 		this->m_currentPolicy = policyEntity;
-		DEBUG_PRINT("Policy ID: " + this->m_currentPolicy.getId());
+
+		DEBUG_TRACE(changePolicyThreadFunction, "New policy data, ID=", this->m_currentPolicy.getId(),
+			", Version=", this->m_currentPolicy.getUpdateCount());
 
 		this->m_changePolicyEvent.setEvent();
 		this->m_changePolicyEvent.resetEvent();
@@ -49,11 +53,13 @@ void PolicyNotifications::changePolicyThreadFunction(const EndpointController& e
 			RuleEntity ruleEntity = ruleController.getRule(ruleId);
 			this->m_currentRules.push_back(ruleEntity);
 
-			DEBUG_PRINT(ruleEntity);
+			DEBUG_TRACE(changePolicyThreadFunction, "Rule: ", ruleEntity.getName(), "ID=", ruleEntity.getId());
 		}
 
 		this->notifySubscribers();
 	}
+
+	DEBUG_WTRACE(PolicyNotifications, "Stop fetching policy updates");
 }
 
 void PolicyNotifications::notifySubscribers()

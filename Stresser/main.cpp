@@ -96,7 +96,7 @@ BOOL consoleHandler(DWORD signal) {
 	{
 		AutoCriticalSection autoCriticalSection;
 
-		DEBUG_PRINT("[*] Counter CTRL + C event, signaling to stop");
+		DEBUG_TRACE(StresserMainThread, "Counter CTRL + C event, signaling to stop all functionality");
 
 		g_shutdownEvent.setEvent();
 

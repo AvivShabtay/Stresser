@@ -6,6 +6,7 @@
 #include "../Utils/StringUtils.h"
 #include "../Utils/RegistryArtifactUtils.h"
 #include "../Utils/AutoCriticalSection.h"
+#include "../Utils/DebugPrint.h"
 #include "boost/algorithm/string.hpp"
 
 RegistryEventHandler::RegistryEventHandler(std::vector<std::shared_ptr<IArtifact>>& artifacts)
@@ -15,7 +16,7 @@ RegistryEventHandler::RegistryEventHandler(std::vector<std::shared_ptr<IArtifact
 
 std::optional<EventEntity> RegistryEventHandler::onEventRecord(PEVENT_RECORD record)
 {
-	if(m_artifacts.empty())
+	if (m_artifacts.empty())
 	{
 		return std::nullopt;
 	}
@@ -64,7 +65,8 @@ std::optional<EventEntity> RegistryEventHandler::onEventRecord(PEVENT_RECORD rec
 					const std::wstring eventData = L"PID= " + std::to_wstring(processPid) + L" Key= " + keyName;
 					const std::string narrowEventData = StringUtils::wstringToString(eventData);
 
-					std::cout << "Event Found!" << std::endl;
+					DEBUG_WTRACE(RegistryEventHandler, "RegistryDetectionEvent: Event timestamp=", wideTimestamp,
+						" PID=", processPid, " touch Fake registry value=", artifactKey);
 
 					return EventEntity("Registry Artifact touched", eventType, narrowEventData, timestamp);
 				}

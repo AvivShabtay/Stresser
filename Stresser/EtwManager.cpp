@@ -18,11 +18,17 @@ EtwManager::~EtwManager()
 	}
 }
 
-void EtwManager::start() {
+void EtwManager::start()
+{
+	DEBUG_WTRACE(EtwManager, "Start ETW manager");
+
 	this->m_autoTraceSession.reset(this->getProperties(), this->getTraceLogFile(), KERNEL_LOGGER_NAME);
 }
 
-void EtwManager::stop() {
+void EtwManager::stop()
+{
+	DEBUG_WTRACE(EtwManager, "Stop ETW manager");
+
 	this->m_autoTraceSession.release();
 }
 
