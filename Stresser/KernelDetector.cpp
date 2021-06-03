@@ -20,6 +20,7 @@ KernelDetector::KernelDetector(const EventController& eventController)
 	m_onProcessEvent(UM_ON_FAKE_PROCESS_EVENT_NAME, FALSE, FALSE),
 	m_stopDetectionThreadEvent(STOP_FETCH_THREAD_EVENT_NAME)
 {
+	DEBUG_WTRACE(KernelDetector, "Initiating kernel mode detector");
 }
 
 KernelDetector::~KernelDetector()
@@ -33,21 +34,23 @@ KernelDetector::~KernelDetector()
 	}
 	catch (const std::exception& exception)
 	{
-		DEBUG_PRINT(exception.what());
+		DEBUG_TRACE(~KernelDetector, exception.what());
 	}
 	catch (...)
 	{
-		DEBUG_WPRINT(STRINGIFY(KernelDetector) "Undefined exception was thrown in destructor");
+		DEBUG_WTRACE(KernelDetector, "Undefined exception was thrown in destructor");
 	}
 }
 
 void KernelDetector::start()
 {
+	DEBUG_WTRACE(KernelDetector, "Start kernel mode detector");
+
 	this->m_doesTestSigning = LocalPcUtils::doesTestSigningEnabled();
 	if (!this->m_doesTestSigning)
 	{
-		DEBUG_WPRINT(STRINGIFY(start) "Running on system without testsigning enabled");
-		DEBUG_WPRINT(STRINGIFY(start) "Could not install process detector driver");
+		DEBUG_WTRACE(start, "Running on system without testsigning enabled");
+		DEBUG_WTRACE(start, "Could not install process detector driver");
 
 		// Continue Stresser without kernel detector
 		return;
@@ -67,9 +70,11 @@ void KernelDetector::start()
 
 void KernelDetector::stop()
 {
+	DEBUG_WTRACE(KernelDetector, "Stop kernel mode detector");
+
 	if (!this->m_doesTestSigning)
 	{
-		DEBUG_PRINT(STRINGIFY(stop) "Running on system without testsigning enabled");
+		DEBUG_TRACE(stop, "Running on system without testsigning enabled");
 		return;
 	}
 
@@ -81,7 +86,7 @@ void KernelDetector::stop()
 	}
 	catch (const std::exception& exception)
 	{
-		DEBUG_PRINT(exception.what());
+		DEBUG_TRACE(stop, exception.what());
 	}
 }
 
@@ -113,7 +118,7 @@ void KernelDetector::setNewArtifacts(const std::vector<std::shared_ptr<IArtifact
 	}
 	catch (const std::exception& exception)
 	{
-		DEBUG_PRINT(exception.what());
+		DEBUG_TRACE(setNewArtifacts, exception.what());
 	}
 }
 
@@ -123,12 +128,12 @@ void KernelDetector::installStresserDriver()
 	const std::wstring binaryPath(KernelDetector::createTemporaryPath(STRESSER_DRIVER_NAME_WITH_EXTENSION));
 
 	resource.saveResourceToFileSystem(binaryPath);
-	DEBUG_WPRINT(STRINGIFY(installStresserDriver) L"Save Stresser driver locally: " + binaryPath);
+	DEBUG_WTRACE(installStresserDriver, "Save Stresser driver locally: ", binaryPath);
 
 	ServiceManager serviceManager(STRESSER_DRIVER_SERVICE_NAME, binaryPath, STRESSER_DRIVER_SERVICE_TYPE);
 
 	serviceManager.installAndStart();
-	DEBUG_WPRINT(STRINGIFY(installStresserDriver) L"Install and start Stresser driver service: " + STRESSER_DRIVER_SERVICE_NAME);
+	DEBUG_WTRACE(installStresserDriver, "Install and start Stresser driver service: ", STRESSER_DRIVER_SERVICE_NAME);
 }
 
 void KernelDetector::uninstallStresserDriver()
@@ -137,14 +142,14 @@ void KernelDetector::uninstallStresserDriver()
 	const ServiceManager serviceManager(STRESSER_DRIVER_SERVICE_NAME, binaryPath, STRESSER_DRIVER_SERVICE_TYPE);
 
 	serviceManager.stopAndRemove();
-	DEBUG_WPRINT(STRINGIFY(uninstallStresserDriver) L"Stop and uninstall Stresser driver service: " + STRESSER_DRIVER_SERVICE_NAME);
+	DEBUG_WTRACE(uninstallStresserDriver, "Stop and uninstall Stresser driver service: ", STRESSER_DRIVER_SERVICE_NAME);
 
 	if (!DeleteFile(binaryPath.c_str()))
 	{
 		throw Win32ErrorCodeException("Could not delete Stresser driver: " +
 			StringUtils::wstringToString(binaryPath));
 	}
-	DEBUG_WPRINT(STRINGIFY(uninstallStresserDriver) L"Delete Stresser driver binary file");
+	DEBUG_WTRACE(uninstallStresserDriver, "Delete Stresser driver binary file");
 }
 
 void KernelDetector::registerFakeProcessIds()
@@ -231,13 +236,15 @@ void KernelDetector::onProcessDetectionEvent(const EventsResult& eventsResult)
 
 	for (int i = 0; i < eventsResult.size; ++i)
 	{
-		std::wcout
+		DEBUG_WTRACE(KernelDetector, "ProcessDetectionEvent: Event timestamp=", TimeUtils::systemTimeToTimestamp(eventInfo[i].time, TIME_FORMAT),
+			" PID=", eventInfo[i].processId, " Filename=", eventInfo[i].processName, " touch Fake process PID=", eventInfo[i].fakeProcessId);
+		/*std::wcout
 			<< "~~~~Event~~~~\n"
 			<< "Called PID=" << eventInfo[i].processId << "\n"
 			<< "Called Filename: " << eventInfo[i].processName << "\n"
 			<< "Fake process ID=" << eventInfo[i].fakeProcessId << "\n"
 			<< "Event time: " << TimeUtils::systemTimeToTimestamp(eventInfo[i].time, TIME_FORMAT) << "\n"
-			<< std::endl;
+			<< std::endl;*/
 	}
 }
 

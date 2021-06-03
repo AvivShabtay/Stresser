@@ -53,6 +53,8 @@ bool AuthorizedHttpRequest::startTokenRefresherThread(const std::string& endpoin
 
 	auto threadStartRoutine = [](auto params)
 	{
+		DEBUG_WTRACE(AuthorizedHttpRequest, "Start authorization thread");
+
 		SehTranslatorGuard sehTranslatorGuard;
 
 		auto* const tokenManager = reinterpret_cast<AuthorizedHttpRequest*>(params);
@@ -62,6 +64,7 @@ bool AuthorizedHttpRequest::startTokenRefresherThread(const std::string& endpoin
 			tokenManager->refreshToken();
 		}
 
+		DEBUG_WTRACE(AuthorizedHttpRequest, "Stop authorization thread");
 		return static_cast<DWORD>(0);
 	};
 

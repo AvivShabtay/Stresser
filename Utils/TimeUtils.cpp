@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "TimeUtils.h"
 
+#include <boost/date_time.hpp>
+
 #include <ctime>
 
 // Add before any ATL header:
@@ -14,6 +16,17 @@ std::string TimeUtils::GetCurrentDateTime() {
 	CHAR buffer[35];
 	ctime_s(buffer, 35, &tt);
 	return std::string(buffer);
+}
+
+std::string TimeUtils::getCurrentTimestamp(std::string format)
+{
+	const boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
+	const std::tm timestamp = boost::posix_time::to_tm(now);
+
+	std::stringstream stream;
+	stream << std::put_time(&timestamp, format.c_str());
+
+	return stream.str();
 }
 
 std::wstring TimeUtils::systemTimeToTimestamp(LARGE_INTEGER systemTimeValue, std::wstring format)

@@ -75,7 +75,7 @@ Json PolicyEntity::convertFromEntity(const PolicyEntity& policyEntity)
 std::ostream& operator<<(std::ostream& out, const PolicyEntity& policyEntity)
 {
 	out
-		<< "[Policy] ID: " << policyEntity.m_id
+		<< "ID: " << policyEntity.m_id
 		<< ", Name: " << policyEntity.m_name
 		<< ", Update Count: " << policyEntity.m_updateCount
 		<< ", Number of rules: " << policyEntity.m_numberOfRules
@@ -84,7 +84,7 @@ std::ostream& operator<<(std::ostream& out, const PolicyEntity& policyEntity)
 
 	for (const auto& rule : policyEntity.m_rules)
 	{
-		out << rule;
+		out << rule << std::endl;
 	}
 
 	return out;
