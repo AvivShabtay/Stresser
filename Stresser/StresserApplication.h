@@ -28,6 +28,6 @@ private:
 	WindowsEvent m_shutdownEvent;
 	std::unique_ptr<PolicyNotifications> m_policyNotifications;
 	std::unique_ptr<ArtifactManager> m_artifactManager;
-	std::vector<IStresserDetector> m_detectors;
+	std::vector<std::unique_ptr<IStresserDetector>> m_detectors;
 };
 

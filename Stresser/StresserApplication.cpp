@@ -41,21 +41,21 @@ void StresserApplication::initializeDetectors(AuthorizedHttpRequest& authorizedH
 {
 	EventController& eventController = EventController::getInstance(authorizedHttpRequest);
 
-	UserModeDetector userModeDetector(eventController);
-	KernelDetector kernelDetector(eventController);
+	std::unique_ptr<UserModeDetector> userModeDetector(new UserModeDetector(eventController));
+	std::unique_ptr<KernelDetector> kernelDetector(new KernelDetector(eventController));
 
-	this->m_artifactManager->subscribe(&userModeDetector);
-	this->m_artifactManager->subscribe(&kernelDetector);
+	this->m_artifactManager->subscribe(userModeDetector.get());
+	this->m_artifactManager->subscribe(kernelDetector.get());
 
-	this->m_detectors.push_back(userModeDetector);
-	this->m_detectors.push_back(kernelDetector);
+	this->m_detectors.push_back(std::move(userModeDetector));
+	this->m_detectors.push_back(std::move(kernelDetector));
 }
 
 void StresserApplication::start()
 {
-	for (IStresserDetector& detector : this->m_detectors)
+	for (auto& detector : this->m_detectors)
 	{
-		detector.start();
+		detector->start();
 	}
 }
 
@@ -63,17 +63,17 @@ void StresserApplication::stop()
 {
 	this->m_shutdownEvent.setEvent();
 
-	for (IStresserDetector& detector : this->m_detectors)
+	for (auto& detector : this->m_detectors)
 	{
-		detector.stop();
+		detector->stop();
 	}
 }
 
 void StresserApplication::pause()
 {
-	for (IStresserDetector& detector : this->m_detectors)
+	for (auto& detector : this->m_detectors)
 	{
-		detector.stop();
+		detector->stop();
 	}
 }
 
