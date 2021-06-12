@@ -2,8 +2,8 @@
 #include "Controllers.h"
 #include "../Utils/EventsNames.h"
 
-StresserApplication::StresserApplication(const ServerDetails serverDetails) :
-	m_shutdownEvent(STOP_STRESSER)
+StresserApplication::StresserApplication(const ServerDetails serverDetails)
+	: m_shutdownEvent(STOP_STRESSER), m_artifactManager(new ArtifactManager())
 {
 	// Define communication object:
 	AuthorizedHttpRequest& authorizedHttpRequest = AuthorizedHttpRequest::getInstance(serverDetails, m_shutdownEvent.get());
