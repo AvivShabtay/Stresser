@@ -214,6 +214,9 @@
     <ClInclude Include="ProcessDetector.h">
       <Filter>Detectors\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IStresserApplication.h">
+      <Filter>Application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Configurations">

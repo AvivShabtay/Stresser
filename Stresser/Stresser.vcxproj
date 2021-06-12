@@ -154,6 +154,7 @@
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="IArtifact.h" />
     <ClInclude Include="IArtifactSubscriber.h" />
+    <ClInclude Include="IStresserApplication.h" />
     <ClInclude Include="IStresserDetector.h" />
     <ClInclude Include="KernelDetector.h" />
     <ClInclude Include="PolicyController.h" />
