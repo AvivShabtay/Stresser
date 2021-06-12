@@ -1,6 +1,8 @@
 #include "StresserApplication.h"
 #include "Controllers.h"
+
 #include "../Utils/EventsNames.h"
+#include "../Utils/DebugPrint.h"
 
 StresserApplication::StresserApplication(const ServerDetails serverDetails)
 	: m_shutdownEvent(STOP_STRESSER), m_artifactManager(new ArtifactManager())
@@ -15,7 +17,18 @@ StresserApplication::StresserApplication(const ServerDetails serverDetails)
 
 StresserApplication::~StresserApplication()
 {
-	this->StresserApplication::stop();
+	try
+	{
+		this->StresserApplication::stop();
+	}
+	catch (const std::exception& exception)
+	{
+		DEBUG_TRACE(StresserApplication, "Exception in destructor\n", exception.what());
+	}
+	catch (...)
+	{
+		DEBUG_TRACE(StresserApplication, "Undefined exception in destructor");
+	}
 }
 
 void StresserApplication::initializeEndpoint(AuthorizedHttpRequest& authorizedHttpRequest)
