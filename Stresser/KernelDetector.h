@@ -7,6 +7,8 @@
 #include "../Utils/StandardThread.h"
 #include "../Utils/WindowsEvent.h"
 
+#include <set>
+
 const int STRESSER_DRIVER_RESOURCE_ID = 5;
 const std::wstring STRESSER_DRIVER_RESOURCE_NAME(L"STRESSER_ENGINE");
 const std::wstring STRESSER_DRIVER_SERVICE_NAME(L"StresserProcessDetector");
@@ -69,16 +71,19 @@ private:
 		Try to consume available events or wait for the kernel detector to signal
 		on new arrived events to be consumed.
 	*/
-	static void fetchAndSendEvents(LPVOID params);
+	void fetchAndSendEvents(LPVOID params);
 
 	/* Handler the received events. */
-	static void onProcessDetectionEvent(const EventsResult& eventsResult);
+	void onProcessDetectionEvent(const EventsResult& eventsResult) const;
 
 	/* Reset stop event and start the detection thread. */
 	void startDetectionThread();
 
 	/* Set the stop event and stop the detection thread. */
 	void stopDetectionThread();
+
+	/* Return set of unique EventInfo objects. */
+	std::set<EventInfo, EventInfoComparator> getUniqueEvents(const EventsResult& eventsResult) const;
 
 	bool m_doesTestSigning;
 	StandardThread m_fetchEventThread;
