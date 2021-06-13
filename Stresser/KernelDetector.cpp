@@ -5,11 +5,11 @@
 #include "../Utils/PeResource.h"
 #include "../Utils/ServiceManager.h"
 #include "../Utils/AutoCriticalSection.h"
+#include "../Utils/AutoSignedImageVerifier.h"
 
 #include "resource.h"
 
 #include <sstream>
-
 
 #include "ProcessArtifact.h"
 #include "../Utils/StringUtils.h"
@@ -208,7 +208,7 @@ void KernelDetector::fetchAndSendEvents(LPVOID params)
 		const EventsResult eventsResult = processDetector.receiveEvents();
 		if (0 < eventsResult.size)
 		{
-			KernelDetector::onProcessDetectionEvent(eventsResult);
+			this->onProcessDetectionEvent(eventsResult);
 		}
 		else
 		{
@@ -219,32 +219,50 @@ void KernelDetector::fetchAndSendEvents(LPVOID params)
 			if (WAIT_OBJECT_0 == kernelDetector->m_onProcessEvent.wait(WAIT_BETWEEN_FETCH_EVENT_MS))
 			{
 				const EventsResult eventsResult = processDetector.receiveEvents();
-				KernelDetector::onProcessDetectionEvent(eventsResult);
+				this->onProcessDetectionEvent(eventsResult);
 			}
 		}
 	}
 }
 
-void KernelDetector::onProcessDetectionEvent(const EventsResult& eventsResult)
+void KernelDetector::onProcessDetectionEvent(const EventsResult& eventsResult) const
 {
 	if (0 >= eventsResult.size)
 	{
 		return;
 	}
 
-	const std::unique_ptr<EventInfo[]>& eventInfo = eventsResult.events;
+	std::set<EventInfo, EventInfoComparator> uniqueEvents = this->getUniqueEvents(eventsResult);
 
-	for (int i = 0; i < eventsResult.size; ++i)
+	for (const auto& eventInfo : uniqueEvents)
 	{
-		DEBUG_WTRACE(KernelDetector, "ProcessDetectionEvent: Event timestamp=", TimeUtils::systemTimeToTimestamp(eventInfo[i].time, TIME_FORMAT),
-			" PID=", eventInfo[i].processId, " Filename=", eventInfo[i].processName, " touch Fake process PID=", eventInfo[i].fakeProcessId);
-		/*std::wcout
-			<< "~~~~Event~~~~\n"
-			<< "Called PID=" << eventInfo[i].processId << "\n"
-			<< "Called Filename: " << eventInfo[i].processName << "\n"
-			<< "Fake process ID=" << eventInfo[i].fakeProcessId << "\n"
-			<< "Event time: " << TimeUtils::systemTimeToTimestamp(eventInfo[i].time, TIME_FORMAT) << "\n"
-			<< std::endl;*/
+		AutoSignedImageVerifier verify(eventInfo.processName);
+		const VerificationResult result = verify.verify();
+
+		// Not signed process:
+		if (!result.first)
+		{
+			const std::wstring eventTimestamp(TimeUtils::systemTimeToTimestamp(eventInfo.time, TIME_FORMAT));
+
+			std::wstringstream eventStream;
+			eventStream << "ProcessDetectionEvent: Event timestamp=";
+			eventStream << eventTimestamp;
+			eventStream << " PID=";
+			eventStream << eventInfo.processId;
+			eventStream << " Filename=";
+			eventStream << eventInfo.processName;
+			eventStream << " touch Fake process PID=";
+			eventStream << eventInfo.fakeProcessId;
+
+			const std::wstring eventData(eventStream.str());
+
+			DEBUG_WTRACE(KernelDetector, eventData);
+
+			EventEntity eventEntity("Process Artifact touched", "Process", "Fake process touched",
+				StringUtils::wstringToString(eventTimestamp));
+
+			this->sendEvent(eventEntity);
+		}
 	}
 }
 
@@ -261,4 +279,25 @@ void KernelDetector::stopDetectionThread()
 {
 	this->m_stopDetectionThreadEvent.setEvent();
 	this->m_fetchEventThread.release();
+}
+
+std::set<EventInfo, EventInfoComparator> KernelDetector::getUniqueEvents(const EventsResult& eventsResult) const
+{
+	const std::unique_ptr<EventInfo[]>& eventInfo = eventsResult.events;
+
+	std::vector<EventInfo> events;
+
+	for (int i = 0; i < eventsResult.size; ++i)
+	{
+		events.push_back(eventInfo[i]);
+	}
+
+	std::set<EventInfo, EventInfoComparator> uniqueEvents;
+
+	for (const auto& eventInfo : events)
+	{
+		uniqueEvents.insert(eventInfo);
+	}
+
+	return uniqueEvents;
 }

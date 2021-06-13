@@ -63,6 +63,21 @@ struct EventInfo
 };
 
 /*
+ * Used for comparison between two referent EventInfo objects.
+ */
+struct EventInfoComparator
+{
+	bool operator()(const EventInfo& e1, const EventInfo& e2) const
+	{
+		return
+			wcscmp(e1.processName, e2.processName) == 0
+			&& e1.fakeProcessId == e2.fakeProcessId
+			&& e1.processId == e2.processId
+			&& e1.time.QuadPart == e2.time.QuadPart;
+	}
+};
+
+/*
 
  */
 struct EventsHeader
