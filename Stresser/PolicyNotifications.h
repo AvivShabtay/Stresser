@@ -26,7 +26,7 @@ private:
 		const PolicyController& policyController, const RuleController& ruleController);
 
 	void notifySubscribers();
-	
+
 	std::vector<IPolicySubscriber*> m_subscribers;
 	PolicyEntity m_currentPolicy;
 	std::string m_endpointId;

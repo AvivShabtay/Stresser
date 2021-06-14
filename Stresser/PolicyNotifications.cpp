@@ -1,6 +1,7 @@
 #include "PolicyNotifications.h"
 #include "../Utils/DebugPrint.h"
 #include "../Utils/EventsNames.h"
+#include "../Utils/SehTranslatorGuard.h"
 
 PolicyNotifications::PolicyNotifications(const std::string& endpointId, const HANDLE& shutdownEvent,
 	const EndpointController& endpointController, const PolicyController& policyController, const RuleController& ruleController) :
@@ -26,6 +27,8 @@ void PolicyNotifications::changePolicyThreadFunction(const EndpointController& e
 	const PolicyController& policyController, const RuleController& ruleController)
 {
 	DEBUG_WTRACE(PolicyNotifications, "Start fetching policy updates");
+
+	SehTranslatorGuard sehTranslatorGuard;
 
 	// Check if there is CTRL + C signal:
 	while (WAIT_TIMEOUT == WaitForSingleObject(m_shutdownEvent, 30 * 1000))
