@@ -12,12 +12,27 @@
 
 #include <iostream>
 
-#include <Windows.h>
-
 #include "KernelDetector.h"
 #include "StresserApplication.h"
 
-using Json = nlohmann::json;
+#include <Windows.h>
+
+std::shared_ptr<IStresserApplication> g_application;
+
+BOOL consoleHandler(const DWORD signal)
+{
+	if (CTRL_C_EVENT == signal)
+	{
+		AutoCriticalSection autoCriticalSection;
+
+		DEBUG_TRACE(StresserMainThread, "Counter CTRL + C event, signaling to stop all functionality");
+
+		g_application->stop();
+
+		return true;
+	}
+	return false;
+}
 
 int wmain(int argc, PWCHAR argv[])
 {
@@ -25,39 +40,30 @@ int wmain(int argc, PWCHAR argv[])
 	{
 		SehTranslatorGuard sehTranslatorGuard;
 
-		// Define application globals:
 		ServerDetails serverDetails("Stresser Client / 1.0", 11, "application/json", "stresser-project.herokuapp.com", "80", "/api");
 
-		std::unique_ptr<IStresserApplication> application = std::make_unique<StresserApplication>(serverDetails);
+		g_application = std::make_unique<StresserApplication>(serverDetails);
 
-		auto consoleHandler = [&application](const DWORD signal) -> BOOL
-		{
-			if (CTRL_C_EVENT == signal)
-			{
-				AutoCriticalSection autoCriticalSection;
-
-				DEBUG_TRACE(StresserMainThread, "Counter CTRL + C event, signaling to stop all functionality");
-
-				application->stop();
-
-				return true;
-			}
-			return false;
-		};
-		if (!SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(&consoleHandler), TRUE))
+		if (!SetConsoleCtrlHandler(consoleHandler, TRUE))
 		{
 			throw std::runtime_error("Could not set console handler");
 		}
 
-		application->start();
+		g_application->start();
 
-		// Keep the main thread running until user CTRL + C:
-		application->waitForShutdown();
+		g_application->waitForShutdown();
 	}
-	catch (const std::exception& exception)
+	catch (const std::exception &exception)
 	{
-		DEBUG_PRINT(exception.what());
+		DEBUG_TRACE(StresserMainThread, exception.what());
+		return 1;
+	}
+	catch (...)
+	{
+		DEBUG_TRACE(StresserMainThread, "Unknown exeption");
+		return 1;
 	}
 
+	DEBUG_TRACE(StresserMainThread, "Stresser shuting down...");
 	return 0;
 }
