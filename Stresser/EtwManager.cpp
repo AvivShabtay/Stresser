@@ -2,6 +2,11 @@
 
 #include "../Utils/DebugPrint.h"
 
+EtwManager::EtwManager()
+{
+	this->initializeGuids();
+}
+
 EtwManager::~EtwManager()
 {
 	try
@@ -36,7 +41,7 @@ void EtwManager::onEventRecord(PEVENT_RECORD record)
 {
 	for (const auto& eventHandler : this->m_eventsHandlers)
 	{
-		if (EtwEventsGuid.at(eventHandler->getType()) == record->EventHeader.ProviderId)
+		if (m_etwEventsGuid.at(eventHandler->getType()) == record->EventHeader.ProviderId)
 		{
 			std::optional<EventEntity> eventEntity = eventHandler->onEventRecord(record);
 			if (eventEntity)
@@ -105,4 +110,18 @@ ULONG EtwManager::getEventTypes() const
 	}
 
 	return eventTypes;
+}
+
+void EtwManager::initializeGuids()
+{
+	this->m_etwEventsGuid =
+	{
+		{EtwEventTypes::DiskIo, DiskIoGuid},
+		{EtwEventTypes::DiskFileIo, FileIoGuid},
+		{EtwEventTypes::FileIo, FileIoGuid},
+		{EtwEventTypes::FileIoInit, FileIoGuid},
+		{EtwEventTypes::Registry, RegistryGuid},
+		{EtwEventTypes::Process, ProcessGuid},
+		{EtwEventTypes::ProcessCounters, ProcessGuid}
+	};
 }

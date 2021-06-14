@@ -20,6 +20,10 @@ StresserApplication::~StresserApplication()
 	try
 	{
 		this->StresserApplication::stop();
+		for (auto& detector : this->m_detectors)
+		{
+			detector->stop();
+		}
 	}
 	catch (const std::exception& exception)
 	{
@@ -75,11 +79,6 @@ void StresserApplication::start()
 void StresserApplication::stop()
 {
 	this->m_shutdownEvent.setEvent();
-
-	for (auto& detector : this->m_detectors)
-	{
-		detector->stop();
-	}
 }
 
 void StresserApplication::pause()

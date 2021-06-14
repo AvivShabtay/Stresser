@@ -17,14 +17,3 @@ enum class EtwEventTypes : ULONG
 	Process = EVENT_TRACE_FLAG_PROCESS,
 	ProcessCounters = EVENT_TRACE_FLAG_PROCESS_COUNTERS
 };
-
-const std::map<EtwEventTypes, GUID> EtwEventsGuid =
-{
-	{EtwEventTypes::DiskIo, DiskIoGuid},
-	{EtwEventTypes::DiskFileIo, FileIoGuid},
-	{EtwEventTypes::FileIo, FileIoGuid},
-	{EtwEventTypes::FileIoInit, FileIoGuid},
-	{EtwEventTypes::Registry, RegistryGuid},
-	{EtwEventTypes::Process, ProcessGuid},
-	{EtwEventTypes::ProcessCounters, ProcessGuid}
-};
