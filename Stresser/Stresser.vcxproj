@@ -131,6 +131,7 @@
     <ClCompile Include="RuleEntity.cpp" />
     <ClCompile Include="ServerDetails.cpp" />
     <ClCompile Include="EtwManager.cpp" />
+    <ClCompile Include="StresserApplication.cpp" />
     <ClCompile Include="UserModeDetector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="IArtifact.h" />
     <ClInclude Include="IArtifactSubscriber.h" />
+    <ClInclude Include="IStresserApplication.h" />
     <ClInclude Include="IStresserDetector.h" />
     <ClInclude Include="KernelDetector.h" />
     <ClInclude Include="PolicyController.h" />
@@ -169,6 +171,7 @@
     <ClInclude Include="RuleEntity.h" />
     <ClInclude Include="ServerDetails.h" />
     <ClInclude Include="EtwManager.h" />
+    <ClInclude Include="StresserApplication.h" />
     <ClInclude Include="UserModeDetector.h" />
   </ItemGroup>
   <ItemGroup>

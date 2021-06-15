@@ -27,7 +27,7 @@ const std::wstring LOGGER_NAME(KERNEL_LOGGER_NAME);
 class EtwManager : public IEventCollector
 {
 public:
-	EtwManager() = default;
+	EtwManager();
 
 	virtual ~EtwManager();
 
@@ -56,7 +56,10 @@ private:
 	ULONG getEventTypes() const;
 
 private:
+	void initializeGuids();
+
 	std::function<void(EventEntity&)> m_callback;
 	std::vector<std::shared_ptr<IEtwEventHandler>> m_eventsHandlers;
 	AutoEtwTraceSession m_autoTraceSession;
+	std::map<EtwEventTypes, GUID> m_etwEventsGuid;
 };

@@ -1,34 +1,38 @@
 #include "Controllers.h"
-#include "Entities.h"
 #include "ServerDetails.h"
 #include "AuthorizedHttpRequest.h"
-
-#include "ArtifactManager.h"
-#include "PolicyNotifications.h"
 
 #include "UserModeDetector.h"
 
 #include "../Utils/AutoCriticalSection.h"
 #include "../Utils/DebugPrint.h"
 #include "../Utils/SehTranslatorGuard.h"
-#include "../Utils/WindowsEvent.h"
-#include "../Utils/EventsNames.h"
 
 #include "nlohmann/json.hpp"
 
 #include <iostream>
 
+#include "KernelDetector.h"
+#include "StresserApplication.h"
+
 #include <Windows.h>
 
-#include "KernelDetector.h"
+std::shared_ptr<IStresserApplication> g_application;
 
-using Json = nlohmann::json;
+BOOL consoleHandler(const DWORD signal)
+{
+	if (CTRL_C_EVENT == signal)
+	{
+		AutoCriticalSection autoCriticalSection;
 
-// Used to signal events in the main thread:
-WindowsEvent g_shutdownEvent(STOP_STRESSER);
+		DEBUG_TRACE(StresserMainThread, "Counter CTRL + C event, signaling to stop all functionality");
 
+		g_application->stop();
 
-BOOL consoleHandler(DWORD signal);
+		return true;
+	}
+	return false;
+}
 
 int wmain(int argc, PWCHAR argv[])
 {
@@ -36,72 +40,30 @@ int wmain(int argc, PWCHAR argv[])
 	{
 		SehTranslatorGuard sehTranslatorGuard;
 
-		if (!SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE))
+		ServerDetails serverDetails("Stresser Client / 1.0", 11, "application/json", "stresser-project.herokuapp.com", "80", "/api");
+
+		g_application = std::make_unique<StresserApplication>(serverDetails);
+
+		if (!SetConsoleCtrlHandler(consoleHandler, TRUE))
 		{
 			throw std::runtime_error("Could not set console handler");
 		}
 
-		// Define application globals:
-		ServerDetails serverDetails("Stresser Client / 1.0", 11, "application/json", "stresser-project.herokuapp.com", "80", "/api");
+		g_application->start();
 
-		// Define communication object:
-		AuthorizedHttpRequest& authorizedHttpRequest = AuthorizedHttpRequest::getInstance(serverDetails, g_shutdownEvent.get());
-
-		// Define application controllers:
-		EndpointController& endpointController = EndpointController::getInstance(authorizedHttpRequest);
-		PolicyController& policyController = PolicyController::getInstance(authorizedHttpRequest);
-		RuleController& ruleController = RuleController::getInstance(authorizedHttpRequest);
-		EventController& eventController = EventController::getInstance(authorizedHttpRequest);
-
-		// Register new endpoint in the server:
-		// TODO: Move from here !
-		EndpointEntity endpoint = endpointController.createEndpoint();
-		std::string endpointId = endpoint.GetID();
-
-		// Start token manager:
-		authorizedHttpRequest.startTokenRefresherThread(endpointId, endpoint.GetAPIKey());
-
-		PolicyNotifications policyNotifications(endpointId, g_shutdownEvent.get(), endpointController, policyController, ruleController);
-
-		ArtifactManager artifactManager;
-
-		UserModeDetector userModeDetector(eventController);
-
-		policyNotifications.subscribe(&artifactManager);
-
-		artifactManager.subscribe(&userModeDetector);
-
-		userModeDetector.start();
-
-		KernelDetector kernelDetector(eventController);
-
-		artifactManager.subscribe(&kernelDetector);
-
-		kernelDetector.start();
-
-		// Keep the main thread running until user CTRL + C:
-		WaitForSingleObject(g_shutdownEvent.get(), INFINITE);
+		g_application->waitForShutdown();
 	}
-	catch (const std::exception& exception)
+	catch (const std::exception &exception)
 	{
-		DEBUG_PRINT(exception.what());
+		DEBUG_TRACE(StresserMainThread, exception.what());
+		return 1;
+	}
+	catch (...)
+	{
+		DEBUG_TRACE(StresserMainThread, "Unknown exeption");
+		return 1;
 	}
 
+	DEBUG_TRACE(StresserMainThread, "Stresser shuting down...");
 	return 0;
-}
-
-BOOL consoleHandler(DWORD signal) {
-
-	if (CTRL_C_EVENT == signal)
-	{
-		AutoCriticalSection autoCriticalSection;
-
-		DEBUG_TRACE(StresserMainThread, "Counter CTRL + C event, signaling to stop all functionality");
-
-		g_shutdownEvent.setEvent();
-
-		return TRUE;
-	}
-
-	return FALSE;
 }
