@@ -3,10 +3,13 @@
 #include "EtwUtils.h"
 #include "EventParser.h"
 #include "ArtifactTypes.h"
+
 #include "../Utils/TimeUtils.h"
 #include "../Utils/StringUtils.h"
 #include "../Utils/LocalPcUtils.h"
 #include "../Utils/AutoCriticalSection.h"
+#include "../Utils/DebugPrint.h"
+
 #include "boost/algorithm/string.hpp"
 
 FileEventHandler::FileEventHandler(std::vector<std::shared_ptr<IArtifact>>& artifacts)
@@ -74,6 +77,8 @@ std::optional<EventEntity> FileEventHandler::onEventRecord(PEVENT_RECORD record)
 
 					const std::wstring eventData = L"PID= " + std::to_wstring(processPid) + L" FilePath= " + filePath;
 					std::string narrowEventData = StringUtils::wstringToString(eventData);
+
+					DEBUG_WTRACE(FileEventHandler, "RegistryDetectionEvent: Event timestamp=", wideTimestamp, eventData);
 
 					return EventEntity("File Artifact touched", eventType, narrowEventData, timestamp);
 				}

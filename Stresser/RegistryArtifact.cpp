@@ -1,5 +1,7 @@
 #include "RegistryArtifact.h"
 
+#include "../Utils/DebugPrint.h"
+
 RegistryArtifact::RegistryArtifact(const std::string& name, const std::string& data) : IArtifact(name, data)
 {
 	this->m_registryPrefix = RegistryArtifactUtils::getRegistryPrefix(this->m_data);
@@ -42,6 +44,8 @@ void RegistryArtifact::install()
 	}
 
 	AutoRegistryKeyHandle autoHKey(hKey);
+
+	DEBUG_TRACE(RegistryArtifact, "Install fake registry: ", this->m_registrySubKey.c_str());
 }
 
 void RegistryArtifact::uninstall()
@@ -50,4 +54,6 @@ void RegistryArtifact::uninstall()
 	{
 		throw Win32ErrorCodeException("Failed to delete the registry key!");
 	}
+
+	DEBUG_TRACE(RegistryArtifact, "Uninstall fake registry: ", this->m_registrySubKey.c_str());
 }

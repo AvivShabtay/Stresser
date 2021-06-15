@@ -1,5 +1,7 @@
 #include "FileArtifact.h"
 
+#include "../Utils/DebugPrint.h"
+
 FileArtifact::FileArtifact(const std::string& name, const  std::string& data) : IArtifact(name, data)
 {
 	// https://stackoverflow.com/a/962148
@@ -35,6 +37,8 @@ void FileArtifact::install()
 	{
 		throw Win32ErrorCodeException("Failed to create a File!");
 	}
+
+	DEBUG_TRACE(FileArtifact, "Install fake file: ", fileName.c_str());
 }
 
 void FileArtifact::uninstall()
@@ -45,4 +49,6 @@ void FileArtifact::uninstall()
 	{
 		throw Win32ErrorCodeException("Failed to delete a File!");
 	}
+
+	DEBUG_TRACE(FileArtifact, "Uninstall fake file: ", fileName.c_str());
 }
