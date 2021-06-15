@@ -70,30 +70,62 @@ void StresserApplication::initializeDetectors(AuthorizedHttpRequest& authorizedH
 
 void StresserApplication::start()
 {
-	for (auto& detector : this->m_detectors)
+	try
 	{
-		detector->start();
+		for (auto& detector : this->m_detectors)
+		{
+			detector->start();
+		}
+	}
+	catch (const std::exception& exception)
+	{
+		DEBUG_TRACE(StresserApplication, "Exception was thrown in stresser start", exception.what());
+		throw;
 	}
 }
 
 void StresserApplication::stop()
 {
-	this->m_shutdownEvent.setEvent();
+	try
+	{
+		this->m_shutdownEvent.setEvent();
+	}
+	catch (const std::exception& exception)
+	{
+		DEBUG_TRACE(StresserApplication, "Exception was thrown in stresser stop", exception.what());
+		throw;
+	}
 }
 
 void StresserApplication::pause()
 {
-	for (auto& detector : this->m_detectors)
+	try
 	{
-		detector->stop();
+		for (auto& detector : this->m_detectors)
+		{
+			detector->stop();
+		}
+	}
+	catch (const std::exception& exception)
+	{
+		DEBUG_TRACE(StresserApplication, "Exception was thrown in stresser pause", exception.what());
+		throw;
 	}
 }
 
 void StresserApplication::waitForShutdown()
 {
-	if (WAIT_OBJECT_0 != this->m_shutdownEvent.wait())
+	try
 	{
-		throw std::runtime_error("Unexpected error with the shutdown wait!");
+		if (WAIT_OBJECT_0 != this->m_shutdownEvent.wait())
+		{
+			throw std::runtime_error("Unexpected error with the shutdown wait!");
+		}
+	}
+	catch (const std::exception& exception)
+	{
+		DEBUG_TRACE(StresserApplication, "Exception was thrown in stresser waitForShutdown", exception.what());
+		throw;
 	}
 }
 

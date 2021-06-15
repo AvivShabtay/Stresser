@@ -11,6 +11,12 @@ class StresserApplication : public IStresserApplication
 public:
 	explicit StresserApplication(const ServerDetails serverDetails);
 
+	StresserApplication(const StresserApplication&) = delete;
+
+	StresserApplication(StresserApplication&&) = delete;
+
+	StresserApplication& operator=(StresserApplication&&) = delete;
+
 	~StresserApplication() override;
 
 	void start() override;
