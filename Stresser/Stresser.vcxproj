@@ -101,6 +101,7 @@
     <ClCompile Include="ArtifactManager.cpp" />
     <ClCompile Include="AuthorizedHttpRequest.cpp" />
     <ClCompile Include="AutoEtwTraceSession.cpp" />
+    <ClCompile Include="AutoSetLostConnectionEvent.cpp" />
     <ClCompile Include="CollectorManager.cpp" />
     <ClCompile Include="EndpointController.cpp" />
     <ClCompile Include="EndpointEntity.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="ArtifactTypes.h" />
     <ClInclude Include="AuthorizedHttpRequest.h" />
     <ClInclude Include="AutoEtwTraceSession.h" />
+    <ClInclude Include="AutoSetLostConnectionEvent.h" />
     <ClInclude Include="CollectorManager.h" />
     <ClInclude Include="Controllers.h" />
     <ClInclude Include="EndpointController.h" />

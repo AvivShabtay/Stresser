@@ -110,6 +110,9 @@
     <ClCompile Include="NetworkConnectionException.cpp">
       <Filter>Communication\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AutoSetLostConnectionEvent.cpp">
+      <Filter>Application\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="StresserApplication.cpp">
       <Filter>Application</Filter>
     </ClCompile>
@@ -228,6 +231,9 @@
     </ClInclude>
     <ClInclude Include="NetworkConnectionException.h">
       <Filter>Communication\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoSetLostConnectionEvent.h">
+      <Filter>Application\Headers Files</Filter>
     </ClInclude>
     <ClInclude Include="IStresserApplication.h">
       <Filter>Application</Filter>
