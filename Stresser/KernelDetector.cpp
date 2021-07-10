@@ -165,7 +165,7 @@ void KernelDetector::registerFakeProcessIds()
 	{
 		if (ArtifactTypes::Process != artifact->getType())
 		{
-			return;
+			continue;
 		}
 
 		const auto* processArtifact = dynamic_cast<ProcessArtifact*>(artifact.get());
