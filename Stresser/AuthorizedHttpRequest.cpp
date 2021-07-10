@@ -1,22 +1,27 @@
 #include "AuthorizedHttpRequest.h"
+#include "NetworkConnectionException.h"
+#include "AutoSetLostConnectionEvent.h"
+#include "InvalidResponseException.h"
 
 #include "../Utils/AutoCriticalSection.h"
 #include "../Utils/ShutdownSignal.h"
 #include "../Utils/StringUtils.h"
 #include "../Utils/DebugPrint.h"
 #include "../Utils/SehTranslatorGuard.h"
+#include "../Utils/WindowsEvent.h"
+#include "../Utils/EventsNames.h"
 
 #include <Windows.h>
 
-
-AuthorizedHttpRequest& AuthorizedHttpRequest::getInstance(const ServerDetails& server, const HANDLE& shutdownEvent)
+AuthorizedHttpRequest& AuthorizedHttpRequest::getInstance(ServerDetails server, HANDLE shutdownEvent)
 {
 	static AuthorizedHttpRequest g_tokenManager(server, shutdownEvent);
 	return g_tokenManager;
 }
 
-AuthorizedHttpRequest::AuthorizedHttpRequest(const ServerDetails& server, const HANDLE& shutdownEvent)
-	: m_server(server), m_shutdownEvent(shutdownEvent)
+AuthorizedHttpRequest::AuthorizedHttpRequest(ServerDetails server, HANDLE shutdownEvent)
+	: m_server(server),
+	m_shutdownEvent(shutdownEvent)
 {
 }
 
@@ -29,14 +34,12 @@ void AuthorizedHttpRequest::refreshToken()
 	jsEndpointData["apiKey"] = this->m_token;
 
 	Json jsResponse = this->sendRequest(http::verb::put, targetPath, jsEndpointData);
-
 	if (jsResponse.empty())
 	{
-		throw std::runtime_error("Server return with no data");
+		throw InvalidResponseException("Server return with no data");
 	}
 
 	const std::string newToken = StringUtils::RemoveQuotationMarks(jsResponse["apiKey"].dump());
-	//DEBUG_PRINT("[+] Changing token from: " + this->m_token + ", to: " + newToken);
 	this->setToken(newToken);
 }
 
@@ -59,9 +62,28 @@ bool AuthorizedHttpRequest::startTokenRefresherThread(const std::string& endpoin
 
 		auto* const tokenManager = reinterpret_cast<AuthorizedHttpRequest*>(params);
 
-		while (WAIT_TIMEOUT == WaitForSingleObject(tokenManager->m_shutdownEvent, 1000))
+		WindowsEvent lostConnectionEvent;
+		lostConnectionEvent.open(LOST_CONNECTION_EVENT_NAME);
+
+		constexpr int TRIGGER_EVENT_COUNT = 2;
+		HANDLE triggerEvents[TRIGGER_EVENT_COUNT] =
 		{
-			tokenManager->refreshToken();
+			tokenManager->m_shutdownEvent,
+			lostConnectionEvent.get()
+		};
+
+		constexpr DWORD TIMEOUT = 30 * 1000;
+
+		while (WAIT_TIMEOUT == WaitForMultipleObjects(TRIGGER_EVENT_COUNT, triggerEvents, FALSE, TIMEOUT))
+		{
+			try
+			{
+				tokenManager->refreshToken();
+			}
+			catch (const InvalidResponseException&)
+			{
+				DEBUG_TRACE(AuthorizedHttpRequest, "Could not refresh token");
+			}
 		}
 
 		DEBUG_WTRACE(AuthorizedHttpRequest, "Stop authorization thread");
@@ -83,14 +105,24 @@ Json AuthorizedHttpRequest::sendRequest(const http::verb& requestMethod, const s
 {
 	std::string path = this->m_server.getApiPrefix() + target;
 
-	if (this->m_token.empty())
+	try
 	{
-		return HttpRequest::sendRequest(this->m_server.getUserAgent(), this->m_server.getHttpVersion(), this->m_server.getContentType(), "",
-			requestMethod, this->m_server.getHostname(), path, this->m_server.getPort(), payload);
+		if (this->m_token.empty())
+		{
+			return HttpRequest::sendRequest(this->m_server.getUserAgent(), this->m_server.getHttpVersion(), this->m_server.getContentType(), "",
+				requestMethod, this->m_server.getHostname(), path, this->m_server.getPort(), payload);
+		}
+		else
+		{
+			return HttpRequest::sendRequest(this->m_server.getUserAgent(), this->m_server.getHttpVersion(), this->m_server.getContentType(),
+				this->m_token, requestMethod, this->m_server.getHostname(), path, this->m_server.getPort(), payload);
+		}
 	}
-	else
+	catch (const NetworkConnectionException& exception)
 	{
-		return HttpRequest::sendRequest(this->m_server.getUserAgent(), this->m_server.getHttpVersion(), this->m_server.getContentType(),
-			this->m_token, requestMethod, this->m_server.getHostname(), path, this->m_server.getPort(), payload);
+		DEBUG_TRACE(AuthorizedHttpRequest, "Lost network connection, signal global event");
+
+		AutoSetLostConnectionEvent setLostConnectionEvent;
+		return {}; // return empty JSON
 	}
 }

@@ -25,7 +25,7 @@ public:
 	 * @shutdownEvent - Handle to signal object representing the application to stop.
 	 * @note - This class is NOT responsible to close the signale object.
 	 */
-	static AuthorizedHttpRequest& getInstance(const ServerDetails& server, const HANDLE& shutdownEvent);
+	static AuthorizedHttpRequest& getInstance(ServerDetails server = ServerDetails(), HANDLE shutdownEvent = 0);
 
 	/*
 	 * Start sending request to the server to keep the endpoint token valid.
@@ -44,7 +44,7 @@ public:
 
 private:
 	/* Keep class as singleton. */
-	AuthorizedHttpRequest(const ServerDetails& server, const HANDLE& shutdownEvent);
+	AuthorizedHttpRequest(ServerDetails server, HANDLE shutdownEvent);
 
 	/*
 	 * Send HTTP request the expected arguments to the server for refreshing the
