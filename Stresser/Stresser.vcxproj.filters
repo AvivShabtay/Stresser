@@ -117,7 +117,7 @@
       <Filter>Application\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StresserApplication.cpp">
-      <Filter>Application</Filter>
+      <Filter>Application\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,10 +242,10 @@
       <Filter>Application\Headers Files</Filter>
     </ClInclude>
     <ClInclude Include="IStresserApplication.h">
-      <Filter>Application</Filter>
+      <Filter>Application\Headers Files</Filter>
     </ClInclude>
     <ClInclude Include="StresserApplication.h">
-      <Filter>Application</Filter>
+      <Filter>Application\Headers Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
