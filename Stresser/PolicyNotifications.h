@@ -21,6 +21,10 @@ public:
 
 	void subscribe(IPolicySubscriber* subscriber);
 
+	void startFetchPolicyThread();
+
+	void resetEndpointId(std::string endpointId);
+
 private:
 	void changePolicyThreadFunction(const EndpointController& endpointController,
 		const PolicyController& policyController, const RuleController& ruleController);
@@ -31,8 +35,14 @@ private:
 	PolicyEntity m_currentPolicy;
 	std::string m_endpointId;
 	WindowsEvent m_changePolicyEvent;
+	WindowsEvent m_lostConnectionEvent;
 	HANDLE m_shutdownEvent;
 	StandardThread m_changePolicyThread;
 	std::vector<RuleEntity> m_currentRules;
+
+	// Save locally for supporting start inner thread again:
+	const EndpointController& m_endpointController;
+	const PolicyController& m_policyController;
+	const RuleController& m_ruleController;
 };
 
