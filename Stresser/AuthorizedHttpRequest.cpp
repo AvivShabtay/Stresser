@@ -2,6 +2,7 @@
 #include "NetworkConnectionException.h"
 #include "AutoSetLostConnectionEvent.h"
 #include "InvalidResponseException.h"
+#include "ParsingJsonException.h"
 
 #include "../Utils/AutoCriticalSection.h"
 #include "../Utils/ShutdownSignal.h"
@@ -123,6 +124,10 @@ Json AuthorizedHttpRequest::sendRequest(const http::verb& requestMethod, const s
 		DEBUG_TRACE(AuthorizedHttpRequest, "Lost network connection, signal global event");
 
 		AutoSetLostConnectionEvent setLostConnectionEvent;
+		return {}; // return empty JSON
+	}
+	catch (const ParsingJsonException&)
+	{
 		return {}; // return empty JSON
 	}
 }
