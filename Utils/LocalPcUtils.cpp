@@ -6,13 +6,14 @@
 
 #include <boost/asio/ip/udp.hpp>
 #include <boost/asio/io_service.hpp>
-
+#include <boost/asio/ip/tcp.hpp>
 
 #include <winternl.h>
 #pragma comment(lib, "ntdll.lib")
 
 namespace net = boost::asio;        // from <boost/asio.hpp>
 using udp = net::ip::udp;
+using tcp = net::ip::tcp;
 
 std::wstring LocalPcUtils::getLocalComputerName()
 {
@@ -119,5 +120,32 @@ std::wstring LocalPcUtils::getLocalComputerIp()
 	}
 
 	throw std::exception("Cant get local computer ip");
+}
+
+bool LocalPcUtils::doesNetworkConnectionAvailable()
+{
+	try
+	{
+		std::string googleAddress("8.8.8.8");
+		std::string googlePort("53");
+
+		boost::asio::io_service io_service;
+
+		tcp::resolver resolver(io_service);
+		tcp::resolver::query query(tcp::v4(), googleAddress, googlePort);
+		tcp::resolver::iterator iterator = resolver.resolve(query);
+
+		tcp::socket s(io_service);
+
+		s.connect(*iterator);
+		Sleep(250);
+		s.close();
+
+		return true;
+	}
+	catch (const boost::system::system_error& exception)
+	{
+		return false;
+	}
 }
 
