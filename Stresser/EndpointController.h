@@ -3,11 +3,9 @@
 #include "AuthorizedHttpRequest.h"
 #include "EndpointEntity.h"
 
-#include "../Utils/AutoHandle.h"
-
 #include "nlohmann/json.hpp"
 
-#include <iostream>
+#include <string>
 
 using Json = nlohmann::json;
 
@@ -38,7 +36,7 @@ public:
 		Create new endpoint entity in the server
 		@return The new endpoint details: ID and token.
 	*/
-	EndpointEntity createEndpoint() const;
+	EndpointEntity createEndpoint();
 
 	/*
 		Return the endpoint data from the server by it's endpoint ID.
@@ -49,6 +47,8 @@ public:
 
 private:
 	EndpointController(AuthorizedHttpRequest& authorizedHttpRequest);
+
+	void setHostname();
 
 	AuthorizedHttpRequest& m_authorizedHttpRequest;
 	std::wstring m_computerName;
