@@ -110,6 +110,9 @@
     <ClCompile Include="NetworkConnectionException.cpp">
       <Filter>Communication\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InvalidResponseException.cpp">
+      <Filter>Controllers\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="AutoSetLostConnectionEvent.cpp">
       <Filter>Application\Source Files</Filter>
     </ClCompile>
@@ -231,6 +234,9 @@
     </ClInclude>
     <ClInclude Include="NetworkConnectionException.h">
       <Filter>Communication\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InvalidResponseException.h">
+      <Filter>Controllers\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AutoSetLostConnectionEvent.h">
       <Filter>Application\Headers Files</Filter>

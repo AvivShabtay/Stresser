@@ -115,6 +115,7 @@
     <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="IArtifact.cpp" />
     <ClCompile Include="IArtifactSubscriber.cpp" />
+    <ClCompile Include="InvalidResponseException.cpp" />
     <ClCompile Include="IStresserDetector.cpp" />
     <ClCompile Include="IEtwEventHandler.cpp" />
     <ClCompile Include="IEtwEventHandler.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="IArtifact.h" />
     <ClInclude Include="IArtifactSubscriber.h" />
+    <ClInclude Include="InvalidResponseException.h" />
     <ClInclude Include="IStresserApplication.h" />
     <ClInclude Include="IStresserDetector.h" />
     <ClInclude Include="KernelDetector.h" />
