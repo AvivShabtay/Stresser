@@ -6,6 +6,7 @@
 #include "../Utils/ServiceManager.h"
 #include "../Utils/AutoCriticalSection.h"
 #include "../Utils/AutoSignedImageVerifier.h"
+#include "../Utils/EventsNames.h"
 
 #include "resource.h"
 
@@ -165,7 +166,7 @@ void KernelDetector::registerFakeProcessIds()
 	{
 		if (ArtifactTypes::Process != artifact->getType())
 		{
-			return;
+			continue;
 		}
 
 		const auto* processArtifact = dynamic_cast<ProcessArtifact*>(artifact.get());
@@ -175,7 +176,7 @@ void KernelDetector::registerFakeProcessIds()
 		const ProcessDetector processDetector;
 		processDetector.addFakeProcessId(processId);
 
-		DEBUG_WPRINT(STRINGIFY(startDetection) "Register fake process ID for detection: " + processId);
+		DEBUG_TRACE(KernelDetector, "Register fake process ID for detection: ", processId);
 	}
 }
 
@@ -199,8 +200,12 @@ void KernelDetector::fetchAndSendEvents(LPVOID params)
 {
 	auto* kernelDetector = static_cast<KernelDetector*>(params);
 
+	WindowsEvent stresserShutdownEvent;
+	stresserShutdownEvent.open(STOP_STRESSER);
+
 	// Check if requested to stop the thread functionality:
-	while (!kernelDetector->m_stopDetectionThreadEvent.isSignaled())
+	while (!kernelDetector->m_stopDetectionThreadEvent.isSignaled()
+		&& !stresserShutdownEvent.isSignaled())
 	{
 		const ProcessDetector processDetector;
 
