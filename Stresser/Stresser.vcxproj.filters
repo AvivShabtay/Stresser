@@ -104,6 +104,12 @@
     <ClCompile Include="ProcessDetector.cpp">
       <Filter>Detectors\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ParsingJsonException.cpp">
+      <Filter>Communication\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkConnectionException.cpp">
+      <Filter>Communication\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="StresserApplication.cpp">
       <Filter>Application</Filter>
     </ClCompile>
@@ -217,6 +223,12 @@
     <ClInclude Include="ProcessDetector.h">
       <Filter>Detectors\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ParsingJsonException.h">
+      <Filter>Communication\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkConnectionException.h">
+      <Filter>Communication\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="IStresserApplication.h">
       <Filter>Application</Filter>
     </ClInclude>
@@ -305,6 +317,12 @@
     </Filter>
     <Filter Include="Application">
       <UniqueIdentifier>{4919a036-2a97-4d71-8a9d-2be05a3685c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\Source Files">
+      <UniqueIdentifier>{145d5036-064e-4c2e-a259-e0c7b0c803c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\Headers Files">
+      <UniqueIdentifier>{37832c84-b8b9-4128-b854-1e9c2316647c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

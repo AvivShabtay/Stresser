@@ -120,6 +120,8 @@
     <ClCompile Include="IEventCollector.h" />
     <ClCompile Include="KernelDetector.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="NetworkConnectionException.cpp" />
+    <ClCompile Include="ParsingJsonException.cpp" />
     <ClCompile Include="PolicyController.cpp" />
     <ClCompile Include="PolicyEntity.cpp" />
     <ClCompile Include="PolicyNotifications.cpp" />
@@ -158,6 +160,8 @@
     <ClInclude Include="IStresserApplication.h" />
     <ClInclude Include="IStresserDetector.h" />
     <ClInclude Include="KernelDetector.h" />
+    <ClInclude Include="NetworkConnectionException.h" />
+    <ClInclude Include="ParsingJsonException.h" />
     <ClInclude Include="PolicyController.h" />
     <ClInclude Include="PolicyEntity.h" />
     <ClInclude Include="PolicyNotifications.h" />
