@@ -103,6 +103,22 @@ DWORD WindowsEvent::wait(DWORD timeout) const
 	return WaitForSingleObject(this->m_event, timeout);
 }
 
+void WindowsEvent::open(const std::wstring& eventName)
+{
+	if (eventName.empty())
+	{
+		throw std::runtime_error("Invalid event name to open");
+	}
+
+	this->release();
+
+	this->m_event = OpenEvent(EVENT_MODIFY_STATE | SYNCHRONIZE, FALSE, eventName.c_str());
+	if (nullptr == this->m_event)
+	{
+		throw Win32ErrorCodeException("Could not open event object");
+	}
+}
+
 void WindowsEvent::createEvent(const std::wstring& eventName, BOOL initialState, BOOL manualReset,
 	LPSECURITY_ATTRIBUTES eventAttributes)
 {
