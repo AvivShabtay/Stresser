@@ -40,7 +40,7 @@ int wmain(int argc, PWCHAR argv[])
 	{
 		SehTranslatorGuard sehTranslatorGuard;
 
-		ServerDetails serverDetails("Stresser Client / 1.0", 11, "application/json", "stresser-project.herokuapp.com", "80", "/api");
+		const ServerDetails serverDetails("Stresser Client / 1.0", 11, "application/json", "stresser-project.herokuapp.com", "80", "/api");
 
 		g_application = std::make_unique<StresserApplication>(serverDetails);
 
@@ -53,7 +53,7 @@ int wmain(int argc, PWCHAR argv[])
 
 		g_application->waitForShutdown();
 	}
-	catch (const std::exception &exception)
+	catch (const std::exception& exception)
 	{
 		DEBUG_TRACE(StresserMainThread, exception.what());
 		return 1;
