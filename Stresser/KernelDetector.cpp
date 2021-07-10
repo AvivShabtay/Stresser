@@ -175,7 +175,7 @@ void KernelDetector::registerFakeProcessIds()
 		const ProcessDetector processDetector;
 		processDetector.addFakeProcessId(processId);
 
-		DEBUG_WPRINT(STRINGIFY(startDetection) "Register fake process ID for detection: " + processId);
+		DEBUG_TRACE(KernelDetector, "Register fake process ID for detection: ", processId);
 	}
 }
 
