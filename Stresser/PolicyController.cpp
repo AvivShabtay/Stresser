@@ -1,4 +1,5 @@
 #include "PolicyController.h"
+#include "InvalidResponseException.h"
 
 #include <sstream>
 
@@ -19,7 +20,7 @@ PolicyEntity PolicyController::getPolicy(const std::string& policyId) const
 	const Json responseJson = this->m_authorizedHttpRequest.sendRequest(http::verb::get, targetPath.str(), "");
 	if (responseJson.empty())
 	{
-		throw std::runtime_error("Server return with no data");
+		throw InvalidResponseException("Server return with no data");
 	}
 
 	return PolicyEntity::convertFromJson(responseJson);

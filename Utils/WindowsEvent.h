@@ -52,6 +52,8 @@ public:
 		return (WAIT_OBJECT_0 == this->wait(0));
 	}
 
+	void open(const std::wstring& eventName);
+
 private:
 	/* Create event object from by given values. */
 	void createEvent(const std::wstring& eventName, BOOL initialState, BOOL manualReset, LPSECURITY_ATTRIBUTES eventAttributes);

@@ -1,7 +1,7 @@
 #include "ServerDetails.h"
 
-ServerDetails::ServerDetails(const std::string userAgent, int httpVersion, const std::string contentType,
-	const std::string hostname, const std::string port, const std::string apiPrefix)
+ServerDetails::ServerDetails(const std::string& userAgent, int httpVersion, const std::string& contentType,
+	const std::string& hostname, const std::string& port, const std::string& apiPrefix)
 	: m_userAgent(userAgent), m_httpVersion(httpVersion), m_contentType(contentType),
 	m_hostname(hostname), m_port(port), m_apiPrefix(apiPrefix)
 {

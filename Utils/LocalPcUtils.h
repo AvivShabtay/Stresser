@@ -24,5 +24,7 @@ public:
 	static bool doesTestSigningEnabled();
 
 	static std::wstring getLocalComputerIp();
+
+	static bool doesNetworkConnectionAvailable();
 };
 

@@ -101,6 +101,7 @@
     <ClCompile Include="ArtifactManager.cpp" />
     <ClCompile Include="AuthorizedHttpRequest.cpp" />
     <ClCompile Include="AutoEtwTraceSession.cpp" />
+    <ClCompile Include="AutoSetLostConnectionEvent.cpp" />
     <ClCompile Include="CollectorManager.cpp" />
     <ClCompile Include="EndpointController.cpp" />
     <ClCompile Include="EndpointEntity.cpp" />
@@ -114,12 +115,15 @@
     <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="IArtifact.cpp" />
     <ClCompile Include="IArtifactSubscriber.cpp" />
+    <ClCompile Include="InvalidResponseException.cpp" />
     <ClCompile Include="IStresserDetector.cpp" />
     <ClCompile Include="IEtwEventHandler.cpp" />
     <ClCompile Include="IEtwEventHandler.h" />
     <ClCompile Include="IEventCollector.h" />
     <ClCompile Include="KernelDetector.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="NetworkConnectionException.cpp" />
+    <ClCompile Include="ParsingJsonException.cpp" />
     <ClCompile Include="PolicyController.cpp" />
     <ClCompile Include="PolicyEntity.cpp" />
     <ClCompile Include="PolicyNotifications.cpp" />
@@ -140,6 +144,7 @@
     <ClInclude Include="ArtifactTypes.h" />
     <ClInclude Include="AuthorizedHttpRequest.h" />
     <ClInclude Include="AutoEtwTraceSession.h" />
+    <ClInclude Include="AutoSetLostConnectionEvent.h" />
     <ClInclude Include="CollectorManager.h" />
     <ClInclude Include="Controllers.h" />
     <ClInclude Include="EndpointController.h" />
@@ -155,9 +160,12 @@
     <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="IArtifact.h" />
     <ClInclude Include="IArtifactSubscriber.h" />
+    <ClInclude Include="InvalidResponseException.h" />
     <ClInclude Include="IStresserApplication.h" />
     <ClInclude Include="IStresserDetector.h" />
     <ClInclude Include="KernelDetector.h" />
+    <ClInclude Include="NetworkConnectionException.h" />
+    <ClInclude Include="ParsingJsonException.h" />
     <ClInclude Include="PolicyController.h" />
     <ClInclude Include="PolicyEntity.h" />
     <ClInclude Include="PolicyNotifications.h" />

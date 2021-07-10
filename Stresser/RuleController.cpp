@@ -1,4 +1,5 @@
 #include "RuleController.h"
+#include "InvalidResponseException.h"
 
 RuleController& RuleController::getInstance(AuthorizedHttpRequest& authorizedHttpRequest)
 {
@@ -17,7 +18,7 @@ RuleEntity RuleController::getRule(const std::string& ruleId) const
 	const Json responseJson = this->m_authorizedHttpRequest.sendRequest(http::verb::get, targetPath.str(), "");
 	if (responseJson.empty())
 	{
-		throw std::runtime_error("Server return with no data");
+		throw InvalidResponseException("Server return with no data");
 	}
 
 	return RuleEntity::convertFromJson(responseJson);
