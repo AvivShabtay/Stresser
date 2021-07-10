@@ -1,4 +1,6 @@
 #include "EventController.h"
+#include "InvalidResponseException.h"
+
 #include "../Utils/StringUtils.h"
 #include "../Utils/LocalPcUtils.h"
 
@@ -22,7 +24,7 @@ void EventController::sendEvent(EventEntity& eventEntity) const
 	const Json responseJson = this->m_authorizedHttpRequest.sendRequest(http::verb::post, targetPath, jsEvent);
 	if (responseJson.empty())
 	{
-		throw std::runtime_error("Server return with no data");
+		throw InvalidResponseException("Server return with no data");
 	}
 }
 
